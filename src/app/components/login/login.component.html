@@ -1,0 +1,18 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Login</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-item>
+    <ion-label position="floating">E-Mail</ion-label>
+    <ion-input type="email" [(ngModel)]="email" name="email" required="true"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="floating">Passwort</ion-label>
+    <ion-input type="password" [(ngModel)]="password" name="password" required="true"></ion-input>
+  </ion-item>
+  <ion-button type="submit" (click)="login()" expand="block">Login</ion-button>
+  <ion-button (click)="toRegister()" expand="block" fill="clear">Zur Registrierung</ion-button>
+</ion-content>

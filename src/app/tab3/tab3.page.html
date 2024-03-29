@@ -13,5 +13,8 @@
     </ion-toolbar>
   </ion-header>
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+  <ion-button routerLink="profile-edit" expand="block">Profil bearbeiten</ion-button>
+  <ion-button (click)="openPasswordChangeModal()" expand="block">Passwort ändern</ion-button>
+  <ion-button (click)="logout()" color="danger" expand="block">Logout</ion-button>
+
 </ion-content>
