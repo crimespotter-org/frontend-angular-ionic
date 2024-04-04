@@ -1,10 +1,89 @@
+<ion-menu side="end" menuId="filterMenu" contentId="caselist">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Filter</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list>
+      <ion-item>
+        <ion-label>Datum</ion-label>
+        <ion-datetime></ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-label>Status</ion-label>
+        <ion-select placeholder="Status auswählen">
+          <ion-select-option value="open">Offen</ion-select-option>
+          <ion-select-option value="closed">Geschlossen</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item>
+        <ion-label>Typ</ion-label>
+        <ion-select placeholder="Typ auswählen">
+          <ion-select-option value="typ1">Typ 1</ion-select-option>
+          <ion-select-option value="typ2">Typ 2</ion-select-option>
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
+  </ion-content>
+</ion-menu>
+
+<ion-header [translucent]="true" id="caselist">
+  <ion-toolbar>
+    <ion-searchbar placeholder="Suche"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilterMenu()">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-chip color="primary">
+      <ion-label></ion-label>
+      <ion-icon name="close-circle"></ion-icon>
+    </ion-chip>
+  </ion-toolbar>
+</ion-header>
+
+
 <ion-list>
-  <ion-item *ngFor="let fall of faelle">
-    <ion-label>
-      <h2>{{ fall.titel }}</h2>
-      <p>{{ fall.zusammenfassung }}</p>
-    </ion-label>
-  </ion-item>
+  <ion-item-sliding *ngFor="let fall of faelle">
+    <ion-item-options side="start">
+      <ion-item-option color="primary">
+        <ion-icon name="thumbs-up-outline"></ion-icon>
+      </ion-item-option>
+      <ion-item-option color="danger">
+        <ion-icon name="thumbs-down-outline"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+
+    <ion-item>
+      <ion-label>
+        <h2>{{ fall.titel }}</h2>
+        <p>{{ fall.zusammenfassung }}</p>
+      </ion-label>
+
+      <!-- Icons für Podcasts, Artikel und Bilder -->
+      <ion-icon slot="end" name="mic-circle-outline"></ion-icon>
+      <ion-icon slot="end" name="newspaper-outline"></ion-icon>
+      <ion-icon slot="end" name="images-outline"></ion-icon>
+
+      <!-- Buttons zum Up- und Downvoten -->
+      <ion-buttons slot="end">
+        <ion-button>
+          <ion-icon slot="icon-only" name="thumbs-up-outline"></ion-icon>
+        </ion-button>
+        <ion-button>
+          <ion-icon slot="icon-only" name="thumbs-down-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+
+    <ion-item-options side="end">
+      <ion-item-option>
+        <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+      </ion-item-option>
+    </ion-item-options>
+  </ion-item-sliding>
 </ion-list>
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
@@ -23,7 +102,7 @@
       <ion-icon name="pricetag"></ion-icon>
     </ion-fab-button>
     <ion-fab-button>
-      <ion-icon name="locate"></ion-icon>
+      <ion-icon name="locate">test</ion-icon>
     </ion-fab-button>
   </ion-fab-list>
 </ion-fab>
@@ -33,3 +112,5 @@
     <ion-icon name="pin"></ion-icon>
   </ion-fab-button>
 </ion-fab>
+
+
