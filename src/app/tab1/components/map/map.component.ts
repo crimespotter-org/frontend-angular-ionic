@@ -3,7 +3,7 @@ import { Geolocation } from '@capacitor/geolocation';
 import { Location } from "../../../shared/interfaces/location.interface"
 import { SupabaseService } from "../../../services/supabase.service";
 import * as L from 'leaflet';
-import { Case } from 'src/app/shared/interfaces/case.interface';
+import { Case } from 'src/app/shared/types/supabase';
 
 @Component({
   selector: 'app-map',
@@ -19,7 +19,8 @@ export class MapComponent implements AfterViewInit {
     this.defaultIcon = L.icon({
         iconUrl: '../../assets/images/marker-icon.png',
         shadowUrl: '../../assets/images/marker-shadow.png',
-        iconAnchor: [12.5, 41]
+        iconAnchor: [12.5, 41],
+        popupAnchor: [0, -40]
     });
   }
 
@@ -27,10 +28,6 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
 
   ngAfterViewInit(): void {
-
-    this.supabaseService.getAllCases().then((data: Case[]) => {
-      console.log(data.forEach((item) => console.log(item.id)));
-    });
 
     Geolocation.getCurrentPosition().then((position) => {
       const coordinates = {
@@ -45,7 +42,12 @@ export class MapComponent implements AfterViewInit {
         longitude: 13.4050
       }
       setTimeout(() => this.initMap(coordinates), 0);
-    });
+    }).then(() => {
+      this.supabaseService.getAllCases().then((data: Case[]) => {
+        data.forEach((item: Case) => this.addMarker(item))
+      });
+    }
+    );
   };
 
 
@@ -57,6 +59,11 @@ export class MapComponent implements AfterViewInit {
     }).addTo(this.map);
     L.marker([initialPosition.latitude, initialPosition.longitude], {icon: this.defaultIcon}).addTo(this.map);
   }
+
+  private addMarker(caze: Case){
+    L.marker([caze.lat, caze.long], {icon: this.defaultIcon}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
+  }
+
 }
 function constructor() {
   throw new Error('Function not implemented.');

@@ -4,7 +4,7 @@ export interface Case {
   id: string;
   title: string;
   summary: string;
-  location: string;
+  location: Location;
   status: string;
   created_by: string;
   created_at: string;
