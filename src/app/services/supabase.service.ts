@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import {createClient, Session, SupabaseClient, User} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
+import {StorageService} from "./storage.service";
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +9,7 @@ import {environment} from "../../environments/environment";
 export class SupabaseService {
   private supabase: SupabaseClient;
 
-  constructor() {
+  constructor(private storageService: StorageService) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
   }
 
@@ -21,7 +22,7 @@ export class SupabaseService {
   }
 
   signOut() {
-    const error = this.supabase.auth.signOut();
+    return this.supabase.auth.signOut();
   }
 
   async getSession() {
@@ -31,14 +32,28 @@ export class SupabaseService {
       console.error('Fehler beim Holen der Session:', error);
       return null;
     }
-    console.log(session.session)
     return session.session;
   }
-  async checkAuthenticated() {
 
+  async updateLocalUser() {
+    const {data: user, error} = await this.supabase.auth.getUser();
 
+    if (error) {
+      console.error('Fehler beim Holen des Users:', error);
+      return null;
+    }
 
-    return await this.getSession() != null;
+    if (user.user?.email) this.storageService.saveUserEmail(user.user?.email);
+    if (user.user?.id) this.storageService.saveUserId(user.user?.id);
 
+    const { data: role } = await this.supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', user.user?.id)
+      .single();
+
+    if (role?.role) this.storageService.saveUserRole(role.role);
+
+    return user.user
   }
 }

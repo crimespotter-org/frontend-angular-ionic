@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IonHeader, IonToolbar, IonTitle, IonContent } from '@ionic/angular/standalone';
-import {MapComponent} from "../components/map/map.component";
+import {MapComponent} from "./components/map/map.component";
 
 @Component({
   selector: 'app-tab1',

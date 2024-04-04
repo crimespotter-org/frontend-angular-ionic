@@ -4,7 +4,7 @@ import {SupabaseService} from "../services/supabase.service";
 
 export const authGuard = async () => {
     const supabaseService = inject(SupabaseService), router = inject(Router);
-    if (await supabaseService.checkAuthenticated()) {
+    if (await supabaseService.getSession() != null) {
       console.log("auth true")
       return true
     }
