@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {createClient, Session, SupabaseClient, User} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
 import {StorageService} from "./storage.service";
+import { Case } from '../shared/interfaces/case.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -56,4 +57,41 @@ export class SupabaseService {
 
     return user.user
   }
+
+  async getAllCases(): Promise<Case[]> {
+    try {
+      // Asynchronously query the 'cases' table from Supabase
+      const { data, error } = await this.supabase
+        .from('cases')
+        .select('*');
+  
+      // If there's an error, log it and return an empty array of Case objects
+      if (error) {
+        console.log(error);
+        return [];
+      }
+  
+      // If no error, map the data to an array of Case objects
+      const cases: Case[] = data.map((item: any) => {
+        return {
+          id: item.id,
+          title: item.title,
+          summary: item.summary,
+          location: item.location,
+          status: item.status,
+          created_by: item.created_by,
+          created_at: item.created_at,
+          place_name: item.place_name,
+          zip_code: item.zip_code
+        };
+      });
+  
+      return cases;
+    } catch (error) {
+      console.error('Error fetching cases:', error);
+      return [];
+    }
+  }
+  
+
 }

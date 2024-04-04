@@ -1,7 +1,9 @@
-import { AfterViewInit, Component } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { Geolocation } from '@capacitor/geolocation';
 import { Location } from "../../../shared/interfaces/location.interface"
+import { SupabaseService } from "../../../services/supabase.service";
 import * as L from 'leaflet';
+import { Case } from 'src/app/shared/interfaces/case.interface';
 
 @Component({
   selector: 'app-map',
@@ -10,6 +12,8 @@ import * as L from 'leaflet';
   standalone: true,
 })
 export class MapComponent implements AfterViewInit {
+
+  private supabaseService: SupabaseService = inject(SupabaseService);
 
   constructor(){
     this.defaultIcon = L.icon({
@@ -23,6 +27,11 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
 
   ngAfterViewInit(): void {
+
+    this.supabaseService.getAllCases().then((data: Case[]) => {
+      console.log(data.forEach((item) => console.log(item.id)));
+    });
+
     Geolocation.getCurrentPosition().then((position) => {
       const coordinates = {
         latitude: position.coords.latitude,
