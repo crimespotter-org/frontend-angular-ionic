@@ -1,6 +1,6 @@
-import { AfterViewInit, Component } from '@angular/core';
-import { Geolocation } from '@capacitor/geolocation';
-import { Location } from "../../../shared/interfaces/location.interface"
+import {AfterViewInit, Component} from '@angular/core';
+import {Geolocation} from '@capacitor/geolocation';
+import {Location} from "../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 
 @Component({
@@ -35,9 +35,9 @@ export class MapComponent implements AfterViewInit {
         latitude: 52.5200,
         longitude: 13.4050
       }
-      this.initMap(coordinates);
+      setTimeout(() => this.initMap(coordinates), 0);
     });
-    };
+  };
 
 
   private initMap(initialPosition: Location): void {

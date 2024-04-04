@@ -7,8 +7,8 @@ import {
   ModalController,
   IonButton,
 } from '@ionic/angular/standalone';
-import {ProfileEditPage} from "./profile-edit/profile-edit.page";
-import {PasswordChangePage} from "./password-change/password-change.page";
+import {ProfileEditPage} from "./components/profile-edit/profile-edit.page";
+import {PasswordChangePage} from "./components/password-change/password-change.page";
 import {SupabaseService} from "../services/supabase.service";
 import {Router, RouterLink} from "@angular/router";
 

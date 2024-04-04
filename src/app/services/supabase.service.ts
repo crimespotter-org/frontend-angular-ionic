@@ -18,7 +18,11 @@ export class SupabaseService {
   }
 
   signIn(email: string, password: string) {
-    return this.supabase.auth.signInWithPassword({ email, password });
+    const data = this.supabase.auth.signInWithPassword({ email, password })
+
+    this.updateLocalUser();
+
+    return data;
   }
 
   signOut() {

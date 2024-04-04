@@ -1,0 +1,35 @@
+<ion-list>
+  <ion-item *ngFor="let fall of faelle">
+    <ion-label>
+      <h2>{{ fall.titel }}</h2>
+      <p>{{ fall.zusammenfassung }}</p>
+    </ion-label>
+  </ion-item>
+</ion-list>
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button>
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+
+  <ion-fab-list side="top">
+    <ion-fab-button>
+      <ion-icon name="calendar"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button>
+      <ion-icon name="layers"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button>
+      <ion-icon name="pricetag"></ion-icon>
+    </ion-fab-button>
+    <ion-fab-button>
+      <ion-icon name="locate"></ion-icon>
+    </ion-fab-button>
+  </ion-fab-list>
+</ion-fab>
+
+<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab-button>
+    <ion-icon name="pin"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
