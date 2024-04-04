@@ -44,9 +44,9 @@ export class MapComponent implements AfterViewInit {
         latitude: 52.5200,
         longitude: 13.4050
       }
-      this.initMap(coordinates);
+      setTimeout(() => this.initMap(coordinates), 0);
     });
-    };
+  };
 
 
   private initMap(initialPosition: Location): void {
