@@ -10,6 +10,16 @@ import * as L from 'leaflet';
   standalone: true,
 })
 export class MapComponent implements AfterViewInit {
+
+  constructor(){
+    this.defaultIcon = L.icon({
+        iconUrl: '../../assets/images/marker-icon.png',
+        shadowUrl: '../../assets/images/marker-shadow.png',
+        iconAnchor: [12.5, 41]
+    });
+  }
+
+  private defaultIcon!: L.Icon;
   private map!: L.Map;
 
   ngAfterViewInit(): void {
@@ -36,5 +46,10 @@ export class MapComponent implements AfterViewInit {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
+    L.marker([initialPosition.latitude, initialPosition.longitude], {icon: this.defaultIcon}).addTo(this.map);
   }
 }
+function constructor() {
+  throw new Error('Function not implemented.');
+}
+
