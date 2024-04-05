@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar} from '@ionic/angular/standalone';
 import { ExploreContainerComponent } from '../explore-container/explore-container.component';
 import {CaselistComponent} from "./components/caselist/caselist.component";
+import {HttpClientModule} from "@angular/common/http";
 
 @Component({
   selector: 'app-tab2',

@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 const USER_ROLE_KEY = "user_role";
 const USER_EMAIL_KEY = "user_email";
 const USER_ID_KEY = "user_id";
+const CASE_TYPE_KEY = "case_type";
 
 @Injectable({
   providedIn: 'root'
@@ -37,4 +38,14 @@ export class StorageService {
     return sessionStorage.getItem(USER_ID_KEY);
   }
 
+  public saveCaseTypes(types: string[]) {
+    sessionStorage.setItem(CASE_TYPE_KEY, JSON.stringify(types));  }
+
+  public getCaseTypes() {
+    const data = sessionStorage.getItem(CASE_TYPE_KEY);
+    if (data) {
+      return JSON.parse(data);
+    }
+    return [];
+  }
 }

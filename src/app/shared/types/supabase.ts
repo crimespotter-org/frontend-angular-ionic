@@ -11,6 +11,7 @@ export type Database = {
     Tables: {
       cases: {
         Row: {
+          case_type: Database["public"]["Enums"]["casetype"]
           created_at: string | null
           created_by: string | null
           id: string
@@ -22,6 +23,7 @@ export type Database = {
           zip_code: number | null
         }
         Insert: {
+          case_type: Database["public"]["Enums"]["casetype"]
           created_at?: string | null
           created_by?: string | null
           id?: string
@@ -33,6 +35,7 @@ export type Database = {
           zip_code?: number | null
         }
         Update: {
+          case_type?: Database["public"]["Enums"]["casetype"]
           created_at?: string | null
           created_by?: string | null
           id?: string
@@ -279,7 +282,7 @@ export type Database = {
           created_at: string
           lat: number
           long: number
-        }[]
+        }
       }
       get_all_cases: {
         Args: Record<PropertyKey, never>
@@ -294,8 +297,38 @@ export type Database = {
           long: number
         }
       }
+      get_enum_values: {
+        Args: {
+          enum_typename: string
+        }
+        Returns: string[]
+      }
+      get_filtered_cases: {
+        Args: {
+          start_date?: string
+          end_date?: string
+          currentlat?: number
+          currentlong?: number
+          distance?: number
+          crime_types?: Database["public"]["Enums"]["casetype"][]
+          case_status?: string
+        }
+        Returns: {
+          id: string
+          title: string
+          summary: string
+          status: string
+          created_at: string
+          location: unknown
+          created_by: string
+          place_name: string
+          zip_code: number
+          case_type: Database["public"]["Enums"]["casetype"]
+        }
+      }
     }
     Enums: {
+      casetype: "Mord" | "Diebstahl" | "Raubmord" | "Schlägerei"
       roles: "crimefluencer" | "crimespotter" | "admin"
     }
     CompositeTypes: {
@@ -308,23 +341,23 @@ type PublicSchema = Database[Extract<keyof Database, "public">]
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+      | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+      Database[PublicTableNameOrOptions["schema"]]["Views"])
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+    Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
   : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
+      PublicSchema["Views"])
     ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+      PublicSchema["Views"])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -333,7 +366,7 @@ export type Tables<
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+      | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
@@ -354,7 +387,7 @@ export type TablesInsert<
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
+      | keyof PublicSchema["Tables"]
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
@@ -375,7 +408,7 @@ export type TablesUpdate<
 
 export type Enums<
   PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
+      | keyof PublicSchema["Enums"]
     | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
@@ -387,3 +420,5 @@ export type Enums<
     : never
 
 export type Case = Database['public']['Functions']['get_all_cases']['Returns']
+export type CaseFiltered = Database['public']['Functions']['get_filtered_cases']['Returns']
+export type CaseTypes = Database['public']['Functions']['get_enum_values']['Returns']
