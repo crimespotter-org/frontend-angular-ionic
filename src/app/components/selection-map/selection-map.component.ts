@@ -31,9 +31,9 @@ export class SeletionMapComponent implements AfterViewInit{
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    // setTimeout(() => {
-    //   this.map.invalidateSize();
-    // },10);
+    setTimeout(() => {
+      this.map.invalidateSize();
+    },500);
 
     this.marker.addTo(this.map);
     this.map.on('click', this.onMapClick.bind(this));

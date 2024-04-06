@@ -44,7 +44,7 @@ export class MapComponent implements AfterViewInit {
     setTimeout(() => this.initMap(initialPosition), 0);
   }
 
-  private async initMap(initialPosition: Location): Promise<void> {
+  initMap(initialPosition: Location) {
     if (this.map != undefined) this.map.remove();
     this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
