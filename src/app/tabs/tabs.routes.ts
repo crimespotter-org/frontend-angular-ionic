@@ -13,8 +13,16 @@ export const routes: Routes = [
       },
       {
         path: 'tab2',
-        loadComponent: () =>
-          import('../tab2/tab2.page').then((m) => m.Tab2Page)
+        children: [
+          {
+          path: '',
+          loadComponent: () => import('../tab2/tab2.page').then((m) => m.Tab2Page)
+          },
+          {
+          path: 'add',
+          loadComponent: () => import('../tab2/add/add.page').then((m) => m.AddPage)
+          }
+        ]
       },
       {
         path: 'tab3',

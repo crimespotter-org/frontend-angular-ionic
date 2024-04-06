@@ -6,6 +6,7 @@ import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {defaultMarker, murderMarker} from './markers';
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
+import {ViewDidEnter} from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-map',
@@ -16,7 +17,10 @@ import {FilterSearchComponent} from "../../../components/filter.search/filter.se
     FilterSearchComponent
   ]
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements ViewDidEnter {
+  ionViewDidEnter(): void {
+    console.log('triggered ionViewDidEnter in MapComponent');
+  }
   private supabaseService: SupabaseService = inject(SupabaseService);
   private map!: L.Map;
   private markers: L.Marker[] = [];

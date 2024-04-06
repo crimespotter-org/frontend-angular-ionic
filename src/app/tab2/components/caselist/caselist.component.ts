@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, inject} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -29,6 +29,7 @@ import {
 } from "ionicons/icons";
 import {CaseFiltered} from "../../../shared/types/supabase";
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -56,6 +57,8 @@ import {FilterSearchComponent} from "../../../components/filter.search/filter.se
   standalone: true
 })
 export class CaselistComponent {
+  router = inject(Router);
+
   cases: CaseFiltered[] = [];
 
   constructor() {
@@ -75,5 +78,9 @@ export class CaselistComponent {
 
   updateCases(cases:CaseFiltered[]) {
     this.cases = cases;
+  }
+
+  navigateToAddPage(){
+    this.router.navigate(['./tabs/tab2/add'])
   }
 }

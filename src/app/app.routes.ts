@@ -28,4 +28,9 @@ export const routes: Routes = [
     path: 'password-change',
     loadComponent: () => import('./tab3/components/password-change/password-change.page').then(m => m.PasswordChangePage)
   },
+  {
+    path: 'add',
+    loadComponent: () => import('./tab2/add/add.page').then( m => m.AddPage)
+  },
+
 ];

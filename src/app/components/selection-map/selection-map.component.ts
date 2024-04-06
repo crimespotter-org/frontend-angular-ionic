@@ -1,0 +1,53 @@
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import * as L from 'leaflet';
+import { Location } from 'src/app/shared/interfaces/location.interface';
+import { defaultMarker } from 'src/app/tab1/components/map/markers';
+import {ViewDidEnter} from '@ionic/angular/standalone';
+
+@Component({
+  selector: 'app-seletion-map',
+  templateUrl: './selection-map.component.html',
+  styleUrls: ['./selection-map.component.scss'],
+  standalone: true
+})
+export class SeletionMapComponent implements AfterViewInit{
+
+  @Output() selectedLocation = new EventEmitter<Location>();
+
+  private map!: L.Map;
+  private marker: L.Marker = L.marker([0,0], {icon: defaultMarker, opacity: 0});
+
+  constructor() { }
+
+  ngAfterViewInit(): void {
+    this.initMap({latitude: 48.441976384366384, longitude: 8.684747075615647});
+  }
+
+  initMap(coordinates: Location){
+    this.map = L.map('map').setView([coordinates.latitude, coordinates.longitude], 13);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(this.map);
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+    },1000);
+
+    this.marker.addTo(this.map);
+    this.map.on('click', this.onMapClick.bind(this));
+  }
+
+  private onMapClick(event: L.LeafletMouseEvent) {
+    // Retrieve clicked coordinates
+    const lat = event.latlng.lat;
+    const lng = event.latlng.lng;
+
+
+    this.marker.setOpacity(1);
+    this.marker.setLatLng([lat, lng]);
+
+    this.selectedLocation.emit({latitude: lat, longitude: lng});
+  }
+
+}
