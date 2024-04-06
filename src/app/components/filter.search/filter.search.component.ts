@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -72,7 +72,7 @@ import {Location} from "../../shared/interfaces/location.interface"
   ],
   standalone: true
 })
-export class FilterSearchComponent implements OnInit {
+export class FilterSearchComponent implements AfterViewInit, OnInit {
   @Input() placeholder: string = '';
   @Input() searchType: 'cases' | 'location' | undefined;
 
@@ -94,12 +94,19 @@ export class FilterSearchComponent implements OnInit {
   @Output() emitSearch = new EventEmitter<CaseFiltered[]>();
   @Output() emitLocation = new EventEmitter<Location>();
 
-  constructor(private storageService:
-                StorageService, private supabaseService: SupabaseService, private menu: MenuController, private dataService: DataService, @Inject(LOCALE_ID) private locale: string) {
+  constructor(private storageService: StorageService,
+              private supabaseService: SupabaseService,
+              private menu: MenuController,
+              private dataService: DataService,
+              @Inject(LOCALE_ID) private locale: string) {
     addIcons({
       closeCircle,
       optionsOutline
     });
+  }
+
+  ngAfterViewInit(): void {
+    this.getCurrentLocation();
   }
 
   async ngOnInit() {
@@ -113,8 +120,14 @@ export class FilterSearchComponent implements OnInit {
   }
 
   openFilterMenu() {
+    const contentId = this.searchType;
     this.menu.enable(true, 'filterMenu');
-    this.menu.open('filterMenu');
+    this.menu.open('filterMenu').then(() => {
+      const menu = this.menu._getOpenSync();
+      if (menu) {
+        menu.contentId = contentId;
+      }
+    });
   }
 
   setStartDate(event: CustomEvent) {
@@ -128,40 +141,41 @@ export class FilterSearchComponent implements OnInit {
   async applyFilters() {
 
     this.filters = [];
+    const filterOptions: FilterOptions = {};
 
     if (this.selectedCaseTypes && this.selectedCaseTypes.length > 0) {
+      filterOptions.caseTypes = this.selectedCaseTypes;
       this.selectedCaseTypes.forEach(type => {
         this.filters.push({type: 'caseType', value: type});
       });
     }
 
     if (this.selectedStatus) {
+      filterOptions.status = this.selectedStatus;
+      let status: string;
+      if (this.selectedStatus == 'open') {
+        status = 'Offen';
+      } else {
+        status = 'Geschlossen';
+      }
       this.filters.push({type: 'status', value: this.selectedStatus});
     }
 
     if (this.enableDateRangeSearch && this.startDate && this.endDate) {
-      this.filters.push({type: 'dateRange', value: {start: this.startDate, end: this.endDate}});
+      filterOptions.startDate = this.startDate;
+      filterOptions.endDate = this.endDate,
+        this.filters.push({type: 'dateRange', value: {start: this.startDate, end: this.endDate}});
     }
-
-    if (this.enableLocationSearch) {
-      if (this.useCurrentLocation) {
-        this.filters.push({type: 'location', value: 'Aktueller Ort'});
-      } else if (this.selectedLocation) {
-        this.filters.push({type: 'location', value: this.selectedLocation.name});
-      }
-    }
-
-    const filterOptions: FilterOptions = {
-      startDate: this.startDate,
-      endDate: this.endDate,
-      caseTypes: this.selectedCaseTypes,
-      status: this.selectedStatus,
-    };
 
     if (this.enableLocationSearch) {
       filterOptions.currentLat = this.selectedCoordinates?.latitude;
       filterOptions.currentLong = this.selectedCoordinates?.longitude;
       filterOptions.radius = this.radius;
+      if (this.useCurrentLocation) {
+        this.filters.push({type: 'location', value: 'Aktueller Ort'});
+      } else if (this.selectedLocation) {
+        this.filters.push({type: 'location', value: this.selectedLocation.city});
+      }
     }
 
     this.cases = await this.supabaseService.getFilteredCases(filterOptions);
@@ -178,7 +192,9 @@ export class FilterSearchComponent implements OnInit {
         this.locations = response.map((location) => {
           return {
             postalCode: location.address.postcode,
-            city: location.address.city || location.address.town || location.address.village
+            city: location.address.city || location.address.town || location.address.village,
+            lat: location.lat,
+            lon: location.lon
           };
         });
       },
@@ -195,15 +211,16 @@ export class FilterSearchComponent implements OnInit {
   }
 
   toggleUseCurrentLocation($event: any) {
-    if (this.useCurrentLocation) {
-      Geolocation.getCurrentPosition().then((position) => {
-        this.selectedCoordinates = {latitude: position.coords.latitude, longitude: position.coords.longitude};
-        this.emitLocation.emit(this.selectedCoordinates);
-      }).catch((error) => {
-        console.log(error);
-        this.useCurrentLocation = false;
-      })
-    }
+    this.getCurrentLocation();
+  }
+
+  getCurrentLocation() {
+    Geolocation.getCurrentPosition().then((position) => {
+      this.selectedCoordinates = {latitude: position.coords.latitude, longitude: position.coords.longitude};
+    }).catch((error) => {
+      console.log(error);
+      this.useCurrentLocation = false;
+    })
   }
 
   updateCaseTypeFilter(event: any) {

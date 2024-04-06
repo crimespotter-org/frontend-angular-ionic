@@ -1,7 +1,6 @@
-import {AfterViewInit, Component, inject} from '@angular/core';
+import {AfterViewInit, Component} from '@angular/core';
 import {Geolocation} from '@capacitor/geolocation';
 import {Location} from "../../../shared/interfaces/location.interface"
-import {SupabaseService} from "../../../services/supabase.service";
 import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {defaultMarker, murderMarker} from './markers';
@@ -17,18 +16,13 @@ import {FilterSearchComponent} from "../../../components/filter.search/filter.se
   ]
 })
 export class MapComponent implements AfterViewInit {
-  private supabaseService: SupabaseService = inject(SupabaseService);
   private map!: L.Map;
   private markers: L.Marker[] = [];
-
   cases: CaseFiltered[] = [];
   location: Location | undefined;
 
   async ngAfterViewInit(): Promise<void> {
-    this.initMap();
-  }
-
-  private async initMap(): Promise<void> {
+    console.log("test")
     let initialPosition: Location;
 
     if (this.location == undefined) {
@@ -45,6 +39,10 @@ export class MapComponent implements AfterViewInit {
     } else {
       initialPosition = this.location;
     }
+    setTimeout(() => this.initMap(initialPosition), 0);
+  }
+
+  private async initMap(initialPosition: Location): Promise<void> {
 
     this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -58,12 +56,16 @@ export class MapComponent implements AfterViewInit {
       // You can perform any actions based on the current zoom level here
     });
 
+    this.updateMapWithCases();
+
     L.marker([initialPosition.latitude, initialPosition.longitude], {icon: defaultMarker}).addTo(this.map);
   }
 
   updateCases(cases: CaseFiltered[]) {
     this.cases = cases;
-    this.updateMapWithCases();
+    if (this.map) {
+      this.updateMapWithCases();
+    }
   }
 
   updateLocation(location: Location) {

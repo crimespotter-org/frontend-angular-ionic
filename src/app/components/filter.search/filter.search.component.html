@@ -100,6 +100,7 @@
         {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
         {{ filter.type === 'status' ? 'Status: ' + filter.value : '' }}
         {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
+        {{ filter.type === 'location' ? 'Ort: ' + filter.value : '' }}
       </ion-label>
       <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
     </ion-chip>

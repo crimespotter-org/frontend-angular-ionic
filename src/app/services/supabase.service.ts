@@ -86,7 +86,6 @@ export class SupabaseService {
         currentlong: filterOptions.currentLong,
         distance: filterOptions.radius
       };
-      console.log(params)
     }
 
     const {
