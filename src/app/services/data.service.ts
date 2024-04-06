@@ -7,7 +7,7 @@ export class DataService {
   }
 
   getLocationsByPostalCodeOrCity(query: string, country: string = 'de') {
-    const url = `https://nominatim.openstreetmap.org/search?q=${query}&countrycodes=${country}&format=json&addressdetails=1&limit=5`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${query}&countrycodes=${country}&format=jsonv2&addressdetails=5`;
     return this.http.get<any[]>(url);
   }
 }
