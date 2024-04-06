@@ -32,25 +32,6 @@
       </ion-button>
     </ion-item>
 
-    <!-- <ion-modal trigger="selectLocation">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button (click)="cancelLocationModal()">Cancel</ion-button>
-            </ion-buttons>
-            <ion-title>Wähle einen Ort</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="confirmLocationModal()" [strong]="true">Confirm</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <app-map></app-map>
-        </ion-content>
-      </ng-template>
-    </ion-modal> -->
-
     <ion-modal trigger="selectLocation">
       <ng-template>
         <ion-header>
@@ -69,8 +50,6 @@
         </ion-content>
       </ng-template>
     </ion-modal>
-
-<app-seletion-map (selectedLocation)="selectedLocationChanged($event)"></app-seletion-map>
 
 </ion-content>
 

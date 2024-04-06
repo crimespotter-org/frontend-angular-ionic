@@ -81,6 +81,7 @@ export class CaselistComponent {
   }
 
   navigateToAddPage(){
+    console.log('button clicked');
     this.router.navigate(['./tabs/tab2/add'])
   }
 }

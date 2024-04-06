@@ -20,19 +20,20 @@ export class SeletionMapComponent implements AfterViewInit{
   constructor() { }
 
   ngAfterViewInit(): void {
-    this.initMap({latitude: 48.441976384366384, longitude: 8.684747075615647});
+    setTimeout(() => this.initMap({latitude: 48.441976384366384, longitude: 8.684747075615647}), 0);
   }
 
   initMap(coordinates: Location){
-    this.map = L.map('map').setView([coordinates.latitude, coordinates.longitude], 13);
+    if (this.map != undefined) this.map.remove();
+    this.map = L.map('selectormap').setView([coordinates.latitude, coordinates.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    setTimeout(() => {
-      this.map.invalidateSize();
-    },1000);
+    // setTimeout(() => {
+    //   this.map.invalidateSize();
+    // },10);
 
     this.marker.addTo(this.map);
     this.map.on('click', this.onMapClick.bind(this));

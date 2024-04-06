@@ -16,10 +16,8 @@ import {ViewDidEnter} from '@ionic/angular/standalone';
     FilterSearchComponent
   ]
 })
-export class MapComponent implements ViewDidEnter {
-  ionViewDidEnter(): void {
-    console.log('triggered ionViewDidEnter in MapComponent');
-  }
+export class MapComponent implements AfterViewInit {
+
   private map!: L.Map;
   private markers: L.Marker[] = [];
   cases: CaseFiltered[] = [];
@@ -47,7 +45,7 @@ export class MapComponent implements ViewDidEnter {
   }
 
   private async initMap(initialPosition: Location): Promise<void> {
-
+    if (this.map != undefined) this.map.remove();
     this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
