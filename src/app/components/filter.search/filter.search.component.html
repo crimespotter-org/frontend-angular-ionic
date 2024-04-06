@@ -1,0 +1,108 @@
+<ion-menu side="end" menuId="filterMenu" contentId="caselist">
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>Filter</ion-title>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content>
+    <ion-list lines="full" class="ion-padding-vertical">
+
+      <ion-item>
+        <ion-label position="stacked">Datumsbereich</ion-label>
+        <ion-toggle [(ngModel)]="enableDateRangeSearch"></ion-toggle>
+      </ion-item>
+
+      <ion-item *ngIf="enableDateRangeSearch">
+        <ion-label position="stacked">Startdatum</ion-label>
+        <ion-input [value]="startDate | date: 'dd.MM.YYYY'" id="open-start-modal"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="enableDateRangeSearch">
+        <ion-label position="stacked">Enddatum</ion-label>
+        <ion-input [value]="endDate | date: 'dd.MM.YYYY'" id="open-end-modal"></ion-input>
+      </ion-item>
+
+      <ion-modal id="start-date-modal" trigger="open-start-modal" *ngIf="enableDateRangeSearch">
+        <ng-template>
+          <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setStartDate($event)"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+
+      <ion-modal id="end-date-modal" trigger="open-end-modal" *ngIf="enableDateRangeSearch">
+        <ng-template>
+          <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setEndDate($event)"></ion-datetime>
+        </ng-template>
+      </ion-modal>
+
+      <ion-item>
+        <ion-label position="stacked">Falltyp</ion-label>
+        <ion-select multiple="true" interface="popover" placeholder="Typ auswählen" [(ngModel)]="selectedCaseTypes">
+          <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ casetype }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Status</ion-label>
+        <ion-select interface="popover" placeholder="Status auswählen" [(ngModel)]="selectedStatus">
+          <ion-select-option value="open">Offen</ion-select-option>
+          <ion-select-option value="closed">Geschlossen</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="stacked">Umkreissuche</ion-label>
+        <ion-toggle [(ngModel)]="enableLocationSearch"></ion-toggle>
+      </ion-item>
+
+      <ion-item *ngIf="enableLocationSearch">
+        <ion-label position="stacked">Aktuellen Standort verwenden</ion-label>
+        <ion-toggle [(ngModel)]="useCurrentLocation" (ionChange)="toggleUseCurrentLocation($event)"></ion-toggle>
+      </ion-item>
+
+      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
+        <ion-label position="stacked">Ort</ion-label>
+        <ion-input [(ngModel)]="location" (ionBlur)="checkLocationInput(location)"></ion-input>
+      </ion-item>
+      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
+        <ion-label>Ort</ion-label>
+        <ion-select interface="popover" [(ngModel)]="selectedLocation" (ngModelChange)="onLocationSelected($event)"
+                    placeholder="Ort auswählen">
+          <ion-select-option *ngFor="let location of locations"
+                             [value]="location">{{ location.city + ", " + location.postalCode }}</ion-select-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item *ngIf="enableLocationSearch">
+        <ion-label position="stacked">Umkreis (in km)</ion-label>
+        <ion-range min="1" max="100" pin="true" [(ngModel)]="radius">
+          <ion-label slot="start">1 km</ion-label>
+          <ion-label slot="end">100 km</ion-label>
+        </ion-range>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>
+
+
+<ion-header [translucent]="true" id="caselist">
+  <ion-toolbar>
+    <ion-searchbar placeholder="Suche"></ion-searchbar>
+    <ion-buttons slot="end">
+      <ion-button (click)="openFilterMenu()">
+        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-chip *ngFor="let filter of filters" color="primary">
+      <ion-label>
+        {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
+        {{ filter.type === 'status' ? 'Status: ' + filter.value : '' }}
+        {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
+      </ion-label>
+      <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
+    </ion-chip>
+
+  </ion-toolbar>
+</ion-header>

@@ -319,7 +319,8 @@ export type Database = {
           summary: string
           status: string
           created_at: string
-          location: unknown
+          lat: number
+          long: number
           created_by: string
           place_name: string
           zip_code: number

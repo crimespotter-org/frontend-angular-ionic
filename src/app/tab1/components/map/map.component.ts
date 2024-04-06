@@ -1,53 +1,51 @@
-import { AfterViewInit, Component, inject } from '@angular/core';
-import { Geolocation } from '@capacitor/geolocation';
-import { Location } from "../../../shared/interfaces/location.interface"
-import { SupabaseService } from "../../../services/supabase.service";
+import {AfterViewInit, Component, inject} from '@angular/core';
+import {Geolocation} from '@capacitor/geolocation';
+import {Location} from "../../../shared/interfaces/location.interface"
+import {SupabaseService} from "../../../services/supabase.service";
 import * as L from 'leaflet';
-import { Case } from 'src/app/shared/types/supabase';
-import { defaultMarker, murderMarker } from './markers';
+import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
+import {defaultMarker, murderMarker} from './markers';
+import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
   standalone: true,
+  imports: [
+    FilterSearchComponent
+  ]
 })
 export class MapComponent implements AfterViewInit {
-
   private supabaseService: SupabaseService = inject(SupabaseService);
-
-  constructor(){
-  }
-
   private map!: L.Map;
+  private markers: L.Marker[] = [];
+
+  cases: CaseFiltered[] = [];
+  location: Location | undefined;
 
   async ngAfterViewInit(): Promise<void> {
+    this.initMap();
+  }
 
-    try{
-      const userPosition = await Geolocation.getCurrentPosition();
+  private async initMap(): Promise<void> {
+    let initialPosition: Location;
 
-      //current position of user 
-      this.initMap({
-        latitude: userPosition.coords.latitude, 
-        longitude: userPosition.coords.longitude});
-
-      L.marker([userPosition.coords.latitude, userPosition.coords.longitude], {icon: defaultMarker}).bindPopup("Hier sind Sie").addTo(this.map);
+    if (this.location == undefined) {
+      try {
+        const userPosition = await Geolocation.getCurrentPosition();
+        initialPosition = {
+          latitude: userPosition.coords.latitude,
+          longitude: userPosition.coords.longitude
+        };
+      } catch (error) {
+        console.log("Error getting user location, defaulting to Berlin", error);
+        initialPosition = {latitude: 52.5200, longitude: 13.4050}; // Berlin
+      }
+    } else {
+      initialPosition = this.location;
     }
-    catch(error){
-      //Berlin
-      this.initMap({
-        latitude: 52.5200,
-        longitude: 13.4050
-      })
-    }
-    
-    this.supabaseService.getAllCases().then((data: Case[]) => {
-      data.forEach((item: Case) => this.addCaseMarker(item))
-    });
-  };
 
-
-  private initMap(initialPosition: Location): void {
     this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
@@ -59,15 +57,40 @@ export class MapComponent implements AfterViewInit {
       console.log("Current zoom level: " + currentZoomLevel);
       // You can perform any actions based on the current zoom level here
     });
+
+    L.marker([initialPosition.latitude, initialPosition.longitude], {icon: defaultMarker}).addTo(this.map);
   }
 
-  private addCaseMarker(caze: Case){
+  updateCases(cases: CaseFiltered[]) {
+    this.cases = cases;
+    this.updateMapWithCases();
+  }
+
+  updateLocation(location: Location) {
+    this.location = location;
+    if (this.map) {
+      this.map.setView([location.latitude, location.longitude]);
+    }
+  }
+
+  updateMapWithCases() {
+    this.clearMarkers();
+    this.cases.forEach((caze) => {
+      const marker = L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title}<br/>`);
+      marker.addTo(this.map);
+      this.markers.push(marker);
+    });
+  }
+
+  clearMarkers() {
+    this.markers.forEach(marker => marker.remove());
+    this.markers = [];
+  }
+
+  addCaseMarker(caze: Case) {
     //TODO: Distinguish between different case types. Seems do be not in db currently
     L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
   }
 
-}
-function constructor() {
-  throw new Error('Function not implemented.');
 }
 
