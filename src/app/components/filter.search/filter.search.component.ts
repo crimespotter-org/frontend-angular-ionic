@@ -75,6 +75,7 @@ import {Location} from "../../shared/interfaces/location.interface"
 export class FilterSearchComponent implements AfterViewInit, OnInit {
   @Input() placeholder: string = '';
   @Input() searchType: 'cases' | 'location' | undefined;
+  @Input() menuId: string = '';
 
   startDate: Date = new Date("01.01.1900");
   endDate: Date = new Date(Date.now());
@@ -120,14 +121,8 @@ export class FilterSearchComponent implements AfterViewInit, OnInit {
   }
 
   openFilterMenu() {
-    const contentId = this.searchType;
-    this.menu.enable(true, 'filterMenu');
-    this.menu.open('filterMenu').then(() => {
-      const menu = this.menu._getOpenSync();
-      if (menu) {
-        menu.contentId = contentId;
-      }
-    });
+    this.menu.enable(true, this.menuId);
+    this.menu.open(this.menuId);
   }
 
   setStartDate(event: CustomEvent) {

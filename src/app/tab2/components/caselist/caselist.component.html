@@ -1,4 +1,4 @@
-<app-filter-search placeholder="Fälle durchsuchen..." searchType="cases" (emitSearch)="updateCases($event)"></app-filter-search>
+<app-filter-search placeholder="Fälle durchsuchen..." menuId="caselistMenu" searchType="cases" (emitSearch)="updateCases($event)"></app-filter-search>
 
 <ion-list>
   <ion-item-sliding *ngFor="let case of cases">

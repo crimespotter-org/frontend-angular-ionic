@@ -1,4 +1,4 @@
-<ion-menu side="end" menuId="filterMenu" contentId="caselist">
+<ion-menu side="end" [menuId]="menuId" contentId="searchbar">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>Filter</ion-title>
@@ -87,9 +87,9 @@
 </ion-menu>
 
 
-<ion-header [translucent]="true" id="caselist">
+<ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
-    <ion-searchbar placeholder="Suche"></ion-searchbar>
+    <ion-searchbar [placeholder]=placeholder></ion-searchbar>
     <ion-buttons slot="end">
       <ion-button (click)="openFilterMenu()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
