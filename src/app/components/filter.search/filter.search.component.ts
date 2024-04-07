@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Inject, Input, LOCALE_ID, OnInit, Output} from '@angular/core';
+import {Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -27,15 +27,13 @@ import {
 import {CommonModule, DatePipe, formatDate, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
 import {closeCircle, optionsOutline} from "ionicons/icons";
-import {StorageService} from "../../services/storage.service";
-import {SupabaseService} from "../../services/supabase.service";
-import {DataService} from "../../services/data.service";
-import {CaseFiltered} from "../../shared/types/supabase";
-import {Filter} from "../../shared/interfaces/filters";
 import {FormsModule} from "@angular/forms";
-import {FilterOptions} from "../../shared/interfaces/filter.options";
+import {FilterStateService} from "../../services/filter-state.service";
+import {DataService} from "../../services/data.service";
 import {Geolocation} from "@capacitor/geolocation";
-import {Location} from "../../shared/interfaces/location.interface"
+import {StorageService} from "../../services/storage.service";
+import {Filter} from "../../shared/interfaces/filter";
+
 
 @Component({
   selector: 'app-filter-search',
@@ -72,57 +70,113 @@ import {Location} from "../../shared/interfaces/location.interface"
   ],
   standalone: true
 })
-export class FilterSearchComponent implements AfterViewInit, OnInit {
+export class FilterSearchComponent implements OnInit {
   @Input() placeholder: string = '';
-  @Input() searchType: 'cases' | 'location' | undefined;
   @Input() menuId: string = '';
 
-  startDate: Date = new Date("01.01.1900");
-  endDate: Date = new Date(Date.now());
-  cases: CaseFiltered[] = [];
-  location = '';
-  locations: any[] = [];
-  selectedLocation: any = null;
-  selectedCoordinates?: Location;
-  enableLocationSearch: boolean = false;
-  enableDateRangeSearch: boolean = false;
-  useCurrentLocation: boolean = false;
-  radius?: number;
-  caseTypes: string[] = [];
-  selectedCaseTypes?: string[];
-  selectedStatus?: string;
   filters: Filter[] = [];
-  @Output() emitSearch = new EventEmitter<CaseFiltered[]>();
-  @Output() emitLocation = new EventEmitter<Location>();
+  tempFilters: Filter[] = [];
+  enableDateRangeSearch: boolean = false;
+  startDate?: Date;
+  endDate?: Date;
+  enableLocationSearch: boolean = false;
+  useCurrentLocation: boolean = false;
+  inputLocation?: any;
+  selectedLocation?: any;
+  locations: any[] = [];
+  radius?: number;
+  selectedCaseTypes: string[] = [];
+  selectedStatus?: string;
+  caseTypes: string[] = [];
 
-  constructor(private storageService: StorageService,
-              private supabaseService: SupabaseService,
-              private menu: MenuController,
+  constructor(private menu: MenuController,
+              private filterStateService: FilterStateService,
               private dataService: DataService,
+              private storageService: StorageService,
               @Inject(LOCALE_ID) private locale: string) {
-    addIcons({
-      closeCircle,
-      optionsOutline
+    addIcons({closeCircle, optionsOutline});
+  }
+
+  ngOnInit() {
+    this.filterStateService.filters$.subscribe(filters => {
+      this.filters = filters;
     });
-  }
-
-  ngAfterViewInit(): void {
-    this.getCurrentLocation();
-  }
-
-  async ngOnInit() {
-    await this.loadCases();
-    this.emitSearch.emit(this.cases);
     this.caseTypes = this.storageService.getCaseTypes();
   }
 
-  async loadCases() {
-    this.cases = await this.supabaseService.getFilteredCases();
+  initializeFilterVariables() {
+    const dateRangeFilter = this.filters.find(f => f.type === 'dateRange');
+    this.enableDateRangeSearch = !!dateRangeFilter;
+    if (dateRangeFilter && typeof dateRangeFilter.value !== 'string' && 'start' in dateRangeFilter.value && 'end' in dateRangeFilter.value) {
+      this.startDate = new Date(dateRangeFilter.value.start);
+      this.endDate = new Date(dateRangeFilter.value.end);
+    } else {
+      this.startDate = undefined;
+      this.endDate = undefined;
+    }
+
+    const locationFilter = this.filters.find(f => f.type === 'location');
+    this.enableLocationSearch = !!locationFilter;
+    if (locationFilter && typeof locationFilter.value !== 'string' && 'city' in locationFilter.value) {
+      if (locationFilter.value.city === "Aktueller Ort") {
+        this.useCurrentLocation = true;
+      } else {
+        this.inputLocation = locationFilter.value.postalCode;
+        this.selectedLocation = locationFilter.value;
+        this.radius = locationFilter.value.radius;
+      }
+    } else {
+      this.inputLocation = undefined;
+      this.selectedLocation = undefined;
+      this.radius = 1;
+    }
+
+    const caseTypeFilter = this.filters.filter(f => f.type === 'caseType');
+    this.selectedCaseTypes = caseTypeFilter.map(f => f.value.toString());
+
+    const statusFilter = this.filters.find(f => f.type === 'status');
+    this.selectedStatus = statusFilter ? statusFilter.value.toString() : undefined;
+  }
+
+  addTempFilter(type: 'caseType' | 'status' | 'dateRange' | 'location', value: any): void {
+    this.tempFilters.push({type, value});
+  }
+
+  async applyFilters() {
+    if (this.enableDateRangeSearch && this.startDate && this.endDate) {
+      this.addTempFilter('dateRange', {start: this.startDate, end: this.endDate});
+    }
+
+    if (this.enableLocationSearch) {
+      this.addTempFilter('location', {...this.selectedLocation, radius: this.radius})
+    }
+
+    if (this.selectedCaseTypes.length > 0) {
+      this.selectedCaseTypes.forEach(caseType => {
+        this.addTempFilter('caseType', caseType);
+      });
+    }
+
+    if (this.selectedStatus) {
+      this.addTempFilter('status', this.selectedStatus);
+    }
+
+    this.filterStateService.setFilters([...new Set(this.tempFilters)]);
+    this.tempFilters = [];
+    this.initializeFilterVariables();
+
+    await this.menu.close(this.menuId);
   }
 
   openFilterMenu() {
     this.menu.enable(true, this.menuId);
-    this.menu.open(this.menuId);
+    this.menu.open(this.menuId).then(() => {
+      this.initializeFilterVariables();
+    });
+  }
+
+  removeFilter(filterToRemove: Filter): void {
+    this.filterStateService.removeFilter(filterToRemove);
   }
 
   setStartDate(event: CustomEvent) {
@@ -133,52 +187,21 @@ export class FilterSearchComponent implements AfterViewInit, OnInit {
     this.endDate = new Date(event.detail.value);
   }
 
-  async applyFilters() {
-
-    this.filters = [];
-    const filterOptions: FilterOptions = {};
-
-    if (this.selectedCaseTypes && this.selectedCaseTypes.length > 0) {
-      filterOptions.caseTypes = this.selectedCaseTypes;
-      this.selectedCaseTypes.forEach(type => {
-        this.filters.push({type: 'caseType', value: type});
-      });
-    }
-
-    if (this.selectedStatus) {
-      filterOptions.status = this.selectedStatus;
-      let status: string;
-      if (this.selectedStatus == 'open') {
-        status = 'Offen';
-      } else {
-        status = 'Geschlossen';
-      }
-      this.filters.push({type: 'status', value: this.selectedStatus});
-    }
-
-    if (this.enableDateRangeSearch && this.startDate && this.endDate) {
-      filterOptions.startDate = this.startDate;
-      filterOptions.endDate = this.endDate,
-        this.filters.push({type: 'dateRange', value: {start: this.startDate, end: this.endDate}});
-    }
-
-    if (this.enableLocationSearch) {
-      filterOptions.currentLat = this.selectedCoordinates?.latitude;
-      filterOptions.currentLong = this.selectedCoordinates?.longitude;
-      filterOptions.radius = this.radius;
-      if (this.useCurrentLocation) {
-        this.filters.push({type: 'location', value: 'Aktueller Ort'});
-      } else if (this.selectedLocation) {
-        this.filters.push({type: 'location', value: this.selectedLocation.city});
-      }
-    }
-
-    this.cases = await this.supabaseService.getFilteredCases(filterOptions);
-
-    this.emitSearch.emit(this.cases);
-    this.emitLocation.emit(this.selectedCoordinates);
-
-    await this.menu.close('filterMenu');
+  toggleUseCurrentLocation($event: any) {
+    Geolocation.getCurrentPosition().then(position => {
+      const currentPosition = {
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude
+      };
+      this.selectedLocation = {
+        city: 'Aktueller Ort',
+        latitude: currentPosition.latitude,
+        longitude: currentPosition.longitude
+      };
+    }).catch(err => {
+      console.error(err);
+      this.useCurrentLocation = false;
+    });
   }
 
   checkLocationInput(locationInput: string) {
@@ -188,8 +211,8 @@ export class FilterSearchComponent implements AfterViewInit, OnInit {
           return {
             postalCode: location.address.postcode,
             city: location.address.city || location.address.town || location.address.village,
-            lat: location.lat,
-            lon: location.lon
+            latitude: location.lat,
+            longitude: location.lon
           };
         });
       },
@@ -202,20 +225,7 @@ export class FilterSearchComponent implements AfterViewInit, OnInit {
 
   onLocationSelected(location: any) {
     this.selectedLocation = location;
-    this.selectedCoordinates = {latitude: location.lat, longitude: location.lon};
-  }
-
-  toggleUseCurrentLocation($event: any) {
-    this.getCurrentLocation();
-  }
-
-  getCurrentLocation() {
-    Geolocation.getCurrentPosition().then((position) => {
-      this.selectedCoordinates = {latitude: position.coords.latitude, longitude: position.coords.longitude};
-    }).catch((error) => {
-      console.log(error);
-      this.useCurrentLocation = false;
-    })
+    this.inputLocation = location.postalCode;
   }
 
   updateCaseTypeFilter(event: any) {
@@ -245,39 +255,18 @@ export class FilterSearchComponent implements AfterViewInit, OnInit {
   }
 
   formatDateRange(filterValue: Filter['value']): string {
-    if (typeof filterValue !== 'string') {
-      const start = formatDate(filterValue.start, 'dd.MM.yyyy', this.locale);
-      const end = formatDate(filterValue.end, 'dd.MM.yyyy', this.locale);
-      return `Datum: ${start} - ${end}`;
+    if (typeof filterValue !== 'string' && 'start' in filterValue && 'end' in filterValue) {
+      const startDate = formatDate(filterValue.start, 'dd.MM.yyyy', this.locale);
+      const endDate = formatDate(filterValue.end, 'dd.MM.yyyy', this.locale);
+      return `Datum: ${startDate} - ${endDate}`;
     }
     return '';
   }
 
-  removeFilter(filterToRemove: Filter) {
-    this.filters = this.filters.filter(filter => filter !== filterToRemove);
-
-    if (filterToRemove.type === 'caseType') {
-      if (this.selectedCaseTypes != null) {
-        this.selectedCaseTypes = this.selectedCaseTypes.filter(type => type !== filterToRemove.value)
-        if (this.selectedCaseTypes.length == 0) {
-          this.selectedCaseTypes = undefined;
-        }
-      }
-    } else if (filterToRemove.type === 'status') {
-      this.selectedStatus = undefined;
-    } else if (filterToRemove.type === 'dateRange') {
-      this.startDate = new Date("01.01.1900");
-      this.endDate = new Date(Date.now());
-      this.enableDateRangeSearch = false;
-    } else if (filterToRemove.type === 'location') {
-      this.enableLocationSearch = false;
-      this.useCurrentLocation = false;
-      this.selectedLocation = null;
-      this.selectedCoordinates = undefined;
+  formatLocation(filterValue: Filter['value']): string {
+    if (typeof filterValue !== 'string' && 'city' in filterValue) {
+      return `Ort: ${filterValue.city}`;
     }
-
-    this.applyFilters();
+    return ''
   }
-
-
 }

@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -30,7 +30,8 @@ import {
 import {CaseFiltered} from "../../../shared/types/supabase";
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
 import { Router } from '@angular/router';
-
+import {FilterStateService} from "../../../services/filter-state.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-caselist',
@@ -56,8 +57,9 @@ import { Router } from '@angular/router';
   ],
   standalone: true
 })
-export class CaselistComponent {
+export class CaselistComponent implements OnInit {
   router = inject(Router);
+  filterStateService = inject(FilterStateService);
 
   cases: CaseFiltered[] = [];
 
@@ -76,12 +78,18 @@ export class CaselistComponent {
     });
   }
 
-  updateCases(cases:CaseFiltered[]) {
+  ngOnInit() {
+    this.filterStateService.filteredCases$.subscribe(filteredCases => {
+      this.cases = filteredCases;
+    });
+  }
+
+  updateCases(cases: CaseFiltered[]) {
     this.cases = cases;
   }
 
-  navigateToAddPage(){
-    console.log('button clicked');
-    this.router.navigate(['./tabs/tab2/add'])
+  navigateToAddPage() {
+    console.log('Navigating to add page');
+    this.router.navigate(['./tabs/tab2/add']);
   }
 }

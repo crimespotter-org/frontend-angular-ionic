@@ -60,7 +60,7 @@
 
       <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
         <ion-label position="stacked">Ort</ion-label>
-        <ion-input [(ngModel)]="location" (ionBlur)="checkLocationInput(location)"></ion-input>
+        <ion-input [(ngModel)]="inputLocation" (ionBlur)="checkLocationInput(inputLocation)"></ion-input>
       </ion-item>
       <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
         <ion-label>Ort</ion-label>
@@ -100,7 +100,7 @@
         {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
         {{ filter.type === 'status' ? 'Status: ' + filter.value : '' }}
         {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
-        {{ filter.type === 'location' ? 'Ort: ' + filter.value : '' }}
+        {{ filter.type === 'location' ? formatLocation(filter.value): '' }}
       </ion-label>
       <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
     </ion-chip>
