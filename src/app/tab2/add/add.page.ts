@@ -5,12 +5,13 @@ import { IonicModule } from '@ionic/angular';
 import { SeletionMapComponent } from "../../components/selection-map/selection-map.component";
 import { Location } from 'src/app/shared/interfaces/location.interface';
 import { StorageService } from 'src/app/services/storage.service';
-import { locationOutline } from 'ionicons/icons';
+import { addOutline, locationOutline, trashOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 import { IonModal } from '@ionic/angular';
 import { MapComponent } from "../../tab1/components/map/map.component";
 import {ViewDidEnter} from "@ionic/angular/standalone";
 import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
+import { Capacitor } from '@capacitor/core';
 
 @Component({
     selector: 'app-add',
@@ -20,6 +21,7 @@ import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera
     imports: [IonicModule, CommonModule, FormsModule, SeletionMapComponent, MapComponent]
 })
 export class AddPage implements AfterViewInit, ViewDidEnter {
+[x: string]: any;
 
   @ViewChild(IonModal) modal!: IonModal
   
@@ -34,7 +36,7 @@ export class AddPage implements AfterViewInit, ViewDidEnter {
   images: Photo[] = []
   
   constructor() {
-    addIcons({locationOutline});
+    addIcons({locationOutline, addOutline, trashOutline});
   }
 
   ionViewDidEnter(): void {
@@ -62,10 +64,17 @@ export class AddPage implements AfterViewInit, ViewDidEnter {
     const image = await Camera.getPhoto({
       quality: 90,
       allowEditing: false,
-      resultType: CameraResultType.Uri,
+      resultType: CameraResultType.DataUrl,
     });
-    
+
     this.images.push(image);
+  }
+
+  discardImage(image: Photo){
+    let index = this.images.findIndex(item => item === image);
+    if (index !== -1) {
+    this.images.splice(index, 1); // Remove one element at the found index
+}
   }
 
 }

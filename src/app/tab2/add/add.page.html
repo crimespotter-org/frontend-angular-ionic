@@ -5,61 +5,70 @@
 </ion-header>
 
 <ion-content>
-    <ion-item>
-      <ion-label position="stacked">Titel</ion-label>
-      <ion-input placeholder="Geben Sie ihrem Fall einen Titel"></ion-input>
-    </ion-item>
-    <ion-item>
-      <ion-label position="stacked">Beschreibung</ion-label>
-      <ion-input placeholder="Geben Sie ihrem Fall eine Beschreibung"></ion-input>
-    </ion-item>
-  
-    <ion-item>
-      <ion-label position="stacked">Falltyp</ion-label>
-      <ion-select placeholder="Wählen Sie einen Falltyp">
-        <ion-select-option>wdwd</ion-select-option>
-      </ion-select>
-    </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Titel</ion-label>
+    <ion-input placeholder="Geben Sie ihrem Fall einen Titel"></ion-input>
+  </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Beschreibung</ion-label>
+    <ion-input placeholder="Geben Sie ihrem Fall eine Beschreibung"></ion-input>
+  </ion-item>
 
-    <ion-item>
-      <ion-label position="stacked">Ort</ion-label>
-        @if(location != undefined){
-          <ion-label position="stacked">Längengrad: {{location.latitude}}</ion-label>
-          <ion-label position="stacked">Breitengrad: {{location.longitude}}</ion-label>
-        }
-      <ion-button id="selectLocation">
-        <ion-icon name="location-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
+  <ion-item>
+    <ion-label position="stacked">Falltyp</ion-label>
+    <ion-select placeholder="Wählen Sie einen Falltyp">
+      <ion-select-option>wdwd</ion-select-option>
+    </ion-select>
+  </ion-item>
 
-    <ion-modal trigger="selectLocation">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-buttons slot="start">
-              <ion-button (click)="cancelLocationModal()">Cancel</ion-button>
-            </ion-buttons>
-            <ion-title>Wähle einen Ort</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="confirmLocationModal()" [strong]="true">Confirm</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <app-seletion-map (selectedLocation)="selectedLocationChanged($event)"></app-seletion-map>
-        </ion-content>
-      </ng-template>
-    </ion-modal>
-
-    <ion-item>
-      <ion-button (click)="uploadImage()">Foto hinzufügen</ion-button>
-    </ion-item>
-
-    @for(image of images; track image){
-      <ion-img src={{image.webPath}}>
-      </ion-img>
+  <ion-item>
+    <ion-label position="stacked">Ort</ion-label>
+    @if(location != undefined){
+    <ion-label position="stacked">Längengrad: {{location.latitude}}</ion-label>
+    <ion-label position="stacked">Breitengrad: {{location.longitude}}</ion-label>
     }
+    <ion-button id="selectLocation">
+      <ion-icon name="location-outline"></ion-icon>
+    </ion-button>
+  </ion-item>
+
+  <ion-modal trigger="selectLocation">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelLocationModal()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Wähle einen Ort</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirmLocationModal()" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <app-seletion-map (selectedLocation)="selectedLocationChanged($event)"></app-seletion-map>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-item>
+    <ion-label position="stacked">Bilder</ion-label>
+  <div class="scrolling-wrapper">
+    @for(image of images; track image; let idx = $index){
+    <div class="card">
+      <img src={{image.dataUrl}}/>
+      <ion-button class="delete-button" (click)="discardImage(image)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </div>
+    }
+    <div class="card">
+      <ion-button class="add-image" (click)="uploadImage()">
+        <ion-icon name="add-outline"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-item>
+
 
 </ion-content>
-
-
