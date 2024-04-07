@@ -2,12 +2,13 @@ import { AfterViewInit, Component, EventEmitter, OnInit, Output, inject } from '
 import * as L from 'leaflet';
 import { Location } from 'src/app/shared/interfaces/location.interface';
 import { defaultMarker } from 'src/app/tab1/components/map/markers';
-import {ViewDidEnter} from '@ionic/angular/standalone';
+import {ViewDidEnter, IonSearchbar } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-seletion-map',
   templateUrl: './selection-map.component.html',
   styleUrls: ['./selection-map.component.scss'],
+  imports: [IonSearchbar],
   standalone: true
 })
 export class SeletionMapComponent implements AfterViewInit{

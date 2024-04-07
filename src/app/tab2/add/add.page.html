@@ -51,6 +51,15 @@
       </ng-template>
     </ion-modal>
 
+    <ion-item>
+      <ion-button (click)="uploadImage()">Foto hinzufügen</ion-button>
+    </ion-item>
+
+    @for(image of images; track image){
+      <ion-img src={{image.webPath}}>
+      </ion-img>
+    }
+
 </ion-content>
 
 

@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { IonModal } from '@ionic/angular';
 import { MapComponent } from "../../tab1/components/map/map.component";
 import {ViewDidEnter} from "@ionic/angular/standalone";
+import { Camera, CameraResultType, CameraSource, Photo } from '@capacitor/camera';
 
 @Component({
     selector: 'app-add',
@@ -29,6 +30,8 @@ export class AddPage implements AfterViewInit, ViewDidEnter {
 
   storageService = inject(StorageService);
   caseTypes: string[] = [];
+
+  images: Photo[] = []
   
   constructor() {
     addIcons({locationOutline});
@@ -53,6 +56,16 @@ export class AddPage implements AfterViewInit, ViewDidEnter {
 
   cancelLocationModal(){
     this.modal.dismiss(this.location, 'confirm');
+  }
+
+  async uploadImage(){
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.Uri,
+    });
+    
+    this.images.push(image);
   }
 
 }
