@@ -20,8 +20,12 @@ export const routes: Routes = [
           },
           {
           path: 'add',
-          loadComponent: () => import('../tab2/add/add.page').then((m) => m.AddPage)
-          }
+          loadComponent: () => import('../tab2/add/add1/add1.page').then((m) => m.Add1Page)
+          },
+          {
+            path: 'add2',
+            loadComponent: () => import('../tab2/add/add2/add2.page').then((m) => m.Add2Page)
+          },
         ]
       },
       {

@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>add2</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-item>
+    <ion-label position="stacked">Ort</ion-label>
+    <div id="locationSelection">
+      <ion-item button id="selectLocation">
+        <ion-icon slot="start" name="location-outline"></ion-icon>
+        @if(location != undefined){
+        <ion-label>({{location.latitude}}; {{location.longitude}})</ion-label>
+        }
+        @else{
+        <ion-label>Tatort hinzuzufügen</ion-label>
+        }
+      </ion-item>
+    </div>
+  </ion-item>
+
+  <ion-modal trigger="selectLocation" #selectLocationModal>
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-buttons slot="start">
+            <ion-button (click)="cancelLocationModal()">Cancel</ion-button>
+          </ion-buttons>
+          <ion-title>Wähle einen Ort</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="confirmLocationModal()" [strong]="true">Confirm</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+      <ion-content class="ion-padding">
+        <app-seletion-map (selectedLocation)="selectedLocationChanged($event)"></app-seletion-map>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+  <ion-item>
+    <ion-label position="stacked">Bilder</ion-label>
+    @if(images.length === 0){
+    <div id="pictureSelection">
+      <ion-item button (click)="uploadImage()">
+        <ion-icon slot="start" name="image-outline"></ion-icon>
+        <ion-label>Bilder hinzuzufügen</ion-label>
+      </ion-item>
+    </div>
+    }
+    @else {
+    <div class="scrolling-wrapper">
+      @for(image of images; track image; let idx = $index){
+      <div class="card">
+        <img src={{image.dataUrl}} />
+        <ion-button class="delete-button" (click)="discardImage(image)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
+      </div>
+      }
+      <div class="card">
+        <ion-button class="add-image" (click)="uploadImage()">
+          <ion-icon name="add-outline"></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+    }
+
+  </ion-item>
+
+  <ion-item>
+    <ion-label position="stacked">Links</ion-label>
+
+    @for(link of webLinks; track link){
+    <ion-item id="linkContainer">
+      <ion-icon slot="start" name="link-outline"></ion-icon>
+      <ion-input placeholder="Link eingeben"></ion-input>
+      <ion-icon slot="end" name="close-outline" (click)="removeLink(link)" style="cursor: pointer;"></ion-icon>
+
+    </ion-item>
+    }
+    <ion-item button id="addLinkContainer" (click)="addLink()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      <ion-label>Link hinzufügen</ion-label>
+    </ion-item>
+  </ion-item>
+
+</ion-content>
+
+
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button>
+    <ion-icon name="checkmark-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+
+
+<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+  <ion-fab-button (click)="routeToPreviousPage()">
+    <ion-icon name="chevron-back-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
