@@ -1,11 +1,13 @@
-import {AfterViewInit, Component} from '@angular/core';
-import {Geolocation} from '@capacitor/geolocation';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Location} from "../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {defaultMarker, murderMarker} from './markers';
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
-import {ViewDidEnter} from '@ionic/angular/standalone';
+import {FilterStateService} from 'src/app/services/filter-state.service';
+import {IonFab, IonFabButton, IonIcon} from "@ionic/angular/standalone";
+import {addIcons} from "ionicons";
+import {locateOutline} from "ionicons/icons";
 
 @Component({
   selector: 'app-map',
@@ -13,35 +15,38 @@ import {ViewDidEnter} from '@ionic/angular/standalone';
   styleUrls: ['./map.component.scss'],
   standalone: true,
   imports: [
-    FilterSearchComponent
+    FilterSearchComponent,
+    IonFab,
+    IonFabButton,
+    IonIcon
   ]
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements OnInit {
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
   cases: CaseFiltered[] = [];
-  location: Location | undefined;
+  location: Location = {
+    latitude: 52.5200,
+    longitude: 13.4050
+  };
 
-  async ngAfterViewInit(): Promise<void> {
-    console.log("test")
-    let initialPosition: Location;
+  constructor(private filterStateService: FilterStateService) {
+    addIcons({locateOutline});
+  }
 
-    if (this.location == undefined) {
-      try {
-        const userPosition = await Geolocation.getCurrentPosition();
-        initialPosition = {
-          latitude: userPosition.coords.latitude,
-          longitude: userPosition.coords.longitude
-        };
-      } catch (error) {
-        console.log("Error getting user location, defaulting to Berlin", error);
-        initialPosition = {latitude: 52.5200, longitude: 13.4050}; // Berlin
+  ngOnInit() {
+    this.filterStateService.filteredCases$.subscribe(cases => {
+      if (cases) {
+        this.cases = cases;
+        this.updateMapWithCases();
       }
-    } else {
-      initialPosition = this.location;
-    }
-    setTimeout(() => this.initMap(initialPosition), 0);
+    });
+    this.filterStateService.searchLocation$.subscribe(location => {
+      if (location) {
+        this.updateLocation(location);
+      }
+    });
   }
 
   initMap(initialPosition: Location) {
@@ -59,26 +64,20 @@ export class MapComponent implements AfterViewInit {
     });
 
     this.updateMapWithCases();
-
-    L.marker([initialPosition.latitude, initialPosition.longitude], {icon: defaultMarker}).addTo(this.map);
   }
 
-  updateCases(cases: CaseFiltered[]) {
-    this.cases = cases;
-    if (this.map) {
-      this.updateMapWithCases();
-    }
-  }
-
-  updateLocation(location: Location) {
+  updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
     this.location = location;
     if (this.map) {
-      this.map.setView([location.latitude, location.longitude]);
+      this.map.setView([location.latitude, location.longitude], this.map.getZoom());
+    } else {
+      setTimeout(() => this.initMap(location), 0);
     }
   }
 
   updateMapWithCases() {
     this.clearMarkers();
+
     this.cases.forEach((caze) => {
       const marker = L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title}<br/>`);
       marker.addTo(this.map);
@@ -96,5 +95,8 @@ export class MapComponent implements AfterViewInit {
     L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
   }
 
+  async goToCurrentLocation() {
+    await this.filterStateService.goToCurrentLocation();
+  }
 }
 
