@@ -8,6 +8,7 @@ import {FilterStateService} from 'src/app/services/filter-state.service';
 import {IonFab, IonFabButton, IonIcon} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {locateOutline} from "ionicons/icons";
+import {marker} from "leaflet";
 
 @Component({
   selector: 'app-map',
@@ -21,7 +22,7 @@ import {locateOutline} from "ionicons/icons";
     IonIcon
   ]
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
@@ -47,6 +48,10 @@ export class MapComponent implements OnInit {
         this.updateLocation(location);
       }
     });
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => this.initMap({latitude: 52.5200, longitude: 13.4050}), 0);
   }
 
   initMap(initialPosition: Location) {
@@ -98,5 +103,6 @@ export class MapComponent implements OnInit {
   async goToCurrentLocation() {
     await this.filterStateService.goToCurrentLocation();
   }
+
 }
 
