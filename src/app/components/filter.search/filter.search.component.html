@@ -9,16 +9,20 @@
 
       <ion-item>
         <ion-label position="stacked">Datumsbereich</ion-label>
-        <ion-toggle [(ngModel)]="enableDateRangeSearch"></ion-toggle>
+        <ion-toggle [(ngModel)]="enableDateRangeSearch" (ionChange)="toggleEnableDateRangeSearch($event)"></ion-toggle>
       </ion-item>
 
       <ion-item *ngIf="enableDateRangeSearch">
         <ion-label position="stacked">Startdatum</ion-label>
-        <ion-input [value]="startDate | date: 'dd.MM.YYYY'" id="open-start-modal"></ion-input>
+        <ion-input [value]="startDate | date: 'dd.MM.YYYY'" id="open-start-modal"
+                   placeholder="Startdatum auswählen"></ion-input>
+        <ion-note *ngIf="missingStartDate" color="danger">Bitte Startdatum angeben.</ion-note>
       </ion-item>
       <ion-item *ngIf="enableDateRangeSearch">
         <ion-label position="stacked">Enddatum</ion-label>
-        <ion-input [value]="endDate | date: 'dd.MM.YYYY'" id="open-end-modal"></ion-input>
+        <ion-input [value]="endDate | date: 'dd.MM.YYYY'" id="open-end-modal"
+                   placeholder="Enddatum auswählen"></ion-input>
+        <ion-note *ngIf="missingEndDate" color="danger">Bitte Enddatum angeben.</ion-note>
       </ion-item>
 
       <ion-modal id="start-date-modal" trigger="open-start-modal" *ngIf="enableDateRangeSearch">
@@ -48,30 +52,32 @@
         </ion-select>
       </ion-item>
 
-      <ion-item>
+      <ion-item *ngIf="menuId!=='mapMenu'">
         <ion-label position="stacked">Umkreissuche</ion-label>
         <ion-toggle [(ngModel)]="enableLocationSearch"></ion-toggle>
       </ion-item>
 
-      <ion-item *ngIf="enableLocationSearch">
+      <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu'">
         <ion-label position="stacked">Aktuellen Standort verwenden</ion-label>
         <ion-toggle [(ngModel)]="useCurrentLocation" (ionChange)="toggleUseCurrentLocation($event)"></ion-toggle>
       </ion-item>
 
-      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
+      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation && menuId!=='mapMenu'">
         <ion-label position="stacked">Ort</ion-label>
-        <ion-input [(ngModel)]="inputLocation" (ionBlur)="checkLocationInput(inputLocation)"></ion-input>
-      </ion-item>
-      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation">
-        <ion-label>Ort</ion-label>
-        <ion-select interface="popover" [(ngModel)]="selectedLocation" (ngModelChange)="onLocationSelected($event)"
-                    placeholder="Ort auswählen">
-          <ion-select-option *ngFor="let location of locations"
-                             [value]="location">{{ location.city + ", " + location.postalCode }}</ion-select-option>
-        </ion-select>
+        <ion-input [(ngModel)]="inputLocation" (ionInput)="onLocationFilterChange(inputLocation)"
+                   placeholder="Ort auswählen"></ion-input>
+        <ion-note *ngIf="missingLocationDetails" color="danger">Bitte Ort angeben.</ion-note>
       </ion-item>
 
-      <ion-item *ngIf="enableLocationSearch">
+      <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0">
+        <ion-item *ngFor="let location of locations" (click)="onLocationFilterSelected(location)">
+          <ion-label>
+            {{ location.city }} <span *ngIf="location.postalCode">{{ ', ' + location.postalCode }}</span>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+
+      <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu' ">
         <ion-label position="stacked">Umkreis (in km)</ion-label>
         <ion-range min="1" max="100" pin="true" [(ngModel)]="radius">
           <ion-label slot="start">1 km</ion-label>
@@ -79,9 +85,8 @@
         </ion-range>
       </ion-item>
 
-      <ion-item lines="none">
-        <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
-      </ion-item>
+      <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
+
     </ion-list>
   </ion-content>
 </ion-menu>
@@ -89,7 +94,18 @@
 
 <ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
-    <ion-searchbar [placeholder]=placeholder></ion-searchbar>
+    <ion-searchbar (ionInput)="onSearchChange(inputSearch)"
+                   (ionBlur)="onSearchBlur()"
+                   (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
+    </ion-searchbar>
+    <ion-list *ngIf="searchList.length > 0">
+      <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
+        <ion-label>
+          <span *ngIf="search.city"> {{search.city}} <span
+            *ngIf="search.postalCode"> {{ ', ' + search.postalCode }} </span> </span>
+        </ion-label>
+      </ion-item>
+    </ion-list>
     <ion-buttons slot="end">
       <ion-button (click)="openFilterMenu()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
@@ -98,9 +114,9 @@
     <ion-chip *ngFor="let filter of filters" color="primary">
       <ion-label>
         {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
-        {{ filter.type === 'status' ? 'Status: ' + filter.value : '' }}
+        {{ filter.type === 'status' ? 'Status: ' + (filter.value==="open"? 'Offen' : 'Geschlossen') : ''}}
         {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
-        {{ filter.type === 'location' ? formatLocation(filter.value): '' }}
+        {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
       </ion-label>
       <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
     </ion-chip>
