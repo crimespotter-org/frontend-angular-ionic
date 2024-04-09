@@ -23,7 +23,7 @@ import {locateOutline} from "ionicons/icons";
         IonHeader
     ]
 })
-export class MapComponent implements OnInit, AfterViewInit {
+export class MapComponent implements OnInit {
 
     private map!: L.Map;
     private markers: L.Marker[] = [];
@@ -51,10 +51,6 @@ export class MapComponent implements OnInit, AfterViewInit {
         });
     }
 
-    ngAfterViewInit(): void {
-        setTimeout(() => this.initMap(this.location), 0);
-    }
-
     initMap(initialPosition: Location) {
         if (this.map != undefined) this.map.remove();
         this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
@@ -68,8 +64,6 @@ export class MapComponent implements OnInit, AfterViewInit {
             console.log("Current zoom level: " + currentZoomLevel);
             // You can perform any actions based on the current zoom level here
         });
-
-        this.map.invalidateSize();
 
         this.updateMapWithCases();
     }
