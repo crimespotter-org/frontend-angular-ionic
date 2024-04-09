@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Location } from 'src/app/shared/interfaces/location.interface';
 import { defaultMarker } from 'src/app/tab1/components/map/markers';
@@ -11,7 +11,9 @@ import {ViewDidEnter, IonSearchbar } from '@ionic/angular/standalone';
   imports: [IonSearchbar],
   standalone: true
 })
-export class SeletionMapComponent implements AfterViewInit{
+export class SelectionMapComponent implements AfterViewInit{
+
+  @Input() location: Location = {latitude: 48.441976384366384, longitude: 8.684747075615647};
 
   @Output() selectedLocation = new EventEmitter<Location>();
 
@@ -21,7 +23,7 @@ export class SeletionMapComponent implements AfterViewInit{
   constructor() { }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.initMap({latitude: 48.441976384366384, longitude: 8.684747075615647}), 0);
+      setTimeout(() => this.initMap({latitude: this.location.latitude, longitude: this.location.longitude}), 0);
   }
 
   initMap(coordinates: Location){

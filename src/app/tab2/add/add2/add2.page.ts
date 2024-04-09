@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule } from '@angular/forms';
 import { IonicModule } from '@ionic/angular';
 import { addIcons } from 'ionicons';
 import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline } from 'ionicons/icons';
@@ -8,7 +8,9 @@ import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Location } from 'src/app/shared/interfaces/location.interface';
-import { SeletionMapComponent } from "../../../components/selection-map/selection-map.component";
+import { SelectionMapComponent } from "../../../components/selection-map/selection-map.component";
+import { AddService } from 'src/app/services/add.service';
+import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
 
 @Component({
   selector: 'app-add2',
@@ -40,23 +42,29 @@ import { SeletionMapComponent } from "../../../components/selection-map/selectio
     IonCard,
     IonCardContent,
     IonModal,
-    SeletionMapComponent,
+    SelectionMapComponent,
+    LocationPickerComponent,
     IonInput
   ]
 })
 export class Add2Page implements OnInit {
 
   router = inject(Router)
+  addService = inject(AddService);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
 
   webLinks: webLink[] = [];
   images: Photo[] = [];
-  location!: Location;
+  location: Location | undefined;
+
+  form: FormGroup;
 
   constructor() {
-    addIcons({ linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline })
+    addIcons({ linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
+
+    this.form = this.addService.form.get('page2') as FormGroup;
   }
 
   ngOnInit() {
@@ -68,6 +76,7 @@ export class Add2Page implements OnInit {
   }
 
   confirmLocationModal() {
+    this.form.get('location')?.setValue(this.location);
     this.modal.dismiss(null, 'cancel');
   }
 

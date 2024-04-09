@@ -1,0 +1,34 @@
+
+<ion-item>
+  <ion-label position="stacked">Ort</ion-label>
+  <div id="locationSelection">
+    <ion-item button id="selectLocation">
+      <ion-icon slot="start" name="location-outline"></ion-icon>
+      @if(location != undefined){
+      <ion-label>({{location.latitude}}; {{location.longitude}})</ion-label>
+      }
+      @else{
+      <ion-label>Tatort hinzuzufügen</ion-label>
+      }
+    </ion-item>
+  </div>
+</ion-item>
+
+<ion-modal trigger="selectLocation" #selectLocationModal>
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-buttons slot="start">
+          <ion-button (click)="cancelLocationModal()">Cancel</ion-button>
+        </ion-buttons>
+        <ion-title>Wähle einen Ort</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="confirmLocationModal()" [strong]="true">Confirm</ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <app-seletion-map (selectedLocation)="selectedLocationChanged($event)"></app-seletion-map>
+    </ion-content>
+  </ng-template>
+</ion-modal>

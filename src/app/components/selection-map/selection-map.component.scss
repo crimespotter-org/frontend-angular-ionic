@@ -1,0 +1,13 @@
+#selectormap {
+    height: 400px; /* Set the height of the map container */
+    position: relative; /* Positioning context for absolute positioning of search bar */
+}
+
+ion-searchbar {
+    position: absolute;
+    top: 20px; /* Adjust top position as needed */
+    left: 50%; /* Position the search bar horizontally in the middle */
+    transform: translateX(-50%); /* Center horizontally */
+    z-index: 1000; /* Ensure the search bar is above the map */
+    width: 70%;
+}
