@@ -1,36 +1,38 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>add</ion-title>
+    <ion-title>Neuen Fall anlegen</ion-title>
   </ion-toolbar>
 </ion-header>
 
 
 <ion-content>
   <form class="form" [formGroup]="form">
-  <ion-item>
-    <ion-label position="stacked">Titel</ion-label>
-    <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title" clearInput required></ion-input>
-  </ion-item>
-  <ion-item>
-    <ion-label position="stacked">Beschreibung</ion-label>
-    <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" required autosize rows="3"></ion-textarea>
-  </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Titel</ion-label>
+      <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Falltyp</ion-label>
-    <ion-select placeholder="Wählen Sie einen Falltyp" formControlName="type" required>
-      @for(type of caseTypes; track type){
+    <ion-item>
+      <ion-label position="stacked">Beschreibung</ion-label>
+      <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" autosize
+        rows="3"></ion-textarea>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="stacked">Falltyp</ion-label>
+      <ion-select placeholder="Wählen Sie einen Falltyp" formControlName="type">
+        @for(type of caseTypes; track type){
         <ion-select-option>{{type}}</ion-select-option>
-      }
-    </ion-select>
-  </ion-item>
+        }
+      </ion-select>
+    </ion-item>
 
-  <ion-item>
-    <ion-label position="stacked">Tatzeit</ion-label>
-    <ion-datetime formControlName="date_of_crime" required></ion-datetime>
-  </ion-item>
+    <ion-item>
+      <ion-label position="stacked">Tatzeit</ion-label>
+      <ion-datetime formControlName="date_of_crime"></ion-datetime>
+    </ion-item>
 
-</form>
+  </form>
 </ion-content>
 
 <ion-toast message="Bitte füllen Sie alle Felder aus" duration="700" icon="warning-outline"></ion-toast>

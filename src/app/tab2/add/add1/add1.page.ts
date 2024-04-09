@@ -4,7 +4,7 @@ import { FormGroup, FormsModule } from '@angular/forms';
 import { StorageService } from 'src/app/services/storage.service';
 import { addOutline, chevronForwardOutline, locationOutline, trashOutline, warningOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import { IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AddService } from 'src/app/services/add.service';
@@ -37,6 +37,7 @@ import { AddService } from 'src/app/services/add.service';
       IonItemOption,
       IonItemOptions,
       IonItemSliding,
+      IonInput,
     ]
 })
 export class Add1Page implements AfterViewInit {
@@ -46,15 +47,14 @@ export class Add1Page implements AfterViewInit {
   router = inject(Router);
   fb = inject(FormBuilder);
   addService = inject(AddService);
+  storageService = inject(StorageService);
 
   form: FormGroup;
 
-  
   title: string | undefined;
   summary: string | undefined;
   type: string | undefined;
 
-  storageService = inject(StorageService);
   caseTypes: string[] = [];
   
   constructor() {

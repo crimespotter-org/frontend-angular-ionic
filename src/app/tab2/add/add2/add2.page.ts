@@ -1,7 +1,5 @@
-import { Component, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormGroup, FormsModule } from '@angular/forms';
-import { IonicModule } from '@ionic/angular';
+import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
+import { FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
@@ -17,6 +15,13 @@ import { LocationPickerComponent } from 'src/app/components/location-picker/loca
   templateUrl: './add2.page.html',
   styleUrls: ['./add2.page.scss'],
   standalone: true,
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi:true,
+      useExisting: LocationPickerComponent,
+    }
+  ],
   imports: [IonItem,
     IonContent,
     IonHeader,
@@ -44,7 +49,8 @@ import { LocationPickerComponent } from 'src/app/components/location-picker/loca
     IonModal,
     SelectionMapComponent,
     LocationPickerComponent,
-    IonInput
+    IonInput,
+    ReactiveFormsModule, 
   ]
 })
 export class Add2Page implements OnInit {
@@ -115,6 +121,11 @@ export class Add2Page implements OnInit {
     if (index !== -1) {
       this.webLinks.splice(index, 1); // Remove one element at the found index
     }
+  }
+
+  submitForm(){
+    console.log(this.form.value);
+    console.log(this.form.valid)
   }
 }
 

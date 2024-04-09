@@ -15,7 +15,6 @@ import { Location } from 'src/app/shared/interfaces/location.interface';
 })
 export class LocationPickerComponent implements ControlValueAccessor {
 
-  @Input()
   location?: Location;
 
   @Input()
@@ -25,7 +24,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
   tempLocation: Location | undefined;
 
-  onChange = (_: Location) => { };
+  onChange = (location: Location) => { };
 
   onTouched = () => { };
 
@@ -44,6 +43,9 @@ export class LocationPickerComponent implements ControlValueAccessor {
   registerOnTouched(onTouched: any): void {
     this.onTouched = onTouched;
   }
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
 
   selectedLocationChanged(location: Location) {
     this.tempLocation = location;
@@ -51,6 +53,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
   confirmLocationModal() {
     if (this.tempLocation != undefined) {
+      this.touched = true;
       this.location = this.tempLocation;
       this.onChange(this.location);
       this.onTouched();
@@ -60,6 +63,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
   }
 
   cancelLocationModal() {
+    this.touched = true;
     this.tempLocation = undefined;
     this.onTouched();
     this.modal.dismiss();

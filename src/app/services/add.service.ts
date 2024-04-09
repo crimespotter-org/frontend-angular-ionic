@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Injectable({
   providedIn: 'root'
@@ -12,20 +12,20 @@ export class AddService {
   constructor() { 
     this.form = this.fb.group({
       page1: this.fb.group({
-        title: [''],
-        summary: [''],
-        type: [''],
-        date_of_crime: ''
+        title: ['', Validators.required],
+        summary: ['', Validators.required],
+        type: ['', Validators.required],
+        date_of_crime: ['', Validators.required]
       }),
       page2: this.fb.group({
-        location: [''],
+        location: ['', Validators.required],
         images: [''],
         further_links: ['']
       }),
     });
   }
 
-  
+
 
 
 }
