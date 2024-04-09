@@ -69,7 +69,7 @@
         <ion-note *ngIf="missingLocationDetails" color="danger">Bitte Ort angeben.</ion-note>
       </ion-item>
 
-      <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0">
+      <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0 && menuId!=='mapMenu'">
         <ion-item *ngFor="let location of locations" (click)="onLocationFilterSelected(location)">
           <ion-label>
             {{ location.city }} <span *ngIf="location.postalCode">{{ ', ' + location.postalCode }}</span>
