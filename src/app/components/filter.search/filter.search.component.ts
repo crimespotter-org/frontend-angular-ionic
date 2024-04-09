@@ -1,4 +1,4 @@
-import {Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -72,7 +72,7 @@ import {QueryLocationResponse} from "../../shared/interfaces/query-location-resp
   ],
   standalone: true
 })
-export class FilterSearchComponent implements OnInit {
+export class FilterSearchComponent implements OnInit, AfterViewInit {
   @Input() placeholder: string = '';
   @Input() menuId: string = '';
 
@@ -110,6 +110,11 @@ export class FilterSearchComponent implements OnInit {
       this.filters = filters;
     });
     this.caseTypes = this.storageService.getCaseTypes();
+  }
+
+  ngAfterViewInit() {
+    this.inputSearch = '';
+    this.onSearchChange(this.inputSearch);
   }
 
   initializeFilterVariables() {
