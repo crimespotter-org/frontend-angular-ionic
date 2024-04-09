@@ -29,9 +29,8 @@ import {
 } from "ionicons/icons";
 import {CaseFiltered} from "../../../shared/types/supabase";
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {FilterStateService} from "../../../services/filter-state.service";
-import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-caselist',
