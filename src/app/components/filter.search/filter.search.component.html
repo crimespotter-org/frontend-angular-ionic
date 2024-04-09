@@ -98,28 +98,22 @@
                    (ionBlur)="onSearchBlur()"
                    (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
     </ion-searchbar>
-    <ion-list *ngIf="searchList.length > 0">
-      <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
+    <div class="chips-container">
+      <ion-chip *ngFor="let filter of filters" color="primary">
         <ion-label>
-          <span *ngIf="search.city"> {{search.city}} <span
-            *ngIf="search.postalCode"> {{ ', ' + search.postalCode }} </span> </span>
+          {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
+          {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : ''}}
+          {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
+          {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
         </ion-label>
-      </ion-item>
-    </ion-list>
+        <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
+      </ion-chip>
+    </div>
     <ion-buttons slot="end">
       <ion-button (click)="openFilterMenu()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-chip *ngFor="let filter of filters" color="primary">
-      <ion-label>
-        {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
-        {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : ''}}
-        {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
-        {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
-      </ion-label>
-      <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
-    </ion-chip>
-
   </ion-toolbar>
 </ion-header>
+
