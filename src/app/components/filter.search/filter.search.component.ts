@@ -16,7 +16,7 @@ import {
   IonMenu,
   IonModal, IonNote,
   IonRange,
-  IonSearchbar,
+  IonSearchbar, IonSegment, IonSegmentButton,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -68,7 +68,9 @@ import {QueryLocationResponse} from "../../shared/interfaces/query-location-resp
     NgIf,
     CommonModule,
     IonToggle,
-    IonNote
+    IonNote,
+    IonSegmentButton,
+    IonSegment
   ],
   standalone: true
 })
@@ -96,6 +98,8 @@ export class FilterSearchComponent implements OnInit {
   searchDebounceTime?: any;
   inputSearch?: any;
   searchList: any[] = [];
+  selectedSortOrder = 'created_at';
+  segmentValue = 'sort'; // Initialwert für das Segment
 
   constructor(private menu: MenuController,
               private filterStateService: FilterStateService,
@@ -198,6 +202,10 @@ export class FilterSearchComponent implements OnInit {
     this.initializeFilterVariables();
 
     await this.menu.close(this.menuId);
+  }
+
+  applySorting() {
+    this.filterStateService.applyFilters(this.selectedSortOrder);
   }
 
   openFilterMenu() {
@@ -350,5 +358,9 @@ export class FilterSearchComponent implements OnInit {
       return `Ort: ${filterValue.city}, Radius: ${filterValue.radius}km`;
     }
     return ''
+  }
+
+  segmentChanged(event: any) {
+    this.segmentValue = event.detail.value;
   }
 }

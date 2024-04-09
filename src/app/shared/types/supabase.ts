@@ -14,6 +14,7 @@ export type Database = {
           case_type: Database["public"]["Enums"]["casetype"]
           created_at: string | null
           created_by: string | null
+          crime_date_time: string | null
           id: string
           location: unknown | null
           place_name: string | null
@@ -26,6 +27,7 @@ export type Database = {
           case_type: Database["public"]["Enums"]["casetype"]
           created_at?: string | null
           created_by?: string | null
+          crime_date_time?: string | null
           id?: string
           location?: unknown | null
           place_name?: string | null
@@ -38,6 +40,7 @@ export type Database = {
           case_type?: Database["public"]["Enums"]["casetype"]
           created_at?: string | null
           created_by?: string | null
+          crime_date_time?: string | null
           id?: string
           location?: unknown | null
           place_name?: string | null
@@ -349,6 +352,7 @@ export type Database = {
           has_podcast: boolean
           has_book: boolean
           has_media: boolean
+          crime_date_time: string
         }
       }
     }

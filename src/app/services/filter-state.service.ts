@@ -54,7 +54,7 @@ export class FilterStateService {
     this.applyFilters();
   }
 
-  async applyFilters(): Promise<void> {
+  async applyFilters(sortOrder?: string): Promise<void> {
     const filters = this._filters.getValue();
     const searchQuery = this._searchQuery.getValue();
 
@@ -69,6 +69,24 @@ export class FilterStateService {
     }
 
     this._filteredCases.next(cases);
+    if (sortOrder) {
+      this.sortCases(sortOrder);
+    }
+  }
+
+  sortCases(sortOrder: string) {
+    switch (sortOrder) {
+      case 'title':
+        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => a.title.localeCompare(b.title)));
+        break;
+      case 'created_at':
+        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => new Date(a.created_at).getDate() - new Date(b.created_at).getDate()));
+        break;
+      case 'crime_date_time':
+        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => new Date(a.crime_date_time).getDate() - new Date(b.crime_date_time).getDate()));
+        break;
+      default:
+    }
   }
 
   convertFiltersToFilterOptions(filters: Filter[]): FilterOptions {
@@ -112,7 +130,7 @@ export class FilterStateService {
     return this._filters.getValue();
   }
 
-  async goToCurrentLocation(){
+  async goToCurrentLocation() {
     await this.initializeLocation();
   }
 
