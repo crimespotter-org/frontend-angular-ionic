@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {Location} from "../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
@@ -8,6 +8,7 @@ import {FilterStateService} from 'src/app/services/filter-state.service';
 import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {locateOutline} from "ionicons/icons";
+import {Geolocation} from "@capacitor/geolocation";
 
 @Component({
   selector: 'app-map',
@@ -23,15 +24,12 @@ import {locateOutline} from "ionicons/icons";
     IonHeader
   ]
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, AfterViewInit {
 
   private map!: L.Map;
   private markers: L.Marker[] = [];
   cases: CaseFiltered[] = [];
-  location: Location = {
-    latitude: 52.5200,
-    longitude: 13.4050
-  };
+  location?: Location;
 
   constructor(private filterStateService: FilterStateService) {
     addIcons({locateOutline});
@@ -51,6 +49,26 @@ export class MapComponent implements OnInit {
     });
   }
 
+  async ngAfterViewInit(): Promise<void> {
+    let initialPosition: Location;
+
+    if (this.location == undefined) {
+      try {
+        const userPosition = await Geolocation.getCurrentPosition();
+        this.location  = {
+          latitude: userPosition.coords.latitude,
+          longitude: userPosition.coords.longitude
+        };
+      } catch (error) {
+        console.log("Error getting user location, defaulting to Berlin", error);
+        initialPosition = {latitude: 52.5200, longitude: 13.4050}; // Berlin
+      }
+    } else {
+      initialPosition = this.location;
+    }
+    setTimeout(() => this.initMap(initialPosition), 0);
+  }
+
   initMap(initialPosition: Location) {
     if (this.map != undefined) this.map.remove();
     this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
@@ -59,11 +77,9 @@ export class MapComponent implements OnInit {
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    this.map.on('zoomend', (event) => {
-      const currentZoomLevel = this.map.getZoom();
-      console.log("Current zoom level: " + currentZoomLevel);
-      // You can perform any actions based on the current zoom level here
-    });
+    setTimeout(() => {
+      this.map.invalidateSize();
+    },100);
 
     this.updateMapWithCases();
   }
@@ -72,8 +88,6 @@ export class MapComponent implements OnInit {
     this.location = location;
     if (this.map) {
       this.map.setView([location.latitude, location.longitude], this.map.getZoom());
-    } else {
-      setTimeout(() => this.initMap(location), 0);
     }
   }
 

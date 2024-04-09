@@ -72,7 +72,7 @@ import {QueryLocationResponse} from "../../shared/interfaces/query-location-resp
   ],
   standalone: true
 })
-export class FilterSearchComponent implements OnInit, AfterViewInit {
+export class FilterSearchComponent implements OnInit {
   @Input() placeholder: string = '';
   @Input() menuId: string = '';
 
@@ -110,11 +110,6 @@ export class FilterSearchComponent implements OnInit, AfterViewInit {
       this.filters = filters;
     });
     this.caseTypes = this.storageService.getCaseTypes();
-  }
-
-  ngAfterViewInit() {
-    this.inputSearch = '';
-    this.onSearchChange(this.inputSearch);
   }
 
   initializeFilterVariables() {

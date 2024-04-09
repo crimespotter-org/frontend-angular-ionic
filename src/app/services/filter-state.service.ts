@@ -26,11 +26,10 @@ export class FilterStateService {
 
   constructor(private supabaseService: SupabaseService) {
     this.initializeCases();
-    this.initializeLocation();
   }
 
   private async initializeCases(): Promise<void> {
-    this.applyFilters(); // Führt eine Anfrage ohne Filter durch
+    this.applyFilters();
   }
 
   private async initializeLocation() {
@@ -49,7 +48,7 @@ export class FilterStateService {
 
   setSearchQuery(query: string): void {
     this._searchQuery.next(query);
-    this.applyFilters(); // Aktualisiere die gefilterten Fälle basierend auf dem neuen Suchtext
+    this.applyFilters();
   }
 
   async applyFilters(): Promise<void> {
