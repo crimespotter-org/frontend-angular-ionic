@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from "../shared/interfaces/filter";
 import {SupabaseService} from "./supabase.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {CaseFiltered} from "../shared/types/supabase";
 import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
@@ -18,7 +18,9 @@ export class FilterStateService {
     longitude: 13.4050
   });
   private _searchQuery = new BehaviorSubject<string>('');
+  private updateTrigger = new Subject<void>();
 
+  public updateTrigger$ = this.updateTrigger.asObservable();
   public readonly filters$ = this._filters.asObservable();
   public readonly filteredCases$ = this._filteredCases.asObservable();
   public readonly searchLocation$ = this._searchLocation.asObservable();
@@ -26,6 +28,7 @@ export class FilterStateService {
 
   constructor(private supabaseService: SupabaseService) {
     this.initializeCases();
+    this.initializeLocation();
   }
 
   private async initializeCases(): Promise<void> {
@@ -111,5 +114,9 @@ export class FilterStateService {
 
   async goToCurrentLocation(){
     await this.initializeLocation();
+  }
+
+  public triggerMapUpdate() {
+    this.updateTrigger.next();
   }
 }

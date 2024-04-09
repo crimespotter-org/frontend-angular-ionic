@@ -47,6 +47,9 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateLocation(location);
       }
     });
+    this.filterStateService.updateTrigger$.subscribe(() => {
+      this.reloadMap();
+    });
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -55,7 +58,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (this.location == undefined) {
       try {
         const userPosition = await Geolocation.getCurrentPosition();
-        this.location  = {
+        this.location = {
           latitude: userPosition.coords.latitude,
           longitude: userPosition.coords.longitude
         };
@@ -65,6 +68,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       }
     } else {
       initialPosition = this.location;
+      this.location = initialPosition;
     }
     setTimeout(() => this.initMap(initialPosition), 0);
   }
@@ -79,9 +83,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       this.map.invalidateSize();
-    },100);
+    }, 100);
 
     this.updateMapWithCases();
+  }
+
+  private reloadMap(): void {
+    if (this.location){
+      this.initMap(this.location);
+    }
   }
 
   updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
