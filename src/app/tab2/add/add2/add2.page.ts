@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
-import { FormGroup, FormsModule, NG_VALUE_ACCESSOR, ReactiveFormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
@@ -9,20 +9,15 @@ import { Location } from 'src/app/shared/interfaces/location.interface';
 import { SelectionMapComponent } from "../../../components/selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
 import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-add2',
   templateUrl: './add2.page.html',
   styleUrls: ['./add2.page.scss'],
   standalone: true,
-  providers: [
-    {
-      provide: NG_VALUE_ACCESSOR,
-      multi:true,
-      useExisting: LocationPickerComponent,
-    }
-  ],
-  imports: [IonItem,
+  imports: [CommonModule,
+    IonItem,
     IonContent,
     IonHeader,
     FormsModule,
@@ -79,15 +74,6 @@ export class Add2Page implements OnInit {
   selectedLocationChanged(location: Location) {
     console.log(location);
     this.location = location;
-  }
-
-  confirmLocationModal() {
-    this.form.get('location')?.setValue(this.location);
-    this.modal.dismiss(null, 'cancel');
-  }
-
-  cancelLocationModal() {
-    this.modal.dismiss(this.location, 'confirm');
   }
 
   async uploadImage() {

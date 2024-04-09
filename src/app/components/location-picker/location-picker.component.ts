@@ -1,9 +1,8 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, forwardRef } from '@angular/core';
 import { ModalController, IonModal, IonButton, IonContent, IonTitle, IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonItem} from '@ionic/angular/standalone';
 import { SelectionMapComponent } from '../selection-map/selection-map.component';
-import { ControlValueAccessor } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Location } from 'src/app/shared/interfaces/location.interface';
-
 
 
 @Component({
@@ -11,6 +10,13 @@ import { Location } from 'src/app/shared/interfaces/location.interface';
   templateUrl: './location-picker.component.html',
   styleUrls: ['./location-picker.component.scss'],
   imports: [IonButton, SelectionMapComponent, IonContent, IonModal, IonTitle, IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonItem],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      multi:true,
+      useExisting: forwardRef(() => LocationPickerComponent),
+    }
+  ],
   standalone: true,
 })
 export class LocationPickerComponent implements ControlValueAccessor {
@@ -52,15 +58,18 @@ export class LocationPickerComponent implements ControlValueAccessor {
   }
 
   confirmLocationModal() {
-    if (this.tempLocation != undefined) {
+    if (this.tempLocation == undefined) {
+      return;
+    }
       this.touched = true;
       this.location = this.tempLocation;
+      console.log(this.location);
       this.onChange(this.location);
       this.onTouched();
       this.modal.dismiss();
       this.tempLocation = undefined;
     }
-  }
+  
 
   cancelLocationModal() {
     this.touched = true;

@@ -6,7 +6,7 @@
 
 <ion-content>
   <form class="form" [formGroup]="form">
-    <app-location-picker fromControlName="location"></app-location-picker>
+    <app-location-picker formControlName="location"></app-location-picker>
     <ion-item>
       <ion-label position="stacked">Bilder</ion-label>
       @if(images.length === 0){
@@ -54,6 +54,8 @@
       </ion-item>
     </ion-item>
   </form>
+
+  
 </ion-content>
 
 
