@@ -5,7 +5,7 @@ import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {murderMarker} from './markers';
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
 import {FilterStateService} from 'src/app/services/filter-state.service';
-import {IonFab, IonFabButton, IonIcon} from "@ionic/angular/standalone";
+import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {locateOutline} from "ionicons/icons";
 
@@ -18,7 +18,9 @@ import {locateOutline} from "ionicons/icons";
         FilterSearchComponent,
         IonFab,
         IonFabButton,
-        IonIcon
+        IonIcon,
+        IonContent,
+        IonHeader
     ]
 })
 export class MapComponent implements OnInit, AfterViewInit {
