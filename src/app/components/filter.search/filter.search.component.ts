@@ -26,7 +26,7 @@ import {
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, formatDate, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
-import {closeCircle, optionsOutline} from "ionicons/icons";
+import {closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline} from "ionicons/icons";
 import {FormsModule} from "@angular/forms";
 import {FilterStateService} from "../../services/filter-state.service";
 import {DataService} from "../../services/data.service";
@@ -99,14 +99,15 @@ export class FilterSearchComponent implements OnInit {
   inputSearch?: any;
   searchList: any[] = [];
   selectedSortOrder = 'created_at';
-  segmentValue = 'sort'; // Initialwert für das Segment
+  segmentValue = 'sort';
+  isAscendingSort = true;
 
   constructor(private menu: MenuController,
               private filterStateService: FilterStateService,
               private dataService: DataService,
               private storageService: StorageService,
               @Inject(LOCALE_ID) private locale: string) {
-    addIcons({closeCircle, optionsOutline});
+    addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
 
   ngOnInit() {
@@ -205,7 +206,12 @@ export class FilterSearchComponent implements OnInit {
   }
 
   applySorting() {
-    this.filterStateService.applyFilters(this.selectedSortOrder);
+    this.filterStateService.applyFilters(this.selectedSortOrder, this.isAscendingSort);
+  }
+
+  toggleSortDirection() {
+    this.isAscendingSort = !this.isAscendingSort;
+    this.applySorting();
   }
 
   openFilterMenu() {

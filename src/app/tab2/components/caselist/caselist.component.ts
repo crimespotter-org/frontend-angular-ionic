@@ -13,7 +13,7 @@ import {
   IonLabel,
   IonList
 } from "@ionic/angular/standalone";
-import {CommonModule, NgForOf, NgIf} from "@angular/common";
+import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
 import {
   add,
@@ -54,7 +54,8 @@ import {SupabaseService} from "../../../services/supabase.service";
     CommonModule,
     FilterSearchComponent,
     IonFabButton,
-    IonFab
+    IonFab,
+    DatePipe
   ],
   standalone: true
 })

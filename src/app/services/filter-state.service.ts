@@ -54,7 +54,7 @@ export class FilterStateService {
     this.applyFilters();
   }
 
-  async applyFilters(sortOrder?: string): Promise<void> {
+  async applyFilters(sortOrder?: string, isAscending?: boolean): Promise<void> {
     const filters = this._filters.getValue();
     const searchQuery = this._searchQuery.getValue();
 
@@ -69,24 +69,34 @@ export class FilterStateService {
     }
 
     this._filteredCases.next(cases);
-    if (sortOrder) {
-      this.sortCases(sortOrder);
+    if (sortOrder && isAscending) {
+      this.sortCases(sortOrder, isAscending);
     }
   }
 
-  sortCases(sortOrder: string) {
+  sortCases(sortOrder: string, isAscending: boolean): void {
+    const cases = this._filteredCases.getValue();
+    let sortedCases;
+
     switch (sortOrder) {
       case 'title':
-        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => a.title.localeCompare(b.title)));
+        sortedCases = cases.sort((a, b) => a.title.localeCompare(b.title));
         break;
       case 'created_at':
-        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => new Date(a.created_at).getDate() - new Date(b.created_at).getDate()));
+        sortedCases = cases.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
         break;
       case 'crime_date_time':
-        this._filteredCases.next(this._filteredCases.getValue().sort((a, b) => new Date(a.crime_date_time).getDate() - new Date(b.crime_date_time).getDate()));
+        sortedCases = cases.sort((a, b) => new Date(a.crime_date_time).getTime() - new Date(b.crime_date_time).getTime());
         break;
       default:
+        sortedCases = cases;
     }
+
+    if (!isAscending) {
+      sortedCases = sortedCases.reverse();
+    }
+
+    this._filteredCases.next(sortedCases);
   }
 
   convertFiltersToFilterOptions(filters: Filter[]): FilterOptions {
