@@ -13,10 +13,11 @@ import {
   IonLabel,
   IonList
 } from "@ionic/angular/standalone";
-import {CommonModule, NgForOf, NgIf} from "@angular/common";
+import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
 import {
   add,
+  bookOutline,
   chevronDownOutline,
   chevronUpOutline,
   createOutline,
@@ -29,9 +30,9 @@ import {
 } from "ionicons/icons";
 import {CaseFiltered} from "../../../shared/types/supabase";
 import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
-import { Router } from '@angular/router';
+import {Router} from '@angular/router';
 import {FilterStateService} from "../../../services/filter-state.service";
-import {Subscription} from "rxjs";
+import {SupabaseService} from "../../../services/supabase.service";
 
 @Component({
   selector: 'app-caselist',
@@ -53,18 +54,18 @@ import {Subscription} from "rxjs";
     CommonModule,
     FilterSearchComponent,
     IonFabButton,
-    IonFab
+    IonFab,
+    DatePipe
   ],
   standalone: true
 })
 export class CaselistComponent implements OnInit {
-  router = inject(Router);
-  filterStateService = inject(FilterStateService);
 
   cases: CaseFiltered[] = [];
 
-  constructor() {
+  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router) {
     addIcons({
+      bookOutline,
       chevronUpOutline,
       chevronDownOutline,
       thumbsUpOutline,
@@ -92,4 +93,21 @@ export class CaselistComponent implements OnInit {
     console.log('Navigating to add page');
     this.router.navigate(['./tabs/tab2/add']);
   }
+
+  upvote(caseId: string) {
+    this.supabaseService.upvote(caseId).then(() => {
+      this.filterStateService.applyFilters();
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
+  downvote(caseId: string) {
+    this.supabaseService.downvote(caseId).then(() => {
+      this.filterStateService.applyFilters();
+    }).catch((error) => {
+      console.error(error);
+    });
+  }
+
 }

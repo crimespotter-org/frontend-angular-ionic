@@ -1,93 +1,119 @@
 <ion-menu side="end" [menuId]="menuId" contentId="searchbar">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Filter</ion-title>
+      <ion-title>Optionen</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-list lines="full" class="ion-padding-vertical">
+    <ion-segment [(ngModel)]="segmentValue" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="sort">
+        <ion-label>Sortieren</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="filter">
+        <ion-label>Filtern</ion-label>
+      </ion-segment-button>
+    </ion-segment>
 
-      <ion-item>
-        <ion-label position="stacked">Datumsbereich</ion-label>
-        <ion-toggle [(ngModel)]="enableDateRangeSearch" (ionChange)="toggleEnableDateRangeSearch($event)"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="enableDateRangeSearch">
-        <ion-label position="stacked">Startdatum</ion-label>
-        <ion-input [value]="startDate | date: 'dd.MM.YYYY'" id="open-start-modal"
-                   placeholder="Startdatum auswählen"></ion-input>
-        <ion-note *ngIf="missingStartDate" color="danger">Bitte Startdatum angeben.</ion-note>
-      </ion-item>
-      <ion-item *ngIf="enableDateRangeSearch">
-        <ion-label position="stacked">Enddatum</ion-label>
-        <ion-input [value]="endDate | date: 'dd.MM.YYYY'" id="open-end-modal"
-                   placeholder="Enddatum auswählen"></ion-input>
-        <ion-note *ngIf="missingEndDate" color="danger">Bitte Enddatum angeben.</ion-note>
-      </ion-item>
-
-      <ion-modal id="start-date-modal" trigger="open-start-modal" *ngIf="enableDateRangeSearch">
-        <ng-template>
-          <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setStartDate($event)"></ion-datetime>
-        </ng-template>
-      </ion-modal>
-
-      <ion-modal id="end-date-modal" trigger="open-end-modal" *ngIf="enableDateRangeSearch">
-        <ng-template>
-          <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setEndDate($event)"></ion-datetime>
-        </ng-template>
-      </ion-modal>
-
-      <ion-item>
-        <ion-label position="stacked">Falltyp</ion-label>
-        <ion-select multiple="true" interface="popover" placeholder="Typ auswählen" [(ngModel)]="selectedCaseTypes">
-          <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ casetype }}</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item>
-        <ion-label position="stacked">Status</ion-label>
-        <ion-select interface="popover" placeholder="Status auswählen" [(ngModel)]="selectedStatus">
-          <ion-select-option value="open">Offen</ion-select-option>
-          <ion-select-option value="closed">Geschlossen</ion-select-option>
-        </ion-select>
-      </ion-item>
-
-      <ion-item *ngIf="menuId!=='mapMenu'">
-        <ion-label position="stacked">Umkreissuche</ion-label>
-        <ion-toggle [(ngModel)]="enableLocationSearch"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu'">
-        <ion-label position="stacked">Aktuellen Standort verwenden</ion-label>
-        <ion-toggle [(ngModel)]="useCurrentLocation" (ionChange)="toggleUseCurrentLocation($event)"></ion-toggle>
-      </ion-item>
-
-      <ion-item *ngIf="enableLocationSearch && !useCurrentLocation && menuId!=='mapMenu'">
-        <ion-label position="stacked">Ort</ion-label>
-        <ion-input [(ngModel)]="inputLocation" (ionInput)="onLocationFilterChange(inputLocation)"
-                   placeholder="Ort auswählen"></ion-input>
-        <ion-note *ngIf="missingLocationDetails" color="danger">Bitte Ort angeben.</ion-note>
-      </ion-item>
-
-      <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0">
-        <ion-item *ngFor="let location of locations" (click)="onLocationFilterSelected(location)">
-          <ion-label>
-            {{ location.city }} <span *ngIf="location.postalCode">{{ ', ' + location.postalCode }}</span>
-          </ion-label>
+    <div *ngIf="segmentValue === 'sort'">
+      <ion-list lines="full" class="ion-padding-vertical">
+        <ion-item>
+          <ion-label position="stacked">Sortieren nach</ion-label>
+          <ion-select interface="popover" [(ngModel)]="selectedSortOrder" (ionChange)="applySorting()">
+            <ion-select-option value="title">Titel</ion-select-option>
+            <ion-select-option value="crime_date_time">Tatzeitpunkt</ion-select-option>
+            <ion-select-option value="created_at">Erstellt</ion-select-option>
+          </ion-select>
         </ion-item>
       </ion-list>
+    </div>
 
-      <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu' ">
-        <ion-label position="stacked">Umkreis (in km)</ion-label>
-        <ion-range min="1" max="100" pin="true" [(ngModel)]="radius">
-          <ion-label slot="start">1 km</ion-label>
-          <ion-label slot="end">100 km</ion-label>
-        </ion-range>
-      </ion-item>
+    <div *ngIf="segmentValue === 'filter'">
+      <ion-list lines="full" class="ion-padding-vertical">
 
-      <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
+        <ion-item>
+          <ion-label position="stacked">Datumsbereich Tatzeitpunkt</ion-label>
+          <ion-toggle [(ngModel)]="enableDateRangeSearch"
+                      (ionChange)="toggleEnableDateRangeSearch($event)"></ion-toggle>
+        </ion-item>
 
-    </ion-list>
+        <ion-item *ngIf="enableDateRangeSearch">
+          <ion-label position="stacked">Startdatum</ion-label>
+          <ion-input [value]="startDate | date: 'dd.MM.YYYY'" id="open-start-modal"
+                     placeholder="Startdatum auswählen"></ion-input>
+          <ion-note *ngIf="missingStartDate" color="danger">Bitte Startdatum angeben.</ion-note>
+        </ion-item>
+        <ion-item *ngIf="enableDateRangeSearch">
+          <ion-label position="stacked">Enddatum</ion-label>
+          <ion-input [value]="endDate | date: 'dd.MM.YYYY'" id="open-end-modal"
+                     placeholder="Enddatum auswählen"></ion-input>
+          <ion-note *ngIf="missingEndDate" color="danger">Bitte Enddatum angeben.</ion-note>
+        </ion-item>
+
+        <ion-modal id="start-date-modal" trigger="open-start-modal" *ngIf="enableDateRangeSearch">
+          <ng-template>
+            <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setStartDate($event)"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+
+        <ion-modal id="end-date-modal" trigger="open-end-modal" *ngIf="enableDateRangeSearch">
+          <ng-template>
+            <ion-datetime [preferWheel]="true" presentation="date" (ionChange)="setEndDate($event)"></ion-datetime>
+          </ng-template>
+        </ion-modal>
+
+        <ion-item>
+          <ion-label position="stacked">Falltyp</ion-label>
+          <ion-select multiple="true" interface="popover" placeholder="Typ auswählen" [(ngModel)]="selectedCaseTypes">
+            <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ casetype }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item>
+          <ion-label position="stacked">Status</ion-label>
+          <ion-select interface="popover" placeholder="Status auswählen" [(ngModel)]="selectedStatus">
+            <ion-select-option value="open">Offen</ion-select-option>
+            <ion-select-option value="closed">Geschlossen</ion-select-option>
+          </ion-select>
+        </ion-item>
+
+        <ion-item *ngIf="menuId!=='mapMenu'">
+          <ion-label position="stacked">Umkreissuche</ion-label>
+          <ion-toggle [(ngModel)]="enableLocationSearch"></ion-toggle>
+        </ion-item>
+
+        <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu'">
+          <ion-label position="stacked">Aktuellen Standort verwenden</ion-label>
+          <ion-toggle [(ngModel)]="useCurrentLocation" (ionChange)="toggleUseCurrentLocation($event)"></ion-toggle>
+        </ion-item>
+
+        <ion-item *ngIf="enableLocationSearch && !useCurrentLocation && menuId!=='mapMenu'">
+          <ion-label position="stacked">Ort</ion-label>
+          <ion-input [(ngModel)]="inputLocation" (ionInput)="onLocationFilterChange(inputLocation)"
+                     placeholder="Ort auswählen"></ion-input>
+          <ion-note *ngIf="missingLocationDetails" color="danger">Bitte Ort angeben.</ion-note>
+        </ion-item>
+
+        <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0 && menuId!=='mapMenu'">
+          <ion-item *ngFor="let location of locations" (click)="onLocationFilterSelected(location)">
+            <ion-label>
+              {{ location.city }} <span *ngIf="location.postalCode">{{ ', ' + location.postalCode }}</span>
+            </ion-label>
+          </ion-item>
+        </ion-list>
+
+        <ion-item *ngIf="enableLocationSearch && menuId!=='mapMenu' ">
+          <ion-label position="stacked">Umkreis (in km)</ion-label>
+          <ion-range min="1" max="100" pin="true" [(ngModel)]="radius">
+            <ion-label slot="start">1 km</ion-label>
+            <ion-label slot="end">100 km</ion-label>
+          </ion-range>
+        </ion-item>
+
+        <ion-button expand="block" (click)="applyFilters()">Filter anwenden</ion-button>
+
+      </ion-list>
+    </div>
+
   </ion-content>
 </ion-menu>
 
@@ -98,28 +124,30 @@
                    (ionBlur)="onSearchBlur()"
                    (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
     </ion-searchbar>
-    <ion-list *ngIf="searchList.length > 0">
-      <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
+    <div class="chips-container">
+      <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'" (click)="toggleSortDirection()">
+        <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>
         <ion-label>
-          <span *ngIf="search.city"> {{search.city}} <span
-            *ngIf="search.postalCode"> {{ ', ' + search.postalCode }} </span> </span>
+          {{ selectedSortOrder === 'created_at' ? 'Erstellt' :
+          (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
+            (selectedSortOrder === 'title' ? 'Titel' : '')) }}
         </ion-label>
-      </ion-item>
-    </ion-list>
+      </ion-chip>
+      <ion-chip *ngFor="let filter of filters" color="primary">
+        <ion-label>
+          {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
+          {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : ''}}
+          {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
+          {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
+        </ion-label>
+        <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
+      </ion-chip>
+    </div>
     <ion-buttons slot="end">
       <ion-button (click)="openFilterMenu()">
         <ion-icon slot="icon-only" name="options-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-chip *ngFor="let filter of filters" color="primary">
-      <ion-label>
-        {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
-        {{ filter.type === 'status' ? 'Status: ' + (filter.value==="open"? 'Offen' : 'Geschlossen') : ''}}
-        {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
-        {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
-      </ion-label>
-      <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
-    </ion-chip>
-
   </ion-toolbar>
 </ion-header>
+

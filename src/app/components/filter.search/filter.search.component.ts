@@ -1,4 +1,4 @@
-import {Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -16,7 +16,7 @@ import {
   IonMenu,
   IonModal, IonNote,
   IonRange,
-  IonSearchbar,
+  IonSearchbar, IonSegment, IonSegmentButton,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -26,7 +26,7 @@ import {
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, formatDate, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
-import {closeCircle, optionsOutline} from "ionicons/icons";
+import {closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline} from "ionicons/icons";
 import {FormsModule} from "@angular/forms";
 import {FilterStateService} from "../../services/filter-state.service";
 import {DataService} from "../../services/data.service";
@@ -68,7 +68,9 @@ import {QueryLocationResponse} from "../../shared/interfaces/query-location-resp
     NgIf,
     CommonModule,
     IonToggle,
-    IonNote
+    IonNote,
+    IonSegmentButton,
+    IonSegment
   ],
   standalone: true
 })
@@ -96,20 +98,23 @@ export class FilterSearchComponent implements OnInit {
   searchDebounceTime?: any;
   inputSearch?: any;
   searchList: any[] = [];
+  selectedSortOrder = 'created_at';
+  segmentValue = 'sort';
+  isAscendingSort = false;
 
   constructor(private menu: MenuController,
               private filterStateService: FilterStateService,
               private dataService: DataService,
               private storageService: StorageService,
               @Inject(LOCALE_ID) private locale: string) {
-    addIcons({closeCircle, optionsOutline});
+    addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
 
   ngOnInit() {
     this.filterStateService.filters$.subscribe(filters => {
       this.filters = filters;
     });
-    this.caseTypes = this.storageService.getCaseTypes();
+
   }
 
   initializeFilterVariables() {
@@ -200,11 +205,21 @@ export class FilterSearchComponent implements OnInit {
     await this.menu.close(this.menuId);
   }
 
+  applySorting() {
+    this.filterStateService.sortCases(this.selectedSortOrder, this.isAscendingSort);
+  }
+
+  toggleSortDirection() {
+    this.isAscendingSort = !this.isAscendingSort;
+    this.filterStateService.sortCases(this.selectedSortOrder, this.isAscendingSort);
+  }
+
   openFilterMenu() {
     this.menu.enable(true, this.menuId);
     this.menu.open(this.menuId).then(() => {
       this.initializeFilterVariables();
     });
+    this.caseTypes = this.storageService.getCaseTypes();
   }
 
   removeFilter(filterToRemove: Filter): void {
@@ -349,5 +364,9 @@ export class FilterSearchComponent implements OnInit {
       return `Ort: ${filterValue.city}, Radius: ${filterValue.radius}km`;
     }
     return ''
+  }
+
+  segmentChanged(event: any) {
+    this.segmentValue = event.detail.value;
   }
 }

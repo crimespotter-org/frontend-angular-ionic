@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Filter} from "../shared/interfaces/filter";
 import {SupabaseService} from "./supabase.service";
-import {BehaviorSubject} from "rxjs";
+import {BehaviorSubject, Subject} from "rxjs";
 import {CaseFiltered} from "../shared/types/supabase";
 import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
@@ -18,7 +18,9 @@ export class FilterStateService {
     longitude: 13.4050
   });
   private _searchQuery = new BehaviorSubject<string>('');
+  private updateTrigger = new Subject<void>();
 
+  public updateTrigger$ = this.updateTrigger.asObservable();
   public readonly filters$ = this._filters.asObservable();
   public readonly filteredCases$ = this._filteredCases.asObservable();
   public readonly searchLocation$ = this._searchLocation.asObservable();
@@ -30,7 +32,7 @@ export class FilterStateService {
   }
 
   private async initializeCases(): Promise<void> {
-    this.applyFilters(); // Führt eine Anfrage ohne Filter durch
+    this.applyFilters('created_at', false);
   }
 
   private async initializeLocation() {
@@ -49,10 +51,10 @@ export class FilterStateService {
 
   setSearchQuery(query: string): void {
     this._searchQuery.next(query);
-    this.applyFilters(); // Aktualisiere die gefilterten Fälle basierend auf dem neuen Suchtext
+    this.applyFilters();
   }
 
-  async applyFilters(): Promise<void> {
+  async applyFilters(sortOrder?: string, isAscending?: boolean): Promise<void> {
     const filters = this._filters.getValue();
     const searchQuery = this._searchQuery.getValue();
 
@@ -67,6 +69,34 @@ export class FilterStateService {
     }
 
     this._filteredCases.next(cases);
+    if (sortOrder && isAscending) {
+      this.sortCases(sortOrder, isAscending);
+    }
+  }
+
+  sortCases(sortOrder: string, isAscending: boolean): void {
+    const cases = this._filteredCases.getValue();
+    let sortedCases;
+
+    switch (sortOrder) {
+      case 'title':
+        sortedCases = cases.sort((a, b) => a.title.localeCompare(b.title));
+        break;
+      case 'created_at':
+        sortedCases = cases.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        break;
+      case 'crime_date_time':
+        sortedCases = cases.sort((a, b) => new Date(a.crime_date_time).getTime() - new Date(b.crime_date_time).getTime());
+        break;
+      default:
+        sortedCases = cases;
+    }
+
+    if (!isAscending) {
+      sortedCases = sortedCases.reverse();
+    }
+
+    this._filteredCases.next(sortedCases);
   }
 
   convertFiltersToFilterOptions(filters: Filter[]): FilterOptions {
@@ -110,7 +140,11 @@ export class FilterStateService {
     return this._filters.getValue();
   }
 
-  async goToCurrentLocation(){
+  async goToCurrentLocation() {
     await this.initializeLocation();
+  }
+
+  public triggerMapUpdate() {
+    this.updateTrigger.next();
   }
 }
