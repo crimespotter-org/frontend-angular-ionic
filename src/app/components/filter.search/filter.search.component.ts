@@ -109,7 +109,7 @@ export class FilterSearchComponent implements OnInit {
     this.filterStateService.filters$.subscribe(filters => {
       this.filters = filters;
     });
-    this.caseTypes = this.storageService.getCaseTypes();
+
   }
 
   initializeFilterVariables() {
@@ -205,6 +205,7 @@ export class FilterSearchComponent implements OnInit {
     this.menu.open(this.menuId).then(() => {
       this.initializeFilterVariables();
     });
+    this.caseTypes = this.storageService.getCaseTypes();
   }
 
   removeFilter(filterToRemove: Filter): void {
