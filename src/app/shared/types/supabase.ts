@@ -100,6 +100,7 @@ export type Database = {
           case_id: string | null
           created_at: string | null
           id: string
+          link_type: Database["public"]["Enums"]["link_type"] | null
           type: string
           url: string
         }
@@ -107,6 +108,7 @@ export type Database = {
           case_id?: string | null
           created_at?: string | null
           id?: string
+          link_type?: Database["public"]["Enums"]["link_type"] | null
           type: string
           url: string
         }
@@ -114,6 +116,7 @@ export type Database = {
           case_id?: string | null
           created_at?: string | null
           id?: string
+          link_type?: Database["public"]["Enums"]["link_type"] | null
           type?: string
           url?: string
         }
@@ -267,6 +270,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_case: {
+        Args: {
+          p_title: string
+          p_summary: string
+          p_location: unknown
+          p_status: string
+          p_created_by: string
+          p_place_name: string
+          p_zip_code: number
+          p_case_type: Database["public"]["Enums"]["casetype"]
+          p_links_json: Json
+        }
+        Returns: string
+      }
       find_nearby_cases: {
         Args: {
           distance: number
@@ -325,12 +342,21 @@ export type Database = {
           place_name: string
           zip_code: number
           case_type: Database["public"]["Enums"]["casetype"]
+          upvotes: number
+          downvotes: number
+          user_vote: number
+          has_newspaper: boolean
+          has_podcast: boolean
+          has_book: boolean
+          has_media: boolean
         }
       }
     }
     Enums: {
       casetype: "Mord" | "Diebstahl" | "Raubmord" | "Schlägerei"
+      link_type: "newspaper" | "podcast" | "book"
       roles: "crimefluencer" | "crimespotter" | "admin"
+      status: "open" | "closed"
     }
     CompositeTypes: {
       [_ in never]: never

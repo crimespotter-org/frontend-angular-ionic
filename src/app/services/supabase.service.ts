@@ -117,4 +117,42 @@ export class SupabaseService {
       return [];
     }
   }
+
+  async upvote(caseId: string): Promise<void> {
+    const userId = this.storageService.getUserId();
+    if (userId !== null) {
+      await this.manageVote(caseId, userId, 1);
+    }
+  }
+
+  async downvote(caseId: string): Promise<void> {
+    const userId = this.storageService.getUserId();
+    if (userId !== null) {
+      await this.manageVote(caseId, userId, -1);
+    }
+  }
+
+  private async manageVote(caseId: string, userId: string, vote: number): Promise<void> {
+    const { data, error } = await this.supabase
+      .from('votes')
+      .select('*')
+      .match({ case_id: caseId, user_id: userId })
+      .single();
+
+    if (data) {
+      const { error: updateError } = await this.supabase
+        .from('votes')
+        .update({ vote })
+        .match({ id: data.id });
+    } else {
+      const { error: insertError } = await this.supabase
+        .from('votes')
+        .insert([
+          { case_id: caseId, user_id: userId, vote }
+        ]);
+      if (insertError) {
+        console.error(insertError);
+      }
+    }
+  }
 }
