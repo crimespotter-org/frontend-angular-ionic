@@ -32,7 +32,7 @@ export class FilterStateService {
   }
 
   private async initializeCases(): Promise<void> {
-    this.applyFilters();
+    this.applyFilters('created_at', false);
   }
 
   private async initializeLocation() {

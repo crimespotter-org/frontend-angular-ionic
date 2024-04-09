@@ -100,7 +100,7 @@ export class FilterSearchComponent implements OnInit {
   searchList: any[] = [];
   selectedSortOrder = 'created_at';
   segmentValue = 'sort';
-  isAscendingSort = true;
+  isAscendingSort = false;
 
   constructor(private menu: MenuController,
               private filterStateService: FilterStateService,
@@ -206,12 +206,12 @@ export class FilterSearchComponent implements OnInit {
   }
 
   applySorting() {
-    this.filterStateService.applyFilters(this.selectedSortOrder, this.isAscendingSort);
+    this.filterStateService.sortCases(this.selectedSortOrder, this.isAscendingSort);
   }
 
   toggleSortDirection() {
     this.isAscendingSort = !this.isAscendingSort;
-    this.applySorting();
+    this.filterStateService.sortCases(this.selectedSortOrder, this.isAscendingSort);
   }
 
   openFilterMenu() {
