@@ -125,7 +125,7 @@
                    (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
     </ion-searchbar>
     <div class="chips-container">
-      <ion-chip color="secondary" *ngIf="selectedSortOrder" (click)="toggleSortDirection()">
+      <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'" (click)="toggleSortDirection()">
         <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>
         <ion-label>
           {{ selectedSortOrder === 'created_at' ? 'Erstellt' :
