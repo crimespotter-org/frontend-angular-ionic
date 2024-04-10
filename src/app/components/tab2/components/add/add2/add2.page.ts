@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
-import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
@@ -120,8 +120,8 @@ export class Add2Page implements OnInit {
 
   addLink() {
     this.links.push(this.addService.fb.group({
-      value: '',
-      type: this.linkTypes[0]
+      value: ['', Validators.required],
+      type: [this.linkTypes[0], ]
     }));
   }
 
@@ -136,7 +136,7 @@ export class Add2Page implements OnInit {
 
   async chooseIcon(idx: number){
     const actionSheet = await this.actionSheetController.create({
-      header: 'Links',
+      header: 'Link-Typ wählen',
       buttons: this.linkTypes.map(type => {
         return {
           text: HelperUtils.formatLinkType(type),

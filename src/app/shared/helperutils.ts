@@ -25,7 +25,7 @@ export class HelperUtils{
           case 'podcast':
             return 'Podcast'
           default:
-            return 'link-outline'
+            return 'undefined'
         }
       }
     
