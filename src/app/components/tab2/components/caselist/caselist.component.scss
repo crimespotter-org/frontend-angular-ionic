@@ -50,10 +50,10 @@ ion-item {
     display: -webkit-box;
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
+    font-size: 0.8rem;
   }
-}
-
-.created-at {
-  font-size: 0.6rem;
-  margin-top: 4px;
+  .created-at {
+    font-size: 0.6rem;
+    margin-top: 4px;
+  }
 }
