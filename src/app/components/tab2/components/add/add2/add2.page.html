@@ -39,15 +39,14 @@
 
     <ion-item>
       <ion-label position="stacked">Links</ion-label>
-
-      @for(link of webLinks; track link){
+      @for(link of links.controls; track link; let idx = $index){
       <ion-item id="linkContainer">
-        <ion-icon slot="start" name="link-outline"></ion-icon>
-        <ion-input placeholder="Link eingeben"></ion-input>
-        <ion-icon slot="end" name="close-outline" (click)="removeLink(link)" style="cursor: pointer;"></ion-icon>
+          <ion-icon slot="start" [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)" (click)="chooseIcon(idx)"></ion-icon>
+          <ion-input placeholder="Link eingeben"></ion-input>
+          <ion-icon slot="end" name="close-outline" (click)="removeLink(idx)" style="cursor: pointer;"></ion-icon>
+        </ion-item>
+        }
 
-      </ion-item>
-      }
       <ion-item button id="addLinkContainer" (click)="addLink()">
         <ion-icon slot="start" name="add-outline"></ion-icon>
         <ion-label>Link hinzufügen</ion-label>
@@ -55,7 +54,7 @@
     </ion-item>
   </form>
 
-  
+
 </ion-content>
 
 

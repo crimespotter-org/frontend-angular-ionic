@@ -4,6 +4,7 @@ const USER_ROLE_KEY = "user_role";
 const USER_EMAIL_KEY = "user_email";
 const USER_ID_KEY = "user_id";
 const CASE_TYPE_KEY = "case_type";
+const LINK_TYPE_KEY = "link_type";
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +42,20 @@ export class StorageService {
   public saveCaseTypes(types: string[]) {
     sessionStorage.setItem(CASE_TYPE_KEY, JSON.stringify(types));  }
 
+  public saveLinkTypes(types: string[]) {
+    sessionStorage.setItem(LINK_TYPE_KEY, JSON.stringify(types));
+  }
+
   public getCaseTypes() {
     const data = sessionStorage.getItem(CASE_TYPE_KEY);
+    if (data) {
+      return JSON.parse(data);
+    }
+    return [];
+  }
+
+  public getLinkTypes() {
+    const data = sessionStorage.getItem(LINK_TYPE_KEY);
     if (data) {
       return JSON.parse(data);
     }

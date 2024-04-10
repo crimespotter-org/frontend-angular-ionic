@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline } from 'ionicons/icons';
+import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
@@ -10,6 +10,11 @@ import { SelectionMapComponent } from "../../../../selection-map/selection-map.c
 import { AddService } from 'src/app/services/add.service';
 import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
 import { CommonModule } from '@angular/common';
+import { StorageService } from 'src/app/services/storage.service';
+import { FurtherLink } from 'src/app/shared/interfaces/further-link.interface';
+import { HelperUtils } from 'src/app/shared/helperutils';
+import { ActionSheetController } from '@ionic/angular/standalone';
+import { Action } from 'rxjs/internal/scheduler/Action';
 
 @Component({
   selector: 'app-add2',
@@ -50,22 +55,39 @@ import { CommonModule } from '@angular/common';
 })
 export class Add2Page implements OnInit {
 
+  HelperUtils = HelperUtils;
+
   router = inject(Router)
   addService = inject(AddService);
+  storageService = inject(StorageService);
+  actionSheetController = inject(ActionSheetController);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
-
-  webLinks: webLink[] = [];
   images: Photo[] = [];
   location: Location | undefined;
 
   form: FormGroup;
+  links: FormArray;
+
+  linkTypes: string[] = [];
+
+  //TODO: Make this globally accessible to also show icons in case details page
+  LinkTypeToIcon: Map<string, string> = new Map([
+    ['website', 'link-outline'],
+    ['facebook', 'logo-facebook'],
+    ['twitter', 'logo-twitter'],
+  ]);
 
   constructor() {
-    addIcons({ linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
+    addIcons({ micOutline, bookOutline, newspaperOutline, linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
 
     this.form = this.addService.form.get('page2') as FormGroup;
+    this.links = this.form.get('further_links') as FormArray;
+
+    this.linkTypes = this.storageService.getLinkTypes();
+
+    console.log(this.linkTypes);
   }
 
   ngOnInit() {
@@ -92,36 +114,41 @@ export class Add2Page implements OnInit {
       this.images.splice(index, 1); // Remove one element at the found index
     }
   }
-
   routeToPreviousPage() {
     this.router.navigate(["tabs/tab2/add"]);
   }
 
-  addLink(){
-    this.webLinks.push({value: '', type: LinkType.article});
+  addLink() {
+    this.links.push(this.addService.fb.group({
+      value: '',
+      type: this.linkTypes[0]
+    }));
   }
 
-  removeLink(link: webLink){
-    console.log("clicked");
-    let index = this.webLinks.findIndex(item => item === link);
-    if (index !== -1) {
-      this.webLinks.splice(index, 1); // Remove one element at the found index
-    }
+  removeLink(index: number) {
+    this.links.removeAt(index) // Remove one element at the found index
   }
 
-  submitForm(){
+  submitForm() {
     console.log(this.form.value);
     console.log(this.form.valid)
   }
+
+  async chooseIcon(idx: number){
+    const actionSheet = await this.actionSheetController.create({
+      header: 'Links',
+      buttons: this.linkTypes.map(type => {
+        return {
+          text: HelperUtils.formatLinkType(type),
+          value: type,
+          handler: () => {
+            this.links.at(idx).patchValue({type: type});
+          }
+        };
+      })
+    });
+    await actionSheet.present();
+  }
+
 }
 
-
-enum LinkType{
-  podcast,
-  article
-}
-
-interface webLink{
-  value: string,
-  type: LinkType
-}

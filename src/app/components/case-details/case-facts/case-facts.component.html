@@ -11,7 +11,7 @@
     <div class="chips-container">
       <ion-chip color="primary">
         <ion-icon name="finger-print"></ion-icon>
-        <ion-label>{{ helperService.formatCrimeType(caseDetails.case_type) }}</ion-label>
+        <ion-label>{{ HelperUtils.formatCrimeType(caseDetails.case_type) }}</ion-label>
       </ion-chip>
       <ion-chip [color]="caseDetails.status === 'open' ? 'danger' : 'success'">
         <ion-icon name="lock-open-outline" *ngIf="caseDetails.status === 'open'"></ion-icon>
