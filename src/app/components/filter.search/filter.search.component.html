@@ -124,19 +124,30 @@
                    (ionBlur)="onSearchBlur()"
                    (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
     </ion-searchbar>
-    <div class="chips-container">
-      <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'" (click)="toggleSortDirection()">
-        <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>
+    <ion-list *ngIf="searchList.length > 0">
+      <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
         <ion-label>
-          {{ selectedSortOrder === 'created_at' ? 'Erstellt' :
-          (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
-            (selectedSortOrder === 'title' ? 'Titel' : '')) }}
+          <span *ngIf="search.city"> {{search.city}} <span
+            *ngIf="search.postalCode"> {{ ' ' + search.postalCode }} </span> </span>
         </ion-label>
+      </ion-item>
+    </ion-list>
+    <div class="chips-container">
+      <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'"
+                (click)="toggleSortDirection()">
+        <ion-label>
+          {{
+            selectedSortOrder === 'created_at' ? 'Erstellt' :
+              (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
+                (selectedSortOrder === 'title' ? 'Titel' : ''))
+          }}
+        </ion-label>
+        <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>
       </ion-chip>
       <ion-chip *ngFor="let filter of filters" color="primary">
         <ion-label>
           {{ filter.type === 'caseType' ? 'Falltyp: ' + filter.value : '' }}
-          {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : ''}}
+          {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : '' }}
           {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
           {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
         </ion-label>
