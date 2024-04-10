@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import {
   IonHeader,
   IonToolbar,
@@ -9,7 +9,7 @@ import {
 } from '@ionic/angular/standalone';
 import {ProfileEditPage} from "./components/profile-edit/profile-edit.page";
 import {PasswordChangePage} from "./components/password-change/password-change.page";
-import {SupabaseService} from "../services/supabase.service";
+import {SupabaseService} from "../../services/supabase.service";
 import {Router, RouterLink} from "@angular/router";
 
 @Component({
@@ -21,7 +21,8 @@ import {Router, RouterLink} from "@angular/router";
 })
 export class Tab3Page {
 
-  constructor(private modalController: ModalController, private supabaseService: SupabaseService, private router: Router) { }
+  constructor(private modalController: ModalController, private supabaseService: SupabaseService, private router: Router) {
+  }
 
   async openProfileEditModal() {
     const modal = await this.modalController.create({

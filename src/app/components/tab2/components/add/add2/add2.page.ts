@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Location } from 'src/app/shared/interfaces/location.interface';
-import { SelectionMapComponent } from "../../../components/selection-map/selection-map.component";
+import { SelectionMapComponent } from "../../../../selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
 import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
 import { CommonModule } from '@angular/common';
@@ -45,7 +45,7 @@ import { CommonModule } from '@angular/common';
     SelectionMapComponent,
     LocationPickerComponent,
     IonInput,
-    ReactiveFormsModule, 
+    ReactiveFormsModule,
   ]
 })
 export class Add2Page implements OnInit {

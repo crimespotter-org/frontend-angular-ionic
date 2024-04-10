@@ -1,14 +1,14 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
-import {Location} from "../../../shared/interfaces/location.interface"
+import {Location} from "../../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {murderMarker} from './markers';
-import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
 import {FilterStateService} from 'src/app/services/filter-state.service';
 import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {locateOutline} from "ionicons/icons";
 import {Geolocation} from "@capacitor/geolocation";
+import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
 
 @Component({
   selector: 'app-map',

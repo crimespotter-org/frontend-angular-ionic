@@ -14,20 +14,20 @@ import { AddService } from 'src/app/services/add.service';
     templateUrl: './add1.page.html',
     styleUrls: ['./add1.page.scss'],
     standalone: true,
-    imports: [IonItem, 
-      IonContent, 
-      IonHeader, 
-      FormsModule, 
-      ReactiveFormsModule, 
-      IonToast, 
-      IonContent, 
-      IonToolbar, 
-      IonLabel, 
-      IonTitle, 
-      IonFab, 
+    imports: [IonItem,
+      IonContent,
+      IonHeader,
+      FormsModule,
+      ReactiveFormsModule,
+      IonToast,
+      IonContent,
+      IonToolbar,
+      IonLabel,
+      IonTitle,
+      IonFab,
       IonIcon,
       IonFabButton,
-      IonSelect, 
+      IonSelect,
       IonSelectOption,
       IonTextarea,
       IonButton,
@@ -56,7 +56,7 @@ export class Add1Page implements AfterViewInit {
   type: string | undefined;
 
   caseTypes: string[] = [];
-  
+
   constructor() {
     addIcons({locationOutline, addOutline, trashOutline, chevronForwardOutline, warningOutline});
 
@@ -64,18 +64,18 @@ export class Add1Page implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.caseTypes = this.storageService.getCaseTypes(); 
+    this.caseTypes = this.storageService.getCaseTypes();
   }
 
   routeToNextPage(){
     console.log(this.form.value);
     if(this.form.valid){
       this.router.navigate(['tabs/tab2/add2']);
-    }    
+    }
     else{
       this.toast.present();
     }
- 
+
   }
 
 }

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import {IonHeader, IonToolbar, IonTitle, IonContent, IonSearchbar} from '@ionic/angular/standalone';
 import {MapComponent} from "./components/map/map.component";
-import {FilterSearchComponent} from "../components/filter.search/filter.search.component";
-import {FilterStateService} from "../services/filter-state.service";
+import {FilterSearchComponent} from "../filter-search/filter.search.component";
+import {FilterStateService} from "../../services/filter-state.service";
 
 @Component({
   selector: 'app-tab1',

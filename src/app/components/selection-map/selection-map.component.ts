@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Location } from 'src/app/shared/interfaces/location.interface';
-import { defaultMarker } from 'src/app/tab1/components/map/markers';
+import { defaultMarker } from 'src/app/components/tab1/components/map/markers';
 import {ViewDidEnter, IonSearchbar } from '@ionic/angular/standalone';
 
 @Component({

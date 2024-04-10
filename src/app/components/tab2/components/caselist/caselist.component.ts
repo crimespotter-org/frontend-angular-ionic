@@ -28,11 +28,11 @@ import {
   thumbsDownOutline,
   thumbsUpOutline
 } from "ionicons/icons";
-import {CaseFiltered} from "../../../shared/types/supabase";
-import {FilterSearchComponent} from "../../../components/filter.search/filter.search.component";
 import {Router} from '@angular/router';
-import {FilterStateService} from "../../../services/filter-state.service";
-import {SupabaseService} from "../../../services/supabase.service";
+import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
+import {CaseFiltered} from "../../../../shared/types/supabase";
+import {SupabaseService} from "../../../../services/supabase.service";
+import {FilterStateService} from "../../../../services/filter-state.service";
 
 @Component({
   selector: 'app-caselist',
@@ -91,7 +91,7 @@ export class CaselistComponent implements OnInit {
 
   navigateToAddPage() {
     console.log('Navigating to add page');
-    this.router.navigate(['./tabs/tab2/add']);
+    this.router.navigate(['/tabs/tab2/add']);
   }
 
   upvote(caseId: string) {
