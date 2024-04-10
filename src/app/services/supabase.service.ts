@@ -52,15 +52,31 @@ export class SupabaseService {
     if (user.user?.email) this.storageService.saveUserEmail(user.user?.email);
     if (user.user?.id) this.storageService.saveUserId(user.user?.id);
 
-    const {data: role} = await this.supabase
-      .from('user_profiles')
-      .select('role')
-      .eq('id', user.user?.id)
-      .single();
+    const {data: role} = await this.getUserRole(user.user?.id);
 
-    if (role?.role) this.storageService.saveUserRole(role.role);
+    if (role?.role && role?.role !== '') this.storageService.saveUserRole(role.role);
 
     return user.user
+  }
+
+  async getUserName(userId: string) {
+    const {data: user} = await this.supabase
+      .from('user_profiles')
+      .select('username')
+      .eq('id', userId)
+      .single();
+
+    return user? user.username : '';
+  }
+
+  async getUserRole(userId: string) {
+    const {data: user} = await this.supabase
+      .from('user_profiles')
+      .select('role')
+      .eq('id', userId)
+      .single();
+
+    return user? user.role : '';
   }
 
   async getAllCases(): Promise<Case[] | []> {
@@ -88,7 +104,10 @@ export class SupabaseService {
       };
     }
 
-    const {data: cases, error} = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
+    const {
+      data: cases,
+      error
+    } = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
 
     if (error) {
       console.error(error);
@@ -98,14 +117,17 @@ export class SupabaseService {
   }
 
   async getCaseDetails(case_id_param: string): Promise<CaseDetails | null> {
-
-    const {data: details, error} = await this.supabase.rpc('get_case_details_angular', {case_id_param}).returns<CaseDetails>();
+    const {
+      data: details,
+      error
+    } = await this.supabase.rpc('get_case_details_angular', {case_id_param}).returns<CaseDetails[]>();
 
     if (error) {
       console.error(error);
+      return null;
     }
 
-    return details;
+    return details && details.length > 0 ? details[0] : null;
   }
 
   async updateCaseTypes() {
@@ -138,26 +160,77 @@ export class SupabaseService {
   }
 
   private async manageVote(caseId: string, userId: string, vote: number): Promise<void> {
-    const { data, error } = await this.supabase
+    const {data, error} = await this.supabase
       .from('votes')
       .select('*')
-      .match({ case_id: caseId, user_id: userId })
+      .match({case_id: caseId, user_id: userId})
       .single();
 
     if (data) {
-      const { error: updateError } = await this.supabase
+      const {error: updateError} = await this.supabase
         .from('votes')
-        .update({ vote })
-        .match({ id: data.id });
+        .update({vote})
+        .match({id: data.id});
     } else {
-      const { error: insertError } = await this.supabase
+      const {error: insertError} = await this.supabase
         .from('votes')
         .insert([
-          { case_id: caseId, user_id: userId, vote }
+          {case_id: caseId, user_id: userId, vote}
         ]);
       if (insertError) {
         console.error(insertError);
       }
     }
   }
+
+  subscribeToComments(caseId: string, callback: Function) {
+    return this.supabase
+      .channel(`comments:case_id=eq.${caseId}`).on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'comments'
+      }, async (payload) => {
+        console.log(payload.new)
+        const username = await this.getUserName(payload.new['user_id']);
+        callback({
+          case_id: payload.new['case_id'],
+          created_at: payload.new['created_at'],
+          id: payload.new['id'],
+          text: payload.new['text'],
+          user_id: {
+            username: username
+          }
+        });
+      }).subscribe();
+  }
+
+  addComment(caseId: string, userId: string, text: string) {
+    return this.supabase
+      .from('comments')
+      .insert([{case_id: caseId, user_id: userId, text}]);
+  }
+
+  async getCommentsByCaseId(caseId: string) {
+    const data: any = await this.supabase
+      .from('comments')
+      .select(`
+      id,
+      text,
+      created_at,
+      user_id (
+        username
+      )
+    `)
+      .eq('case_id', caseId)
+      .order('created_at', {ascending: false});
+
+    if(data.error) {
+      console.log(data.error)
+    }
+
+    console.log(data.data)
+
+    return data.data? data.data : [];
+  }
+
 }

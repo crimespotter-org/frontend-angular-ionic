@@ -19,7 +19,10 @@
 
 <ion-content>
   <ng-container [ngSwitch]="segment">
-    <app-case-facts *ngSwitchCase="'facts'" [caseDetails]="caseDetails"></app-case-facts>
+    <app-case-facts *ngSwitchCase="'facts'"></app-case-facts>
+    <app-case-links *ngSwitchCase="'links'"></app-case-links>
+    <app-case-media *ngSwitchCase="'media'"></app-case-media>
+    <app-case-chat *ngSwitchCase="'comments'" [caseId]="caseId"></app-case-chat>
   </ng-container>
   <ion-fab vertical="bottom" horizontal="start" slot="fixed">
     <ion-fab-button (click)="goBack()">

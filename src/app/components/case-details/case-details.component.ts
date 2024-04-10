@@ -17,6 +17,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {SupabaseService} from "../../services/supabase.service";
 import {addIcons} from "ionicons";
 import {chevronBackOutline} from "ionicons/icons";
+import {CaseDetailsService} from "../../services/case-details.service";
+import {CaseLinksComponent} from "./case-links/case-links.component";
+import {CaseMediaComponent} from "./case-media/case-media.component";
+import {CaseChatComponent} from "./case-chat/case-chat.component";
 
 
 @Component({
@@ -39,20 +43,22 @@ import {chevronBackOutline} from "ionicons/icons";
     IonTitle,
     IonSegmentButton,
     IonSegment,
-    IonLabel
+    IonLabel,
+    CaseLinksComponent,
+    CaseMediaComponent,
+    CaseChatComponent
   ],
   standalone: true
 })
 export class CaseDetailsComponent implements OnInit {
-  @Input() returnRoute: string = '/';
-
-  caseDetails?: CaseDetails;
-  segment: string = 'facts';
+  returnRoute: string = '';
+  caseId: string | null = '';
+  segment: string  = 'facts';
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private supabaseService: SupabaseService
+    private caseDetailsService: CaseDetailsService
   ) {
     addIcons({ chevronBackOutline });
   }
@@ -60,7 +66,10 @@ export class CaseDetailsComponent implements OnInit {
   ngOnInit(): void {
     const caseId = this.route.snapshot.paramMap.get('id');
     if (caseId) {
-      this.loadCaseDetails(caseId);
+      this.caseId = this.route.snapshot.paramMap.get('id');
+      if (this.caseId) {
+        this.caseDetailsService.loadCaseDetails(this.caseId);
+      }
     }
 
     const currentNavigation = this.router.getCurrentNavigation();
@@ -70,18 +79,7 @@ export class CaseDetailsComponent implements OnInit {
   }
 
   goBack() {
-    console.log(this.returnRoute)
     this.router.navigateByUrl(this.returnRoute);
-  }
-
-  async loadCaseDetails(caseId: string): Promise<void> {
-    this.supabaseService.getCaseDetails(caseId).then((caseDetail) => {
-      if (caseDetail) {
-        this.caseDetails = caseDetail;
-      }
-    }).catch((error) => {
-      console.error(error);
-    });
   }
 
   segmentChanged(event: any) {

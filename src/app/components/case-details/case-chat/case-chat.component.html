@@ -1,0 +1,13 @@
+<div *ngIf="comments.length > 0">
+  <ion-item *ngFor="let comment of comments">
+    <ion-label>
+      <h3>{{ comment.user_id.username }}</h3>
+      <p>{{ comment.text }}</p>
+      <p>{{ comment.created_at | date: 'short' }}</p>
+    </ion-label>
+  </ion-item>
+</div>
+<ion-item>
+  <ion-input [(ngModel)]="newCommentText" placeholder="Schreibe einen Kommentar..."></ion-input>
+  <ion-button (click)="addComment()">Senden</ion-button>
+</ion-item>
