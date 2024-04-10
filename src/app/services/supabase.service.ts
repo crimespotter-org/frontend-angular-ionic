@@ -97,9 +97,9 @@ export class SupabaseService {
     return cases || [];
   }
 
-  async getCaseDetails(caseId: string): Promise<CaseDetails | null> {
+  async getCaseDetails(case_id_param: string): Promise<CaseDetails | null> {
 
-    const {data: details, error} = await this.supabase.rpc('get_case_details_angular', caseId).returns<CaseDetails>();
+    const {data: details, error} = await this.supabase.rpc('get_case_details_angular', {case_id_param}).returns<CaseDetails>();
 
     if (error) {
       console.error(error);

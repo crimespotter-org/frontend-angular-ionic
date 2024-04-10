@@ -58,8 +58,6 @@ export class FilterStateService {
     const filters = this._filters.getValue();
     const searchQuery = this._searchQuery.getValue();
 
-    console.log(filters)
-
     let filterOptions: FilterOptions = this.convertFiltersToFilterOptions(filters);
 
     let cases = await this.supabaseService.getFilteredCases(filterOptions);

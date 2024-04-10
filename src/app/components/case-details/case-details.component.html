@@ -1,23 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="facts">
-        <ion-label>Fakten</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="links">
-        <ion-label>Links</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="media">
-        <ion-label>Medien</ion-label>
-      </ion-segment-button>
-      <ion-segment-button value="comments">
-        <ion-label>Chat</ion-label>
-      </ion-segment-button>
-    </ion-segment>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Case Details</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="facts">
+      <ion-label>Fakten</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="links">
+      <ion-label>Links</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="media">
+      <ion-label>Medien</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="comments">
+      <ion-label>Chat</ion-label>
+    </ion-segment-button>
+  </ion-segment>
   <ng-container [ngSwitch]="segment">
     <app-case-facts *ngSwitchCase="'facts'" [caseDetails]="caseDetails"></app-case-facts>
   </ng-container>

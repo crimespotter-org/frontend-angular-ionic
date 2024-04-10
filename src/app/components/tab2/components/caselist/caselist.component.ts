@@ -112,6 +112,5 @@ export class CaselistComponent implements OnInit {
   }
 
   navigateToCaseDetails(caseId: string) {
-    this.router.navigate(['tabs/case-details', caseId]);
-  }
+    this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });  }
 }
