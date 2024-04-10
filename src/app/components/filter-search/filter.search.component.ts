@@ -34,6 +34,7 @@ import {Geolocation} from "@capacitor/geolocation";
 import {StorageService} from "../../services/storage.service";
 import {Filter} from "../../shared/interfaces/filter";
 import {QueryLocationResponse} from "../../shared/interfaces/query-location-response";
+import {HelperService} from "../../services/helper.service";
 
 
 @Component({
@@ -106,6 +107,7 @@ export class FilterSearchComponent implements OnInit {
               private filterStateService: FilterStateService,
               private dataService: DataService,
               private storageService: StorageService,
+              protected helperService: HelperService,
               @Inject(LOCALE_ID) private locale: string) {
     addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
@@ -234,7 +236,7 @@ export class FilterSearchComponent implements OnInit {
     this.endDate = new Date(event.detail.value);
   }
 
-  toggleEnableDateRangeSearch($event: any){
+  toggleEnableDateRangeSearch($event: any) {
     if (!this.enableDateRangeSearch) {
       this.startDate = undefined;
       this.endDate = undefined;
@@ -308,18 +310,12 @@ export class FilterSearchComponent implements OnInit {
     this.inputLocation = location.city + (location.postalCode ? ', ' + location.postalCode : '');
   }
 
-  updateCaseTypeFilter(event: any) {
-    const selectedTypes: string[] = event.detail.value;
-    this.filters = this.filters.filter(f => f.type !== 'caseType');
-    selectedTypes.forEach(type => this.addCaseTypeFilter(type));
-  }
-
   onLocationFilterChange(searchText: string) {
-    clearTimeout(this.searchDebounceTime); // Bisherigen Timeout löschen
+    clearTimeout(this.searchDebounceTime);
 
     this.searchDebounceTime = setTimeout(() => {
       this.checkLocationInput(searchText);
-    }, 500); // 500 ms Verzögerung
+    }, 500);
   }
 
   checkLocationInput(query: string) {
@@ -328,26 +324,6 @@ export class FilterSearchComponent implements OnInit {
         this.locations = locations;
       });
     }
-  }
-
-  addCaseTypeFilter(type: string) {
-    this.filters.push({type: 'caseType', value: type});
-  }
-
-  updateStatusFilter(event: any) {
-    const selectedStatus: string = event.detail.value;
-    this.filters = this.filters.filter(f => f.type !== 'status');
-    if (selectedStatus) {
-      this.addStatusFilter(selectedStatus);
-    }
-  }
-
-  addStatusFilter(status: string) {
-    this.filters.push({type: 'status', value: status});
-  }
-
-  addDateRangeFilter(start: Date, end: Date) {
-    this.filters.push({type: 'dateRange', value: {start, end}});
   }
 
   formatDateRange(filterValue: Filter['value']): string {

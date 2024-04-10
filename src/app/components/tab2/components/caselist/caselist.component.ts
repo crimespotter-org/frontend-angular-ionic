@@ -33,6 +33,7 @@ import {FilterSearchComponent} from "../../../filter-search/filter.search.compon
 import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
+import {HelperService} from "../../../../services/helper.service";
 
 @Component({
   selector: 'app-caselist',
@@ -63,7 +64,7 @@ export class CaselistComponent implements OnInit {
 
   cases: CaseFiltered[] = [];
 
-  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router) {
+  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router, protected helperService: HelperService) {
     addIcons({
       bookOutline,
       chevronUpOutline,

@@ -317,7 +317,7 @@ export type Database = {
           long: number
         }
       }
-      get_case_details: {
+      get_case_details_angular: {
         Args: {
           case_id_param: string
         }
@@ -340,13 +340,13 @@ export type Database = {
           link_created_at: string
         }
       }
-      get_enum_values: {
+      get_enum_values_angular: {
         Args: {
           enum_typename: string
         }
         Returns: string[]
       }
-      get_filtered_cases: {
+      get_filtered_cases_angular: {
         Args: {
           start_date?: string
           end_date?: string
@@ -360,7 +360,7 @@ export type Database = {
           id: string
           title: string
           summary: string
-          status: string
+          status: Database["public"]["Enums"]["status"]
           created_at: string
           lat: number
           long: number
@@ -474,5 +474,7 @@ export type Enums<
     : never
 
 export type Case = Database['public']['Functions']['get_all_cases']['Returns']
-export type CaseFiltered = Database['public']['Functions']['get_filtered_cases']['Returns']
-export type CaseTypes = Database['public']['Functions']['get_enum_values']['Returns']
+export type CaseFiltered = Database['public']['Functions']['get_filtered_cases_angular']['Returns']
+export type CaseTypes = Database['public']['Functions']['get_enum_values_angular']['Returns']
+export type CaseDetails = Database['public']['Functions']['get_case_details_angular']['Returns']
+

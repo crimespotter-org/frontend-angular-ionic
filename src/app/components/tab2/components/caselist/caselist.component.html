@@ -12,7 +12,7 @@
     <ion-item>
       <ion-label>
         <h2>{{ case.title }}</h2>
-        <h5>{{ case.case_type }} | {{ case.status === 'open'? 'Offen' : 'Geschlossen'}}</h5>
+        <h5>{{ helperService.formatCrimeType(case.case_type) }} | {{ case.status === 'open'? 'Offen' : 'Geschlossen'}}</h5>
         <h5>Am {{ case.crime_date_time | date: 'dd.MM.YYYY' }} in {{ case.zip_code }}, {{ case.place_name}}</h5>
         <p>{{ case.summary }}</p>
         <p class="created-at">Erstellt am: {{ case.created_at | date: 'dd.MM.yyyy, HH:mm' }}</p>

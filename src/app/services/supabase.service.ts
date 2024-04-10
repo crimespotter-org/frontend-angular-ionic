@@ -94,7 +94,7 @@ export class SupabaseService {
       error
     }
 
-      = await this.supabase.rpc('get_filtered_cases', params).returns<CaseFiltered[]>();
+      = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
 
     if (error) {
       console.error(error);
@@ -106,7 +106,7 @@ export class SupabaseService {
   async updateCaseTypes() {
     try {
       let {data, error, status} = await this.supabase
-        .rpc('get_enum_values', {enum_typename: 'casetype'});
+        .rpc('get_enum_values_angular', {enum_typename: 'casetype'});
       if (data) {
         const caseTypes = data.map((item: any) => item.toString());
         this.storageService.saveCaseTypes(caseTypes);
