@@ -304,6 +304,27 @@ export type Database = {
           long: number
         }
       }
+      find_nearby_cases2: {
+        Args: {
+          distance: number
+          currentlat: number
+          currentlong: number
+        }
+        Returns: {
+          id: string
+          title: string
+          summary: string
+          status: Database["public"]["Enums"]["status"]
+          created_by: string
+          created_at: string
+          lat: number
+          long: number
+          place_name: string
+          zip_code: number
+          case_type: Database["public"]["Enums"]["casetype"]
+          crime_date_time: string
+        }
+      }
       get_all_cases: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -354,7 +375,7 @@ export type Database = {
           currentlong?: number
           distance?: number
           crime_types?: Database["public"]["Enums"]["casetype"][]
-          case_status?: string
+          case_status?: Database["public"]["Enums"]["status"]
         }
         Returns: {
           id: string
