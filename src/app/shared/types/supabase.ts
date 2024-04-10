@@ -18,7 +18,7 @@ export type Database = {
           id: string
           location: unknown | null
           place_name: string | null
-          status: string
+          status: Database["public"]["Enums"]["status"] | null
           summary: string | null
           title: string
           zip_code: number | null
@@ -31,7 +31,7 @@ export type Database = {
           id?: string
           location?: unknown | null
           place_name?: string | null
-          status: string
+          status?: Database["public"]["Enums"]["status"] | null
           summary?: string | null
           title: string
           zip_code?: number | null
@@ -44,7 +44,7 @@ export type Database = {
           id?: string
           location?: unknown | null
           place_name?: string | null
-          status?: string
+          status?: Database["public"]["Enums"]["status"] | null
           summary?: string | null
           title?: string
           zip_code?: number | null
@@ -317,6 +317,29 @@ export type Database = {
           long: number
         }
       }
+      get_case_details: {
+        Args: {
+          case_id_param: string
+        }
+        Returns: {
+          case_id: string
+          title: string
+          summary: string
+          lat: number
+          long: number
+          created_by: string
+          created_at: string
+          place_name: string
+          zip_code: number
+          case_type: Database["public"]["Enums"]["casetype"]
+          crime_date_time: string
+          status: Database["public"]["Enums"]["status"]
+          link_id: string
+          url: string
+          link_type: Database["public"]["Enums"]["link_type"]
+          link_created_at: string
+        }
+      }
       get_enum_values: {
         Args: {
           enum_typename: string
@@ -357,7 +380,7 @@ export type Database = {
       }
     }
     Enums: {
-      casetype: "Mord" | "Diebstahl" | "Raubmord" | "Schlägerei"
+      casetype: "murder" | "theft" | "robbery-murder" | "brawl" | "rape"
       link_type: "newspaper" | "podcast" | "book"
       roles: "crimefluencer" | "crimespotter" | "admin"
       status: "open" | "closed"
