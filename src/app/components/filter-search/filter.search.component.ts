@@ -116,7 +116,6 @@ export class FilterSearchComponent implements OnInit {
     this.filterStateService.filters$.subscribe(filters => {
       this.filters = filters;
     });
-
   }
 
   initializeFilterVariables() {

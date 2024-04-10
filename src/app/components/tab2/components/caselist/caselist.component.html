@@ -9,8 +9,8 @@
       </ion-item-option>
     </ion-item-options>
 
-    <ion-item (click)="navigateToCaseDetails(case.id)">
-      <ion-label>
+    <ion-item>
+      <ion-label (click)="navigateToCaseDetails(case.id,$event)">
         <h2>{{ case.title }}</h2>
         <h5>{{ helperService.formatCrimeType(case.case_type) }} | {{ case.status === 'open'? 'Offen' : 'Geschlossen'}}</h5>
         <h5>Am {{ case.crime_date_time | date: 'dd.MM.YYYY' }} in {{ case.zip_code }}, {{ case.place_name}}</h5>

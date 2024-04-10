@@ -67,7 +67,7 @@ export class FilterStateService {
     }
 
     this._filteredCases.next(cases);
-    if (sortOrder && isAscending) {
+    if (sortOrder && isAscending !== undefined) {
       this.sortCases(sortOrder, isAscending);
     }
   }

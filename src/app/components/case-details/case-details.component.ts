@@ -1,24 +1,45 @@
-import {Component, ElementRef, HostListener, Input, OnInit} from '@angular/core';
-import {CaseDetails} from "../../shared/types/supabase";
-import {SupabaseService} from "../../services/supabase.service";
-import {ActivatedRoute, Router} from "@angular/router";
-import {GestureController, IonicModule} from "@ionic/angular";
+import {Component, Input, OnInit} from "@angular/core";
 import {FormsModule} from "@angular/forms";
 import {CommonModule, NgSwitch} from "@angular/common";
 import {CaseFactsComponent} from "./case-facts/case-facts.component";
+import {
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon, IonLabel, IonSegment, IonSegmentButton, IonTitle,
+  IonToolbar
+} from "@ionic/angular/standalone";
+import {CaseDetails} from "../../shared/types/supabase";
+import {ActivatedRoute, Router} from "@angular/router";
+import {SupabaseService} from "../../services/supabase.service";
 import {addIcons} from "ionicons";
-import {arrowBack} from "ionicons/icons";
+import {chevronBackOutline} from "ionicons/icons";
+
 
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
   styleUrls: ['./case-details.component.scss'],
   imports: [
-    IonicModule,
     FormsModule,
     NgSwitch,
     CaseFactsComponent,
-    CommonModule
+    CommonModule,
+    IonFab,
+    IonFabButton,
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonButtons,
+    IonButton,
+    IonContent,
+    IonTitle,
+    IonSegmentButton,
+    IonSegment,
+    IonLabel
   ],
   standalone: true
 })
@@ -31,11 +52,9 @@ export class CaseDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private supabaseService: SupabaseService,
-    private gestureCtrl: GestureController,
-    private el: ElementRef,
+    private supabaseService: SupabaseService
   ) {
-    addIcons({ arrowBack });
+    addIcons({ chevronBackOutline });
   }
 
   ngOnInit(): void {
@@ -48,34 +67,10 @@ export class CaseDetailsComponent implements OnInit {
     if (currentNavigation?.extras.state && 'returnRoute' in currentNavigation.extras.state) {
       this.returnRoute = currentNavigation.extras.state['returnRoute'];
     }
-
-    this.setupEdgeSwipeBackGesture();
-  }
-
-  @HostListener('touchstart', ['$event'])
-  onTouchStart(event: TouchEvent) {
-    const touch = event.touches[0];
-    if (touch.clientX < 20) {
-      this.setupEdgeSwipeBackGesture();
-    }
-  }
-
-  setupEdgeSwipeBackGesture() {
-    const gesture = this.gestureCtrl.create({
-      el: this.el.nativeElement,
-      threshold: 15,
-      gestureName: 'edge-swipe-back',
-      onEnd: ev => {
-        if (ev.deltaX > 150) {
-          this.goBack();
-        }
-      }
-    }, true);
-
-    gesture.enable();
   }
 
   goBack() {
+    console.log(this.returnRoute)
     this.router.navigateByUrl(this.returnRoute);
   }
 

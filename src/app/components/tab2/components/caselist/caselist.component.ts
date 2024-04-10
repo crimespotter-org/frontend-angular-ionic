@@ -1,4 +1,4 @@
-import {Component, inject, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -28,7 +28,7 @@ import {
   thumbsDownOutline,
   thumbsUpOutline
 } from "ionicons/icons";
-import {Router} from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
 import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
@@ -56,7 +56,8 @@ import {HelperService} from "../../../../services/helper.service";
     FilterSearchComponent,
     IonFabButton,
     IonFab,
-    DatePipe
+    DatePipe,
+    RouterLink
   ],
   standalone: true
 })
@@ -86,10 +87,6 @@ export class CaselistComponent implements OnInit {
     });
   }
 
-  updateCases(cases: CaseFiltered[]) {
-    this.cases = cases;
-  }
-
   navigateToAddPage() {
     console.log('Navigating to add page');
     this.router.navigate(['/tabs/tab2/add']);
@@ -111,6 +108,14 @@ export class CaselistComponent implements OnInit {
     });
   }
 
-  navigateToCaseDetails(caseId: string) {
-    this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });  }
+  navigateToCaseDetails(caseId: string,  event: MouseEvent) {
+    let target: HTMLElement | null = event.target as HTMLElement | null;
+    while (target !== null) {
+      if (target.classList && target.classList.contains('vote-button')) {
+        return;
+      }
+      target = target.parentElement;
+    }
+    this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });
+  }
 }
