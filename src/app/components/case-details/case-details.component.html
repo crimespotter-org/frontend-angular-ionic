@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-segment [(ngModel)]="segment" (ionChange)="segmentChanged($event)">
+      <ion-segment-button value="facts">
+        <ion-label>Fakten</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="links">
+        <ion-label>Links</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="media">
+        <ion-label>Medien</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="comments">
+        <ion-label>Chat</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ng-container [ngSwitch]="segment">
+    <app-case-facts *ngSwitchCase="'facts'" [caseDetails]="caseDetails"></app-case-facts>
+  </ng-container>
+</ion-content>

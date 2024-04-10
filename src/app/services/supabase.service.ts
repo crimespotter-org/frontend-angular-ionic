@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {createClient, SupabaseClient} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
 import {StorageService} from "./storage.service";
-import {Case, CaseFiltered} from '../shared/types/supabase';
+import {Case, CaseDetails, CaseFiltered} from '../shared/types/supabase';
 import {FilterOptions} from "../shared/interfaces/filter.options";
 
 @Injectable({
@@ -88,19 +88,24 @@ export class SupabaseService {
       };
     }
 
-    const {
-      data: cases
-      ,
-      error
-    }
-
-      = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
+    const {data: cases, error} = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
 
     if (error) {
       console.error(error);
       return [];
     }
     return cases || [];
+  }
+
+  async getCaseDetails(caseId: string): Promise<CaseDetails | null> {
+
+    const {data: details, error} = await this.supabase.rpc('get_case_details_angular', caseId).returns<CaseDetails>();
+
+    if (error) {
+      console.error(error);
+    }
+
+    return details;
   }
 
   async updateCaseTypes() {

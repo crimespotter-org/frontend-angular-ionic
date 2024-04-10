@@ -9,7 +9,7 @@
       </ion-item-option>
     </ion-item-options>
 
-    <ion-item>
+    <ion-item (click)="navigateToCaseDetails(case.id)">
       <ion-label>
         <h2>{{ case.title }}</h2>
         <h5>{{ helperService.formatCrimeType(case.case_type) }} | {{ case.status === 'open'? 'Offen' : 'Geschlossen'}}</h5>

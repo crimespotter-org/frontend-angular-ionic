@@ -46,6 +46,10 @@ export const routes: Routes = [
         ]
       },
       {
+        path: 'case-details/:id',
+        loadComponent: () => import('../../components/case-details/case-details.component').then((m) => m.CaseDetailsComponent)
+      },
+      {
         path: '',
         redirectTo: '/tabs/tab1',
         pathMatch: 'full'

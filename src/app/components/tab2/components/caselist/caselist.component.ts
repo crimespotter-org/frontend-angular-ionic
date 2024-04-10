@@ -111,4 +111,7 @@ export class CaselistComponent implements OnInit {
     });
   }
 
+  navigateToCaseDetails(caseId: string) {
+    this.router.navigate(['tabs/case-details', caseId]);
+  }
 }
