@@ -1,9 +1,20 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {IonButton, IonInput, IonItem, IonLabel} from "@ionic/angular/standalone";
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {
+  IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol,
+  IonContent,
+  IonFooter, IonIcon,
+  IonInput,
+  IonItem,
+  IonLabel,
+  IonList,
+  IonNote, IonRow, IonText, IonToolbar
+} from "@ionic/angular/standalone";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {SupabaseService} from "../../../services/supabase.service";
 import {StorageService} from "../../../services/storage.service";
+import {addIcons} from "ionicons";
+import {chevronBackOutline, send} from "ionicons/icons";
 
 @Component({
   selector: 'app-case-chat',
@@ -17,17 +28,34 @@ import {StorageService} from "../../../services/storage.service";
     FormsModule,
     IonButton,
     DatePipe,
-    NgForOf
+    NgForOf,
+    IonContent,
+    IonList,
+    IonNote,
+    IonFooter,
+    IonIcon,
+    IonToolbar,
+    IonCard,
+    IonCardContent,
+    IonRow,
+    IonCol,
+    IonCardHeader,
+    IonCardTitle,
+    IonCardSubtitle,
+    IonText
   ],
   standalone: true
 })
-export class CaseChatComponent  implements OnInit, OnDestroy {
+export class CaseChatComponent implements OnInit {
   @Input() caseId: any;
+  @ViewChild('chatContainer') private chatContainerRef: ElementRef | undefined;
   comments: any[] = [];
   newCommentText?: string | null = '';
   userId: string | null = '';
 
-  constructor(private supabaseService: SupabaseService, private storageService: StorageService) {}
+  constructor(private supabaseService: SupabaseService, private storageService: StorageService) {
+    addIcons({send});
+  }
 
   ngOnInit() {
     this.loadComments();
@@ -35,21 +63,14 @@ export class CaseChatComponent  implements OnInit, OnDestroy {
     this.subscribeToComments();
   }
 
-  ngOnDestroy() {
-    this.supabaseService.subscribeToComments(this.caseId, (newComment: any) => {
-      this.comments.push(newComment);
-    });
-  }
-
   async loadComments() {
     this.supabaseService.getCommentsByCaseId(this.caseId).then(comments => {
       this.comments = comments;
-    });
+    })
   }
 
   addComment() {
     if (this.newCommentText && !this.newCommentText.trim()) return;
-
     if (this.userId && this.newCommentText) {
       this.supabaseService.addComment(this.caseId, this.userId, this.newCommentText).then(() => {
         this.newCommentText = '';
@@ -66,4 +87,7 @@ export class CaseChatComponent  implements OnInit, OnDestroy {
     });
   }
 
+  isMyMessage(comment: any) {
+    return comment.user_id === this.userId;
+  }
 }

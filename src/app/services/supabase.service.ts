@@ -197,7 +197,8 @@ export class SupabaseService {
           created_at: payload.new['created_at'],
           id: payload.new['id'],
           text: payload.new['text'],
-          user_id: {
+          user_id: payload.new['user_id'],
+          user: {
             username: username
           }
         });
@@ -217,12 +218,13 @@ export class SupabaseService {
       id,
       text,
       created_at,
-      user_id (
+      user_id,
+      user: user_id (
         username
       )
     `)
       .eq('case_id', caseId)
-      .order('created_at', {ascending: false});
+      .order('created_at', {ascending: true});
 
     if(data.error) {
       console.log(data.error)
