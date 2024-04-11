@@ -1,3 +1,8 @@
+<ion-refresher slot="fixed" (ionRefresh)="refreshCaselist($event)">
+  <ion-refresher-content></ion-refresher-content>
+</ion-refresher>
+
+
 <ion-list>
   <ion-item-sliding *ngFor="let case of cases">
     <ion-item-options side="start">

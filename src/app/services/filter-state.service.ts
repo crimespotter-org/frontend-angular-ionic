@@ -26,13 +26,16 @@ export class FilterStateService {
   public readonly searchLocation$ = this._searchLocation.asObservable();
   public readonly searchQuery$ = this._searchQuery.asObservable();
 
+  sortOrder = 'created_at';
+  isAscending = false;
+
   constructor(private supabaseService: SupabaseService) {
     this.initializeCases();
     this.initializeLocation();
   }
 
   private async initializeCases(): Promise<void> {
-    this.applyFilters('created_at', false);
+    this.applyFilters(this.sortOrder, this.isAscending);
   }
 
   private async initializeLocation() {
@@ -55,6 +58,9 @@ export class FilterStateService {
   }
 
   async applyFilters(sortOrder?: string, isAscending?: boolean): Promise<void> {
+    if (sortOrder) this.sortOrder = sortOrder;
+    if (isAscending) this.isAscending = isAscending;
+
     const filters = this._filters.getValue();
     const searchQuery = this._searchQuery.getValue();
 
@@ -67,12 +73,15 @@ export class FilterStateService {
     }
 
     this._filteredCases.next(cases);
-    if (sortOrder && isAscending !== undefined) {
-      this.sortCases(sortOrder, isAscending);
+    if (this.sortOrder && this.isAscending !== undefined) {
+      this.sortCases(this.sortOrder, this.isAscending);
     }
   }
 
   sortCases(sortOrder: string, isAscending: boolean): void {
+    this.sortOrder = sortOrder;
+    this.isAscending = isAscending;
+
     const cases = this._filteredCases.getValue();
     let sortedCases;
 
