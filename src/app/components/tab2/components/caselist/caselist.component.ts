@@ -26,7 +26,8 @@ import {
   micCircleOutline,
   newspaperOutline,
   thumbsDownOutline,
-  thumbsUpOutline
+  thumbsUpOutline,
+  chevronDownCircleOutline
 } from "ionicons/icons";
 import {Router, RouterLink} from '@angular/router';
 import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
@@ -81,7 +82,8 @@ export class CaselistComponent implements OnInit {
       imagesOutline,
       createOutline,
       layers,
-      add
+      add,
+      chevronDownCircleOutline
     });
   }
 
@@ -89,11 +91,6 @@ export class CaselistComponent implements OnInit {
     this.filterStateService.filteredCases$.subscribe(filteredCases => {
       this.cases = filteredCases;
     });
-  }
-
-  navigateToAddPage() {
-    console.log('Navigating to add page');
-    this.router.navigate(['/tabs/tab2/add']);
   }
 
   upvote(caseId: string) {
@@ -121,12 +118,5 @@ export class CaselistComponent implements OnInit {
       target = target.parentElement;
     }
     this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });
-  }
-
-  refreshCaselist($event: CustomEvent) {
-    this.filterStateService.applyFilters();
-    if (event?.target) {
-      (event.target as HTMLIonRefresherElement).complete();
-    }
   }
 }
