@@ -314,7 +314,7 @@ export class FilterSearchComponent implements OnInit {
   onLocationFilterSelected(location: QueryLocationResponse) {
     this.selectedLocation = location;
     this.locations = [];
-    this.inputLocation = location.city + (location.postalCode ? ', ' + location.postalCode : '');
+    this.inputLocation = location.city + (location.sub? location.sub : '') + (location.postalCode ? ', ' + location.postalCode : '');
   }
 
   onLocationFilterChange(searchText: string) {
