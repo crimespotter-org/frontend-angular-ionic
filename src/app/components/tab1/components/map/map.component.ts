@@ -97,7 +97,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
     this.location = location;
     if (this.map) {
-      this.map.flyTo([location.latitude, location.longitude], this.map.getZoom());
+      this.map.flyTo([location.latitude, location.longitude], this.map.getZoom(), {
+        animate: true,
+        duration: 0.8
+      });
     }
   }
 
