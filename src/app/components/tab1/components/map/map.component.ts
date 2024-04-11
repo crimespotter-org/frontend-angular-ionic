@@ -97,7 +97,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
     this.location = location;
     if (this.map) {
-      this.map.setView([location.latitude, location.longitude], this.map.getZoom());
+      this.map.flyTo([location.latitude, location.longitude], 13, {
+        animate: true,
+        duration: 0.8
+      });
     }
   }
 
@@ -122,7 +125,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   async goToCurrentLocation() {
-    //await this.filterStateService.goToCurrentLocation();
+    await this.filterStateService.goToCurrentLocation();
   }
 
 }

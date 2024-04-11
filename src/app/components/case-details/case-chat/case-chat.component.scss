@@ -1,0 +1,36 @@
+.new-message-input {
+  --padding-start: 0;
+  --padding-end: 0;
+}
+
+.my-message {
+  --background: var(--ion-color-secondary);
+}
+
+.chat-container {
+  margin-bottom: 60px;
+}
+
+ion-footer {
+  --background: var(--ion-background-color);
+}
+
+.card-subtitle {
+  text-transform: none;
+}
+
+ion-card-header {
+  padding-bottom: 0;
+}
+
+ion-card-content {
+  padding-top: 0;
+}
+
+.message-input {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--ion-background-color);
+}

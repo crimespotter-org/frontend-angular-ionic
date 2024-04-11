@@ -17,7 +17,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [scrollEvents]="true">
   <ng-container [ngSwitch]="segment">
     <app-case-facts *ngSwitchCase="'facts'"></app-case-facts>
     <app-case-links *ngSwitchCase="'links'"></app-case-links>

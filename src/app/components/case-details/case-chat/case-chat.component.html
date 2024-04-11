@@ -1,13 +1,26 @@
-<div *ngIf="comments.length > 0">
-  <ion-item *ngFor="let comment of comments">
-    <ion-label>
-      <h3>{{ comment.user_id.username }}</h3>
-      <p>{{ comment.text }}</p>
-      <p>{{ comment.created_at | date: 'short' }}</p>
-    </ion-label>
+<div class="chat-container" #chatContainer>
+  <div *ngFor="let message of comments">
+    <ion-card [class.my-message]="isMyMessage(message)">
+      <ion-card-header>
+        <ion-card-subtitle>
+          <span class="card-subtitle">{{ message.user.username }}
+            am {{ message.created_at | date:'dd.MM.yyyy, HH:mm' }}</span>
+        </ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-text>
+          <p>{{ message.text }}</p>
+        </ion-text>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</div>
+
+<div class="message-input">
+  <ion-item lines="none">
+    <ion-input [(ngModel)]="newCommentText" placeholder="Schreibe einen Kommentar..."></ion-input>
+    <ion-button slot="end" (click)="addComment()" fill="clear">
+      <ion-icon slot="icon-only" name="send"></ion-icon>
+    </ion-button>
   </ion-item>
 </div>
-<ion-item>
-  <ion-input [(ngModel)]="newCommentText" placeholder="Schreibe einen Kommentar..."></ion-input>
-  <ion-button (click)="addComment()">Senden</ion-button>
-</ion-item>
