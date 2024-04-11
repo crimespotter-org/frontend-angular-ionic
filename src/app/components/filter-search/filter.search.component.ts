@@ -275,12 +275,15 @@ export class FilterSearchComponent implements OnInit {
 
   onSearchBlur() {
     setTimeout(() => {
-      this.inputSearch = undefined;
-      this.searchList = [];
+      if (this.menuId === 'mapMenu') {
+        this.inputSearch = undefined;
+        this.searchList = [];
+      }
     }, 200);
   }
 
   onSearchClear() {
+    this.filterStateService.setSearchQuery('');
     this.inputSearch = undefined;
     this.searchList = [];
   }
@@ -291,6 +294,9 @@ export class FilterSearchComponent implements OnInit {
         .subscribe((locations) => {
           this.searchList = locations;
         });
+    }
+    else {
+      this.searchList = []
     }
   }
 
@@ -308,7 +314,7 @@ export class FilterSearchComponent implements OnInit {
   onLocationFilterSelected(location: QueryLocationResponse) {
     this.selectedLocation = location;
     this.locations = [];
-    this.inputLocation = location.city + (location.postalCode ? ', ' + location.postalCode : '');
+    this.inputLocation = location.city + (location.sub? location.sub : '') + (location.postalCode ? ', ' + location.postalCode : '');
   }
 
   onLocationFilterChange(searchText: string) {
