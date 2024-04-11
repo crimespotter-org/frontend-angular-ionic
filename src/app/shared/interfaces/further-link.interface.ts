@@ -1,4 +1,4 @@
 export interface FurtherLink {
-    uri : string;
+    value : string;
     type : string;
 }

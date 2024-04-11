@@ -16,6 +16,9 @@ import { HelperUtils } from 'src/app/shared/helperutils';
 import { ActionSheetController } from '@ionic/angular/standalone';
 import { Action } from 'rxjs/internal/scheduler/Action';
 import { LocationService } from 'src/app/services/location.service';
+import { SupabaseService } from 'src/app/services/supabase.service';
+import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
+
 
 @Component({
   selector: 'app-add2',
@@ -63,6 +66,7 @@ export class Add2Page implements OnInit {
   storageService = inject(StorageService);
   actionSheetController = inject(ActionSheetController);
   locationService = inject(LocationService);
+  supaBaseService = inject(SupabaseService);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
@@ -124,7 +128,7 @@ export class Add2Page implements OnInit {
   addLink() {
     this.links.push(this.addService.fb.group({
       value: ['', Validators.required],
-      type: [this.linkTypes[0], ]
+      type: [this.linkTypes[0],]
     }));
   }
 
@@ -132,12 +136,41 @@ export class Add2Page implements OnInit {
     this.links.removeAt(index) // Remove one element at the found index
   }
 
-  submitForm() {
-    console.log(this.form.value);
-    console.log(this.form.valid)
+  async submitForm() {
+    
+    if (!this.addService.form.valid) {
+      console.log('Form invalid');
+      return;
+    }
+
+    const fullform = this.addService.form;
+
+
+    const array = this.form.get('further_links') as FormArray;
+
+    console.log(array);
+
+    //TODO: fetch placename and zip code from location service
+
+    const loc = fullform.get('page2')?.get('location')
+
+    const caseData: AddCase = {
+      title: fullform.get('page1')?.get('title')?.value,
+      summary: fullform.get('page1')?.get('summary')?.value,
+      caseType: fullform.get('page1')?.get('type')?.value,
+      crimeDateTime: fullform.get('page1')?.get('date_of_crime')?.value,
+      latitude: loc?.value?.latitude,
+      longitude: loc?.value?.longitude,
+      status: 'closed',
+      placeName: "unknown",
+      zipCode: 0,
+      links: array.value
+    };
+
+    await this.supaBaseService.createCrimeCase(caseData);
   }
 
-  async chooseIcon(idx: number){
+  async chooseIcon(idx: number) {
     const actionSheet = await this.actionSheetController.create({
       header: 'Link-Typ wählen',
       buttons: this.linkTypes.map(type => {
@@ -145,7 +178,7 @@ export class Add2Page implements OnInit {
           text: HelperUtils.formatLinkType(type),
           value: type,
           handler: () => {
-            this.links.at(idx).patchValue({type: type});
+            this.links.at(idx).patchValue({ type: type });
           }
         };
       })

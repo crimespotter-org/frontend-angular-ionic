@@ -2,3 +2,14 @@
     margin-top: 10px;
     width: 100%;
 }
+
+:host(.ng-touched.ng-invalid) .formbody {
+    --border-color: var(--highlight-color-invalid);
+    --border-style: solid;
+    --border-width: 1px;
+  }
+
+:host(.ng-touched.ng-invalid) .header {
+    color: var(--highlight-color-invalid);
+}
+

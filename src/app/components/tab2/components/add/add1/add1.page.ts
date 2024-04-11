@@ -71,14 +71,15 @@ export class Add1Page implements AfterViewInit {
   }
 
   routeToNextPage(){
+    console.log(this.form.get('title')?.touched);
     console.log(this.form.value);
     if(this.form.valid){
       this.router.navigate(['tabs/tab2/add2']);
     }
     else{
+      this.form.markAllAsTouched();
       this.toast.present();
     }
-
   }
 
 }

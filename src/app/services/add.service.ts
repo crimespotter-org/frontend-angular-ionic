@@ -18,7 +18,8 @@ export class AddService {
         date_of_crime: ['', Validators.required]
       }),
       page2: this.fb.group({
-        location: [undefined, Validators.required],
+        location: [null, Validators.required],
+        images: this.fb.array([]),
         further_links: this.fb.array([])
       }),
     });

@@ -51,6 +51,9 @@ export class LocationPickerComponent implements ControlValueAccessor {
   }
   setDisabledState(isDisabled: boolean): void {
     this.disabled = isDisabled;
+    if (isDisabled) {
+      this.onTouched();
+    }
   }
 
   selectedLocationChanged(location: Location) {
@@ -72,9 +75,19 @@ export class LocationPickerComponent implements ControlValueAccessor {
   
 
   cancelLocationModal() {
+    console.log('canceled');
     this.touched = true;
-    this.tempLocation = undefined;
     this.onTouched();
+    this.tempLocation = undefined;
     this.modal.dismiss();
+  }
+
+  getClasses() {
+    return {
+      'ng-touched': this.touched,
+      'ng-untouched': !this.touched,
+      'ng-valid': this.location != null,
+      'ng-invalid': this.location == null
+    };
   }
 }

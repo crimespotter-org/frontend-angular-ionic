@@ -1,9 +1,10 @@
-import {Injectable} from '@angular/core';
-import {createClient, SupabaseClient} from "@supabase/supabase-js";
-import {environment} from "../../environments/environment";
-import {StorageService} from "./storage.service";
-import {Case, CaseDetails, CaseFiltered} from '../shared/types/supabase';
-import {FilterOptions} from "../shared/interfaces/filter.options";
+import { Injectable } from '@angular/core';
+import { createClient, SupabaseClient } from "@supabase/supabase-js";
+import { environment } from "../../environments/environment";
+import { StorageService } from "./storage.service";
+import { Case, CaseDetails, CaseFiltered } from '../shared/types/supabase';
+import { FilterOptions } from "../shared/interfaces/filter.options";
+import { AddCase } from '../shared/interfaces/addcase.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -16,11 +17,11 @@ export class SupabaseService {
   }
 
   signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({email, password});
+    return this.supabase.auth.signUp({ email, password });
   }
 
   signIn(email: string, password: string) {
-    const data = this.supabase.auth.signInWithPassword({email, password})
+    const data = this.supabase.auth.signInWithPassword({ email, password })
 
     this.updateLocalUser();
 
@@ -32,7 +33,7 @@ export class SupabaseService {
   }
 
   async getSession() {
-    const {data: session, error} = await this.supabase.auth.getSession();
+    const { data: session, error } = await this.supabase.auth.getSession();
 
     if (error) {
       console.error('Fehler beim Holen der Session:', error);
@@ -42,7 +43,7 @@ export class SupabaseService {
   }
 
   async updateLocalUser() {
-    const {data: user, error} = await this.supabase.auth.getUser();
+    const { data: user, error } = await this.supabase.auth.getUser();
 
     if (error) {
       console.error('Fehler beim Holen des Users:', error);
@@ -52,7 +53,7 @@ export class SupabaseService {
     if (user.user?.email) this.storageService.saveUserEmail(user.user?.email);
     if (user.user?.id) this.storageService.saveUserId(user.user?.id);
 
-    const {data: role} = await this.getUserRole(user.user?.id);
+    const { data: role } = await this.getUserRole(user.user?.id);
 
     if (role?.role && role?.role !== '') this.storageService.saveUserRole(role.role);
 
@@ -60,27 +61,27 @@ export class SupabaseService {
   }
 
   async getUserName(userId: string) {
-    const {data: user} = await this.supabase
+    const { data: user } = await this.supabase
       .from('user_profiles')
       .select('username')
       .eq('id', userId)
       .single();
 
-    return user? user.username : '';
+    return user ? user.username : '';
   }
 
   async getUserRole(userId: string) {
-    const {data: user} = await this.supabase
+    const { data: user } = await this.supabase
       .from('user_profiles')
       .select('role')
       .eq('id', userId)
       .single();
 
-    return user? user.role : '';
+    return user ? user.role : '';
   }
 
   async getAllCases(): Promise<Case[] | []> {
-    const {data: cases, error} = await this.supabase.rpc("get_all_cases").returns<Case[]>();
+    const { data: cases, error } = await this.supabase.rpc("get_all_cases").returns<Case[]>();
     if (error) {
       console.log(error);
       return []
@@ -120,7 +121,7 @@ export class SupabaseService {
     const {
       data: details,
       error
-    } = await this.supabase.rpc('get_case_details_angular', {case_id_param}).returns<CaseDetails[]>();
+    } = await this.supabase.rpc('get_case_details_angular', { case_id_param }).returns<CaseDetails[]>();
 
     if (error) {
       console.error(error);
@@ -132,8 +133,8 @@ export class SupabaseService {
 
   async updateCaseTypes() {
     try {
-      let {data, error, status} = await this.supabase
-        .rpc('get_enum_values_angular', {enum_typename: 'casetype'});
+      let { data, error, status } = await this.supabase
+        .rpc('get_enum_values_angular', { enum_typename: 'casetype' });
       if (data) {
         const caseTypes = data.map((item: any) => item.toString());
         this.storageService.saveCaseTypes(caseTypes);
@@ -145,10 +146,10 @@ export class SupabaseService {
     }
   }
 
-  async updateLinkTypes(){
+  async updateLinkTypes() {
     try {
-      let {data, error, status} = await this.supabase
-        .rpc('get_enum_values_angular', {enum_typename: 'link_type'});
+      let { data, error, status } = await this.supabase
+        .rpc('get_enum_values_angular', { enum_typename: 'link_type' });
       if (data) {
         const linkTypes = data.map((item: any) => item.toString());
         this.storageService.saveLinkTypes(linkTypes);
@@ -175,22 +176,22 @@ export class SupabaseService {
   }
 
   private async manageVote(caseId: string, userId: string, vote: number): Promise<void> {
-    const {data, error} = await this.supabase
+    const { data, error } = await this.supabase
       .from('votes')
       .select('*')
-      .match({case_id: caseId, user_id: userId})
+      .match({ case_id: caseId, user_id: userId })
       .single();
 
     if (data) {
-      const {error: updateError} = await this.supabase
+      const { error: updateError } = await this.supabase
         .from('votes')
-        .update({vote})
-        .match({id: data.id});
+        .update({ vote })
+        .match({ id: data.id });
     } else {
-      const {error: insertError} = await this.supabase
+      const { error: insertError } = await this.supabase
         .from('votes')
         .insert([
-          {case_id: caseId, user_id: userId, vote}
+          { case_id: caseId, user_id: userId, vote }
         ]);
       if (insertError) {
         console.error(insertError);
@@ -223,7 +224,7 @@ export class SupabaseService {
   addComment(caseId: string, userId: string, text: string) {
     return this.supabase
       .from('comments')
-      .insert([{case_id: caseId, user_id: userId, text}]);
+      .insert([{ case_id: caseId, user_id: userId, text }]);
   }
 
   async getCommentsByCaseId(caseId: string) {
@@ -239,15 +240,59 @@ export class SupabaseService {
       )
     `)
       .eq('case_id', caseId)
-      .order('created_at', {ascending: true});
+      .order('created_at', { ascending: true });
 
-    if(data.error) {
+    if (data.error) {
       console.log(data.error)
     }
 
     console.log(data.data)
 
-    return data.data? data.data : [];
+    return data.data ? data.data : [];
+  }
+
+  async createCrimeCase(caseData: AddCase): Promise<number> {
+
+    console.log("creating new case...");
+
+    const userId = this.storageService.getUserId();
+    if (userId === null) {
+      throw new Error('User not logged in');
+    }
+
+
+    const awdawd = {
+      p_title: caseData.title,
+      p_summary: caseData.summary,
+      p_longitude: caseData.longitude,
+      p_latitude: caseData.latitude,
+      p_created_by: userId,
+      p_place_name: caseData.placeName,
+      p_zip_code: caseData.zipCode,
+      p_case_type: caseData.caseType,
+      p_crime_date_time: caseData.crimeDateTime,
+      p_status: caseData.status,
+      p_links: caseData.links.map(link => {
+        return {
+          url: link.value,
+          link_type: link.type
+        }
+      }
+      )
+    };
+
+    console.log(awdawd);
+
+    const { data, error } = await this.supabase
+      .rpc('create_crime_case_angular', awdawd)
+
+    if (error) {
+      throw new Error("Crime case creation failed with error message: \n" + error.message);
+    }
+    else {
+      return data;
+    }
+
   }
 
 }
