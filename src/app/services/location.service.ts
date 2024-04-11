@@ -1,11 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Location } from '../shared/interfaces/location.interface';
 import { Geolocation } from '@capacitor/geolocation';
+import { DEFAULT_INTERPOLATION_CONFIG } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LocationService {
+
+  private defaultLocation: Location = { longitude: 52.52437, latitude: 13.41053 }; // Berlin/Germany
 
   currentLocation: Location | undefined;
 
@@ -15,7 +18,7 @@ export class LocationService {
    * Updates the current location of the user.
    * @returns the current location of the user or undefined if user denied access.
    */
-  async updateLocation(): Promise<Location | undefined> {
+  async updateLocation(): Promise<Location> {
     try {
       const position = await Geolocation.getCurrentPosition();
       this.currentLocation = {
@@ -23,8 +26,7 @@ export class LocationService {
         longitude: position.coords.longitude
       };
     } catch (error) {
-      //don't do anything if user denies access
-      //keep latest location stored
+      this.currentLocation = this.defaultLocation;
     }
     return this.currentLocation;
   }
@@ -34,7 +36,7 @@ export class LocationService {
    * If no location is stored, it will try to update the location.
    * @returns the current location of the user or undefined if user denied access.
    */
-  async getLatestLocation(): Promise<Location | undefined>{
+  async getLatestLocation(): Promise<Location>{
     return this.currentLocation || await this.updateLocation();
   }
 
