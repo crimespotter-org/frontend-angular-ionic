@@ -124,9 +124,9 @@
   <ion-toolbar>
     <ion-searchbar animated="true"
                    placeholder="{{menuId === 'caselistMenu'? 'Suche in Falltiteln': 'Suche nach Ort oder PLZ'}}"
-                   show-cancel-button="focus" (ionInput)="onSearchChange(inputSearch)"
+                   show-cancel-button="focus" cancel-button-text="Abbrechen" (ionInput)="onSearchChange(inputSearch)"
                    (ionBlur)="onSearchBlur()"
-                   (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
+                   (ionClear)="onSearchClear()" [(ngModel)]="inputSearch" (ionCancel)="onSearchClear()">
     </ion-searchbar>
     <ion-list *ngIf="searchList.length > 0">
       <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">

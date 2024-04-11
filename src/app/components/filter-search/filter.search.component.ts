@@ -275,12 +275,15 @@ export class FilterSearchComponent implements OnInit {
 
   onSearchBlur() {
     setTimeout(() => {
-      this.inputSearch = undefined;
-      this.searchList = [];
+      if (this.menuId === 'mapMenu') {
+        this.inputSearch = undefined;
+        this.searchList = [];
+      }
     }, 200);
   }
 
   onSearchClear() {
+    this.filterStateService.setSearchQuery('');
     this.inputSearch = undefined;
     this.searchList = [];
   }
@@ -290,8 +293,10 @@ export class FilterSearchComponent implements OnInit {
       this.dataService.getLocationsNominatim(query)
         .subscribe((locations) => {
           this.searchList = locations;
-          console.log(locations)
         });
+    }
+    else {
+      this.searchList = []
     }
   }
 
