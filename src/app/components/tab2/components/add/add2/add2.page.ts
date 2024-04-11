@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline } from 'ionicons/icons';
+import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
@@ -82,7 +82,7 @@ export class Add2Page implements OnInit {
   ]);
 
   constructor() {
-    addIcons({ micOutline, bookOutline, newspaperOutline, linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
+    addIcons({ caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
 
     this.form = this.addService.form.get('page2') as FormGroup;
     this.links = this.form.get('further_links') as FormArray;

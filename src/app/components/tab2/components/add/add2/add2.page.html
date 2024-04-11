@@ -35,7 +35,10 @@
       <ion-label position="stacked">Links</ion-label>
       <div formArrayName="further_links" id="linkContainer">
         <ion-item *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
-          <ion-icon slot="start" [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)" (click)="chooseIcon(idx)"></ion-icon>
+          <div slot="start" (click)="chooseIcon(idx)" class="linkTypeIconContainer">
+            <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)" style="font-size: 1.5em;"></ion-icon>
+            <ion-icon name="caret-down-outline" style="font-size: 0.75em"></ion-icon>
+          </div>
           <ion-input placeholder="Link eingeben" formControlName="value"></ion-input>
           <ion-icon slot="end" name="close-outline" (click)="removeLink(idx)" style="cursor: pointer;"></ion-icon>
         </ion-item>
