@@ -7,7 +7,7 @@
 
 <ion-content>
   <form class="form" [formGroup]="form">
-    <app-location-picker formControlName="location" [defaultLocation]="currentLocation ?? {latitude: 52.52437, longitude: 13.41053}"></app-location-picker>
+    <app-location-picker formControlName="location" [defaultLocation]="currentLocation || {latitude: 30, longitude: 30}"></app-location-picker>
     <ion-item>
       <ion-label position="stacked">Bilder</ion-label>
       <div id="pictureSelection" *ngIf="images.length === 0">

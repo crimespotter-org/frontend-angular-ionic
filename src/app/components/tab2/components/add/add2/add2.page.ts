@@ -5,7 +5,7 @@ import { closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOut
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
-import { Location } from 'src/app/shared/interfaces/location.interface';
+import { Location, UserLocation } from 'src/app/shared/interfaces/location.interface';
 import { SelectionMapComponent } from "../../../../selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
 import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
@@ -67,7 +67,7 @@ export class Add2Page implements OnInit {
   @ViewChild('selectLocationModal') modal!: IonModal
 
   images: Photo[] = [];
-  currentLocation: Location | undefined;
+  currentLocation?: Location;
 
   form: FormGroup;
   links: FormArray;
@@ -92,10 +92,14 @@ export class Add2Page implements OnInit {
     console.log(this.linkTypes);
   }
 
-  async ngOnInit() {
-    this.currentLocation = await this.locationService.getLatestLocation();
-  }
+  async ngOnInit(): Promise<void> {
+    this.currentLocation = (await this.locationService.getLatestLocation()).location;
 
+    this.locationService.currentLocation$.subscribe(userlocation => {
+      console.log(`Location changed: ${userlocation.location.latitude}, ${userlocation.location.longitude}`)
+      this.currentLocation = userlocation.location;
+    });
+  }
 
   async uploadImage() {
     const image = await Camera.getPhoto({
