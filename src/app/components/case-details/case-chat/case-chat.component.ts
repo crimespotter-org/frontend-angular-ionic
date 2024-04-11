@@ -7,7 +7,7 @@ import {
   IonItem,
   IonLabel,
   IonList,
-  IonNote, IonRow, IonText, IonToolbar
+  IonNote, IonRow, IonText, IonTextarea, IonToolbar
 } from "@ionic/angular/standalone";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -42,7 +42,8 @@ import {chevronBackOutline, send} from "ionicons/icons";
     IonCardHeader,
     IonCardTitle,
     IonCardSubtitle,
-    IonText
+    IonText,
+    IonTextarea
   ],
   standalone: true
 })

@@ -18,7 +18,10 @@
 
 <div class="message-input">
   <ion-item lines="none">
-    <ion-input [(ngModel)]="newCommentText" placeholder="Schreibe einen Kommentar..."></ion-input>
+    <ion-textarea [(ngModel)]="newCommentText"
+                  placeholder="Schreibe einen Kommentar"
+                  [autoGrow]="true"
+                  [rows]="3"></ion-textarea>
     <ion-button slot="end" (click)="addComment()" fill="clear">
       <ion-icon slot="icon-only" name="send"></ion-icon>
     </ion-button>
