@@ -64,7 +64,8 @@
         <ion-item>
           <ion-label position="stacked">Falltyp</ion-label>
           <ion-select multiple="true" interface="popover" placeholder="Typ auswählen" [(ngModel)]="selectedCaseTypes">
-            <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ HelperUtils.formatCrimeType(casetype) }}</ion-select-option>
+            <ion-select-option *ngFor="let casetype of caseTypes"
+                               [value]="casetype">{{ HelperUtils.formatCrimeType(casetype) }}</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -95,8 +96,9 @@
 
         <ion-list *ngIf="enableLocationSearch && !useCurrentLocation && locations.length > 0 && menuId!=='mapMenu'">
           <ion-item *ngFor="let location of locations" (click)="onLocationFilterSelected(location)">
-            <ion-label>
-              {{ location.city }} <span *ngIf="location.postalCode">{{ ', ' + location.postalCode }}</span>
+            <ion-label *ngIf="location.city !== undefined">
+              {{location.city}} <span *ngIf="location.sub"> {{ ' ' + location.sub }} </span>
+              <span *ngIf="location.county"> {{ ' | ' + location.county }} </span>
             </ion-label>
           </ion-item>
         </ion-list>
@@ -120,15 +122,17 @@
 
 <ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
-    <ion-searchbar (ionInput)="onSearchChange(inputSearch)"
+    <ion-searchbar animated="true"
+                   placeholder="{{menuId === 'caselistMenu'? 'Suche in Falltiteln': 'Suche nach Ort oder PLZ'}}"
+                   show-cancel-button="focus" (ionInput)="onSearchChange(inputSearch)"
                    (ionBlur)="onSearchBlur()"
                    (ionClear)="onSearchClear()" [(ngModel)]="inputSearch">
     </ion-searchbar>
     <ion-list *ngIf="searchList.length > 0">
       <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
-        <ion-label>
-          <span *ngIf="search.city"> {{search.city}} <span
-            *ngIf="search.postalCode"> {{ ' ' + search.postalCode }} </span> </span>
+        <ion-label *ngIf="search.city !== undefined">
+          {{search.city}} <span *ngIf="search.sub"> {{ ' ' + search.sub }} </span>
+          <span *ngIf="search.county"> {{ ' | ' + search.county }} </span>
         </ion-label>
       </ion-item>
     </ion-list>
@@ -137,9 +141,9 @@
                 (click)="toggleSortDirection()">
         <ion-label>
           {{
-            selectedSortOrder === 'created_at' ? 'Erstellt' :
-              (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
-                (selectedSortOrder === 'title' ? 'Titel' : ''))
+          selectedSortOrder === 'created_at' ? 'Erstellt' :
+            (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
+              (selectedSortOrder === 'title' ? 'Titel' : ''))
           }}
         </ion-label>
         <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>

@@ -290,6 +290,7 @@ export class FilterSearchComponent implements OnInit {
       this.dataService.getLocationsNominatim(query)
         .subscribe((locations) => {
           this.searchList = locations;
+          console.log(locations)
         });
     }
   }
