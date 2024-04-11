@@ -33,7 +33,6 @@ import {FilterSearchComponent} from "../../../filter-search/filter.search.compon
 import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
-import {HelperService} from "../../../../services/helper.service";
 import { HelperUtils } from 'src/app/shared/helperutils';
 
 @Component({

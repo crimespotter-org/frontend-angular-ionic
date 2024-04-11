@@ -24,7 +24,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
   location?: Location;
 
   @Input()
-  defaultLocation: Location | undefined;
+  defaultLocation: Location = {latitude: 52.52437, longitude: 13.41053};
 
   @ViewChild('selectLocationModal') modal!: IonModal
 

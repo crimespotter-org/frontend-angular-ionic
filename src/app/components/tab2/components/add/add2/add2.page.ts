@@ -15,6 +15,7 @@ import { FurtherLink } from 'src/app/shared/interfaces/further-link.interface';
 import { HelperUtils } from 'src/app/shared/helperutils';
 import { ActionSheetController } from '@ionic/angular/standalone';
 import { Action } from 'rxjs/internal/scheduler/Action';
+import { LocationService } from 'src/app/services/location.service';
 
 @Component({
   selector: 'app-add2',
@@ -61,11 +62,12 @@ export class Add2Page implements OnInit {
   addService = inject(AddService);
   storageService = inject(StorageService);
   actionSheetController = inject(ActionSheetController);
+  locationService = inject(LocationService);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
   images: Photo[] = [];
-  location: Location | undefined;
+  currentLocation: Location | undefined;
 
   form: FormGroup;
   links: FormArray;
@@ -90,13 +92,10 @@ export class Add2Page implements OnInit {
     console.log(this.linkTypes);
   }
 
-  ngOnInit() {
+  async ngOnInit() {
+    this.currentLocation = await this.locationService.getLatestLocation();
   }
 
-  selectedLocationChanged(location: Location) {
-    console.log(location);
-    this.location = location;
-  }
 
   async uploadImage() {
     const image = await Camera.getPhoto({
