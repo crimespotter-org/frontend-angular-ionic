@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Location } from '../shared/interfaces/location.interface';
+import { Location, UserLocation } from '../shared/interfaces/location.interface';
 import { Geolocation } from '@capacitor/geolocation';
 import { DEFAULT_INTERPOLATION_CONFIG } from '@angular/compiler';
 
@@ -8,9 +8,9 @@ import { DEFAULT_INTERPOLATION_CONFIG } from '@angular/compiler';
 })
 export class LocationService {
 
-  private defaultLocation: Location = { longitude: 52.52437, latitude: 13.41053 }; // Berlin/Germany
+  private defaultLocation: UserLocation = { location: {longitude: 52.52437, latitude: 13.41053}, access_denied: true }; // Berlin/Germany
 
-  currentLocation: Location | undefined;
+  currentLocation: UserLocation | undefined;
 
   constructor() { }
 
@@ -18,15 +18,21 @@ export class LocationService {
    * Updates the current location of the user.
    * @returns the current location of the user or undefined if user denied access.
    */
-  async updateLocation(): Promise<Location> {
+  async updateLocation(): Promise<UserLocation> {
     try {
       const position = await Geolocation.getCurrentPosition();
       this.currentLocation = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
+        location: {
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude
+        },
+        access_denied: false
       };
     } catch (error) {
-      this.currentLocation = this.defaultLocation;
+      //if location was already defined and now access is denied, use the latest location
+      if(this.currentLocation == undefined){
+        this.currentLocation = this.defaultLocation;
+      }
     }
     return this.currentLocation;
   }
@@ -36,7 +42,7 @@ export class LocationService {
    * If no location is stored, it will try to update the location.
    * @returns the current location of the user or undefined if user denied access.
    */
-  async getLatestLocation(): Promise<Location>{
+  async getLatestLocation(): Promise<UserLocation>{
     return this.currentLocation || await this.updateLocation();
   }
 
