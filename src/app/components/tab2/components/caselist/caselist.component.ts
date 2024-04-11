@@ -11,7 +11,7 @@ import {
   IonItemOptions,
   IonItemSliding,
   IonLabel,
-  IonList
+  IonList, IonRefresher, IonRefresherContent
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
@@ -57,7 +57,9 @@ import { HelperUtils } from 'src/app/shared/helperutils';
     IonFabButton,
     IonFab,
     DatePipe,
-    RouterLink
+    RouterLink,
+    IonRefresher,
+    IonRefresherContent
   ],
   standalone: true
 })
@@ -119,5 +121,12 @@ export class CaselistComponent implements OnInit {
       target = target.parentElement;
     }
     this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });
+  }
+
+  refreshCaselist($event: CustomEvent) {
+    this.filterStateService.applyFilters();
+    if (event?.target) {
+      (event.target as HTMLIonRefresherElement).complete();
+    }
   }
 }
