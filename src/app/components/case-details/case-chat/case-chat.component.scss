@@ -4,11 +4,11 @@
 }
 
 .my-message {
-  --background: var(--ion-color-secondary);
+  --background: var(--ion-color-tertiary);
 }
 
 .chat-container {
-  margin-bottom: 60px;
+  margin-bottom: 80px;
 }
 
 ion-footer {
@@ -17,13 +17,20 @@ ion-footer {
 
 .card-subtitle {
   text-transform: none;
+  font-size: 0.8rem;
 }
 
 ion-card-header {
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 5px;
   padding-bottom: 0;
 }
 
 ion-card-content {
+  padding-bottom: 5px;
+  padding-right: 5px;
+  padding-left: 5px;
   padding-top: 0;
 }
 
@@ -33,4 +40,9 @@ ion-card-content {
   right: 0;
   bottom: 0;
   background: var(--ion-background-color);
+}
+
+ion-card {
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
