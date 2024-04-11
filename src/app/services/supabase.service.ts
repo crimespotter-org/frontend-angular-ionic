@@ -145,6 +145,21 @@ export class SupabaseService {
     }
   }
 
+  async updateLinkTypes(){
+    try {
+      let {data, error, status} = await this.supabase
+        .rpc('get_enum_values_angular', {enum_typename: 'link_type'});
+      if (data) {
+        const linkTypes = data.map((item: any) => item.toString());
+        this.storageService.saveLinkTypes(linkTypes);
+        return linkTypes;
+      }
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  }
+
   async upvote(caseId: string): Promise<void> {
     const userId = this.storageService.getUserId();
     if (userId !== null) {

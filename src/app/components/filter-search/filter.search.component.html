@@ -64,7 +64,7 @@
         <ion-item>
           <ion-label position="stacked">Falltyp</ion-label>
           <ion-select multiple="true" interface="popover" placeholder="Typ auswählen" [(ngModel)]="selectedCaseTypes">
-            <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ helperService.formatCrimeType(casetype) }}</ion-select-option>
+            <ion-select-option *ngFor="let casetype of caseTypes" [value]="casetype">{{ HelperUtils.formatCrimeType(casetype) }}</ion-select-option>
           </ion-select>
         </ion-item>
 
@@ -146,7 +146,7 @@
       </ion-chip>
       <ion-chip *ngFor="let filter of filters" color="primary">
         <ion-label>
-          {{ filter.type === 'caseType' ? 'Falltyp: ' + helperService.formatCrimeType(filter.value.toString()) : '' }}
+          {{ filter.type === 'caseType' ? 'Falltyp: ' + HelperUtils.formatCrimeType(filter.value.toString()) : '' }}
           {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : '' }}
           {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
           {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}

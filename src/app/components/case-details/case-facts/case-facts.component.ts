@@ -16,7 +16,7 @@ import {
   IonRow, IonText
 } from "@ionic/angular/standalone";
 import {CaseDetailsService} from "../../../services/case-details.service";
-import {HelperService} from "../../../services/helper.service";
+import { HelperUtils } from 'src/app/shared/helperutils';
 import {
   fingerPrint,
   lockOpenOutline,
@@ -49,9 +49,12 @@ import {addIcons} from "ionicons";
   standalone: true
 })
 export class CaseFactsComponent implements OnInit {
+
+  HelperUtils = HelperUtils;
+
   caseDetails: any
 
-  constructor(private caseDetailsService: CaseDetailsService, protected helperService: HelperService) {
+  constructor(private caseDetailsService: CaseDetailsService) {
     addIcons({
       fingerPrint,
       lockOpenOutline,

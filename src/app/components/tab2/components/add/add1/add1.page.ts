@@ -8,6 +8,7 @@ import { IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonD
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AddService } from 'src/app/services/add.service';
+import { HelperUtils } from 'src/app/shared/helperutils';
 
 @Component({
     selector: 'app-add',
@@ -41,6 +42,8 @@ import { AddService } from 'src/app/services/add.service';
     ]
 })
 export class Add1Page implements AfterViewInit {
+
+  HelperUtils = HelperUtils;
 
   @ViewChild(IonToast) toast!: IonToast;
 

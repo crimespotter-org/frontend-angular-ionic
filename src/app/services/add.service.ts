@@ -19,8 +19,7 @@ export class AddService {
       }),
       page2: this.fb.group({
         location: [undefined, Validators.required],
-        images: [''],
-        further_links: ['']
+        further_links: this.fb.array([])
       }),
     });
   }

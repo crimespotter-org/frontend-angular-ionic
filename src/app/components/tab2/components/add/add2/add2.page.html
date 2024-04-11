@@ -1,63 +1,45 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>add2</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
   <form class="form" [formGroup]="form">
     <app-location-picker formControlName="location"></app-location-picker>
     <ion-item>
       <ion-label position="stacked">Bilder</ion-label>
-      @if(images.length === 0){
-      <div id="pictureSelection">
+      <div id="pictureSelection" *ngIf="images.length === 0">
         <ion-item button (click)="uploadImage()">
           <ion-icon slot="start" name="image-outline"></ion-icon>
           <ion-label>Bilder hinzuzufügen</ion-label>
         </ion-item>
       </div>
-      }
-      @else {
-      <div class="scrolling-wrapper">
-        @for(image of images; track image; let idx = $index){
-        <div class="card">
-          <img src={{image.dataUrl}} />
+      <div class="scrolling-wrapper" *ngIf="images.length > 0">
+        <div class="card" *ngFor="let image of images; index as idx">
+          <img [src]="image.dataUrl" />
           <ion-button class="delete-button" (click)="discardImage(image)">
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>
         </div>
-        }
         <div class="card">
           <ion-button class="add-image" (click)="uploadImage()">
             <ion-icon name="add-outline"></ion-icon>
           </ion-button>
         </div>
       </div>
-      }
-
     </ion-item>
 
     <ion-item>
       <ion-label position="stacked">Links</ion-label>
-
-      @for(link of webLinks; track link){
-      <ion-item id="linkContainer">
-        <ion-icon slot="start" name="link-outline"></ion-icon>
-        <ion-input placeholder="Link eingeben"></ion-input>
-        <ion-icon slot="end" name="close-outline" (click)="removeLink(link)" style="cursor: pointer;"></ion-icon>
-
-      </ion-item>
-      }
+      <div formArrayName="further_links" id="linkContainer">
+        <ion-item *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
+          <ion-icon slot="start" [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)" (click)="chooseIcon(idx)"></ion-icon>
+          <ion-input placeholder="Link eingeben" formControlName="value"></ion-input>
+          <ion-icon slot="end" name="close-outline" (click)="removeLink(idx)" style="cursor: pointer;"></ion-icon>
+        </ion-item>
+      </div>
       <ion-item button id="addLinkContainer" (click)="addLink()">
         <ion-icon slot="start" name="add-outline"></ion-icon>
         <ion-label>Link hinzufügen</ion-label>
       </ion-item>
     </ion-item>
   </form>
-
-  
 </ion-content>
-
 
 <ion-fab vertical="bottom" horizontal="end" slot="fixed">
   <ion-fab-button (click)="submitForm()">

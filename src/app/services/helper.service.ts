@@ -7,7 +7,7 @@ export class HelperService {
 
   constructor() { }
 
-  formatCrimeType(crimeType: string): string {
+  static formatCrimeType(crimeType: string): string {
     switch (crimeType) {
       case 'murder':
         return 'Mord'
@@ -21,5 +21,31 @@ export class HelperService {
         return 'Vergewaltigung'
     }
     return ''
+  }
+
+  static formatLinkType(type: string): string {
+    switch (type) {
+      case 'newspaper':
+        return 'Zeitung'
+      case 'book':
+        return 'Buch'
+      case 'podcast':
+        return 'Podcast'
+      default:
+        return 'link-outline'
+    }
+  }
+
+  static convertLinkTypeToIcon(type: string): string {
+    switch (type) {
+      case 'newspaper':
+        return 'newspaper-outline'
+      case 'book':
+        return 'book-outline'
+      case 'podcast':
+        return 'mic-outline'
+      default:
+        return 'link-outline'
+    }
   }
 }

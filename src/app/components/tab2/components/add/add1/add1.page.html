@@ -22,7 +22,7 @@
       <ion-label position="stacked">Falltyp</ion-label>
       <ion-select placeholder="Wählen Sie einen Falltyp" formControlName="type">
         @for(type of caseTypes; track type){
-        <ion-select-option>{{type}}</ion-select-option>
+        <ion-select-option [value]="type">{{ HelperUtils.formatCrimeType(type) }}</ion-select-option>
         }
       </ion-select>
     </ion-item>

@@ -34,7 +34,7 @@ import {Geolocation} from "@capacitor/geolocation";
 import {StorageService} from "../../services/storage.service";
 import {Filter} from "../../shared/interfaces/filter";
 import {QueryLocationResponse} from "../../shared/interfaces/query-location-response";
-import {HelperService} from "../../services/helper.service";
+import { HelperUtils } from 'src/app/shared/helperutils';
 
 
 @Component({
@@ -76,6 +76,9 @@ import {HelperService} from "../../services/helper.service";
   standalone: true
 })
 export class FilterSearchComponent implements OnInit {
+
+  HelperUtils = HelperUtils;
+
   @Input() placeholder: string = '';
   @Input() menuId: string = '';
 
@@ -107,7 +110,6 @@ export class FilterSearchComponent implements OnInit {
               private filterStateService: FilterStateService,
               private dataService: DataService,
               private storageService: StorageService,
-              protected helperService: HelperService,
               @Inject(LOCALE_ID) private locale: string) {
     addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }

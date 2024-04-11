@@ -34,6 +34,7 @@ import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
 import {HelperService} from "../../../../services/helper.service";
+import { HelperUtils } from 'src/app/shared/helperutils';
 
 @Component({
   selector: 'app-caselist',
@@ -63,9 +64,11 @@ import {HelperService} from "../../../../services/helper.service";
 })
 export class CaselistComponent implements OnInit {
 
+  HelperUtils = HelperUtils;
+
   cases: CaseFiltered[] = [];
 
-  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router, protected helperService: HelperService) {
+  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router) {
     addIcons({
       bookOutline,
       chevronUpOutline,

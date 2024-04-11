@@ -122,7 +122,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   async goToCurrentLocation() {
-    await this.filterStateService.goToCurrentLocation();
+    //await this.filterStateService.goToCurrentLocation();
   }
 
 }
