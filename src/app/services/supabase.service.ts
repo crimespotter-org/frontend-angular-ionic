@@ -261,7 +261,7 @@ export class SupabaseService {
     }
 
 
-    const awdawd = {
+    const dataObject = {
       p_title: caseData.title,
       p_summary: caseData.summary,
       p_longitude: caseData.longitude,
@@ -281,10 +281,9 @@ export class SupabaseService {
       )
     };
 
-    console.log(awdawd);
 
     const { data, error } = await this.supabase
-      .rpc('create_crime_case_angular', awdawd)
+      .rpc('create_crime_case_angular', dataObject)
 
     if (error) {
       throw new Error("Crime case creation failed with error message: \n" + error.message);
