@@ -20,6 +20,7 @@ import { SupabaseService } from 'src/app/services/supabase.service';
 import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
 import { DataService } from 'src/app/services/data.service';
 import { firstValueFrom } from 'rxjs';
+import { Image } from 'src/app/shared/interfaces/image.interface';
 
 
 @Component({
@@ -69,7 +70,7 @@ export class Add2Page implements OnInit {
   actionSheetController = inject(ActionSheetController);
   locationService = inject(LocationService);
   supaBaseService = inject(SupabaseService);
-  dataService = inject(DataService); 
+  dataService = inject(DataService);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
@@ -140,12 +141,13 @@ export class Add2Page implements OnInit {
   }
 
   async submitForm() {
-    
+
     if (!this.addService.form.valid) {
       console.log('Form invalid');
       return;
     }
 
+    //manage database entries
     const fullform = this.addService.form;
 
 
@@ -173,7 +175,15 @@ export class Add2Page implements OnInit {
       links: array.value
     };
 
-    await this.supaBaseService.createCrimeCase(caseData);
+    const caseId = await this.supaBaseService.createCrimeCase(caseData);
+
+
+    //manage image uploads
+    const images: Image[] = this.images.map(image => ({ base64: HelperUtils.dataURItoBase64(image?.dataUrl ?? ''), type: image.format }));
+    await this.supaBaseService.uploadImagesForCase(caseId, images);
+
+
+    this.router.navigate(["tabs/tab2"]);
   }
 
   async chooseIcon(idx: number) {

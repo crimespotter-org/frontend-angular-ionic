@@ -5,6 +5,8 @@ import { StorageService } from "./storage.service";
 import { Case, CaseDetails, CaseFiltered } from '../shared/types/supabase';
 import { FilterOptions } from "../shared/interfaces/filter.options";
 import { AddCase } from '../shared/interfaces/addcase.interface';
+import { decode } from 'base64-arraybuffer'
+import { Image } from '../shared/interfaces/image.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -294,4 +296,19 @@ export class SupabaseService {
 
   }
 
+
+
+  async uploadImagesForCase(caseId: number, images: Image[]) {
+
+    for (let i = 0; i < images.length; i++) {
+      const { data, error } = await this.supabase
+        .storage
+        .from('media')
+        .upload(`case-${caseId}/${i}.png`, decode(images[i].base64), {
+          contentType: `image/${images[i].type}`
+        });
+    }
+  }
 }
+
+
