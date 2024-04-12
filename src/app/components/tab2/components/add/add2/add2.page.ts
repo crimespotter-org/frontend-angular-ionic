@@ -18,6 +18,8 @@ import { Action } from 'rxjs/internal/scheduler/Action';
 import { LocationService } from 'src/app/services/location.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
 import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
+import { DataService } from 'src/app/services/data.service';
+import { firstValueFrom } from 'rxjs';
 
 
 @Component({
@@ -67,6 +69,7 @@ export class Add2Page implements OnInit {
   actionSheetController = inject(ActionSheetController);
   locationService = inject(LocationService);
   supaBaseService = inject(SupabaseService);
+  dataService = inject(DataService); 
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
@@ -150,20 +153,23 @@ export class Add2Page implements OnInit {
 
     console.log(array);
 
-    //TODO: fetch placename and zip code from location service
 
-    const loc = fullform.get('page2')?.get('location')
+    const loc = fullform.get('page2')?.get('location')?.value as Location;
 
+    //Fetch geolocation data for coordinates from Nominatim
+    const geoLocationData = await firstValueFrom(this.dataService.getLocationFromCoordinatesNominatim(loc));
+
+    console.log(geoLocationData);
     const caseData: AddCase = {
       title: fullform.get('page1')?.get('title')?.value,
       summary: fullform.get('page1')?.get('summary')?.value,
       caseType: fullform.get('page1')?.get('type')?.value,
       crimeDateTime: fullform.get('page1')?.get('date_of_crime')?.value,
-      latitude: loc?.value?.latitude,
-      longitude: loc?.value?.longitude,
+      latitude: loc.latitude,
+      longitude: loc.longitude,
       status: 'closed',
-      placeName: "unknown",
-      zipCode: 0,
+      placeName: geoLocationData.city || geoLocationData.sub || geoLocationData.county,
+      zipCode: geoLocationData.postalCode,
       links: array.value
     };
 
