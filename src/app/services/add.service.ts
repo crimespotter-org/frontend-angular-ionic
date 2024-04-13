@@ -13,6 +13,7 @@ export class AddService {
     this.form = this.fb.group({
       page1: this.fb.group({
         title: ['', Validators.required],
+        closed: [false],
         summary: ['', Validators.required],
         type: ['', Validators.required],
         date_of_crime: ['', Validators.required]

@@ -161,6 +161,8 @@ export class Add2Page implements OnInit {
     //Fetch geolocation data for coordinates from Nominatim
     const geoLocationData = await firstValueFrom(this.dataService.getLocationFromCoordinatesNominatim(loc));
 
+    const closed: boolean = fullform.get('page1')?.get('closed')?.value;
+
     console.log(geoLocationData);
     const caseData: AddCase = {
       title: fullform.get('page1')?.get('title')?.value,
@@ -169,7 +171,7 @@ export class Add2Page implements OnInit {
       crimeDateTime: fullform.get('page1')?.get('date_of_crime')?.value,
       latitude: loc.latitude,
       longitude: loc.longitude,
-      status: 'closed',
+      status: closed ? 'closed' : 'open',
       placeName: geoLocationData.city || geoLocationData.sub || geoLocationData.county,
       zipCode: geoLocationData.postalCode,
       links: array.value

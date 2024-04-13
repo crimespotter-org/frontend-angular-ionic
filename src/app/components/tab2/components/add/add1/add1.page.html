@@ -7,17 +7,43 @@
 
 <ion-content>
   <form class="form" [formGroup]="form">
-    <ion-item>
-      <ion-label position="stacked">Titel</ion-label>
-      <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
-    </ion-item>
 
+    <ion-grid>
+      <ion-row>
+        <ion-col class="ion-justify-content-center">
+          <ion-item>
+            <ion-label position="stacked">Titel</ion-label>
+            <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
+          </ion-item>
+        </ion-col>
+    
+        <ion-col class="ion-justify-content-center" size="auto">
+          <ion-item style="height: 100%">
+            <ion-chip [color]="this.form.get('closed')?.value ? 'danger' : 'success'" button (click)="switchState()">
+              @if(this.form.get('closed')?.value){
+                <ion-icon name="lock-closed-outline"></ion-icon>
+                <ion-label>Geschlossen</ion-label>
+              }
+              @else{
+                <ion-icon name="lock-open-outline"></ion-icon>
+                <ion-label>Offen</ion-label>
+              }
+            </ion-chip>
+          </ion-item>
+        </ion-col>
+      </ion-row>
+
+<ion-row>
+  <ion-col>
     <ion-item>
       <ion-label position="stacked">Beschreibung</ion-label>
       <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" autosize
         rows="3"></ion-textarea>
     </ion-item>
-
+  </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
     <ion-item>
       <ion-label position="stacked">Falltyp</ion-label>
       <ion-select placeholder="Wählen Sie einen Falltyp" formControlName="type">
@@ -26,12 +52,17 @@
         }
       </ion-select>
     </ion-item>
-
+  </ion-col>
+  </ion-row>
+  <ion-row>
+    <ion-col>
     <ion-item>
       <ion-label position="stacked">Tatzeit</ion-label>
       <ion-datetime formControlName="date_of_crime"></ion-datetime>
     </ion-item>
-
+  </ion-col>
+  </ion-row>
+  </ion-grid>
   </form>
 </ion-content>
 
