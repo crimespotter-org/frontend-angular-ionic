@@ -7,7 +7,21 @@
 
 <ion-content>
   <form class="form" [formGroup]="form">
-    <app-location-picker formControlName="location" [defaultLocation]="currentLocation || {latitude: 30, longitude: 30}"></app-location-picker>
+    <ion-item formGroupName="location">
+      <ion-label position="stacked" class="header">Tatort</ion-label>
+      <ion-item style="width: 100%; margin-top: 5px;">
+      <app-location-picker formControlName="coordinates" (selectedLocation)="selectedLocationChanged($event)" [defaultLocation]="currentLocation || {latitude: 30, longitude: 30}" style="width: 100%;"></app-location-picker>
+    </ion-item>
+    @if(this.form.get('location')?.get('coordinates')?.value != undefined){
+    <ion-item style="width: 100%">
+      <ion-input label="Postleitzahl" labelPlacement="stacked" formControlName="plz" type="number">
+      </ion-input>
+    </ion-item>
+    <ion-item style="width: 100%">
+      <ion-input label="Ort" labelPlacement="stacked" formControlName="city"></ion-input>
+    </ion-item>
+  }
+    </ion-item>
     <ion-item>
       <ion-label position="stacked">Bilder</ion-label>
       <div id="pictureSelection" *ngIf="images.length === 0">

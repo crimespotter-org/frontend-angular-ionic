@@ -13,13 +13,17 @@ export class AddService {
     this.form = this.fb.group({
       page1: this.fb.group({
         title: ['', Validators.required],
-        closed: [false],
+        closed: [true],
         summary: ['', Validators.required],
         type: ['', Validators.required],
         date_of_crime: ['', Validators.required]
       }),
       page2: this.fb.group({
-        location: [null, Validators.required],
+        location: this.fb.group({
+          coordinates: [null, Validators.required],
+          plz: ['', Validators.required],
+          city: ['', Validators.required],
+        }), 
         images: this.fb.array([]),
         further_links: this.fb.array([])
       }),

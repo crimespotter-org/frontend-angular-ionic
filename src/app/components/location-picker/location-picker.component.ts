@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild, forwardRef } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild, forwardRef } from '@angular/core';
 import { ModalController, IonModal, IonButton, IonContent, IonTitle, IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonItem} from '@ionic/angular/standalone';
 import { SelectionMapComponent } from '../selection-map/selection-map.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -25,6 +25,8 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
   @Input()
   defaultLocation: Location = {latitude: 52.52437, longitude: 13.41053};
+
+  @Output() selectedLocation = new EventEmitter<Location>();
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
@@ -66,6 +68,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
     }
       this.touched = true;
       this.location = this.tempLocation;
+      this.selectedLocation.emit(this.location);
       console.log(this.location);
       this.onChange(this.location);
       this.onTouched();

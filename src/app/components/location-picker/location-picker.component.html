@@ -1,6 +1,4 @@
 
-<ion-item >
-  <ion-label position="stacked" class="header">Ort</ion-label>
   <div id="locationSelection">
     <ion-item button id="selectLocation" class="formbody">
       <ion-icon slot="start" name="location-outline"></ion-icon>
@@ -8,11 +6,10 @@
       <ion-label>({{location.latitude}}; {{location.longitude}})</ion-label>
       }
       @else{
-      <ion-label>Tatort hinzuzufügen</ion-label>
+      <ion-label>Tatort auswählen</ion-label>
       }
     </ion-item>
   </div>
-</ion-item>
 
 <ion-modal trigger="selectLocation" #selectLocationModal>
   <ng-template>
