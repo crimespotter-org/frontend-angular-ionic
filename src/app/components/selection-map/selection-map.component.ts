@@ -1,21 +1,32 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChild, inject } from '@angular/core';
 import * as L from 'leaflet';
 import { Location } from 'src/app/shared/interfaces/location.interface';
 import { defaultMarker } from 'src/app/components/tab1/components/map/markers';
-import {ViewDidEnter, IonSearchbar } from '@ionic/angular/standalone';
-
+import {ViewDidEnter, IonSearchbar, IonItem, IonLabel, IonList } from '@ionic/angular/standalone';
+import { NominatimResponse } from 'src/app/shared/interfaces/nominatim-response';
+import { DataService } from 'src/app/services/data.service';
+import { CommonModule } from '@angular/common';
+import { QueryLocationResponse } from 'src/app/shared/interfaces/query-location-response';
+import { NgModel } from '@angular/forms';
 @Component({
   selector: 'app-seletion-map',
   templateUrl: './selection-map.component.html',
   styleUrls: ['./selection-map.component.scss'],
-  imports: [IonSearchbar],
+  imports: [IonSearchbar, IonItem, IonLabel, IonList, CommonModule],
   standalone: true
 })
 export class SelectionMapComponent implements AfterViewInit{
 
+  dataService = inject(DataService);
+
   @Input() location: Location = {latitude: 48.441976384366384, longitude: 8.684747075615647};
 
   @Output() selectedLocation = new EventEmitter<Location>();
+
+  @ViewChild('searchbar') searchbar!: IonSearchbar;
+
+  inputSearch?: any;
+  searchList: any[] = [];
 
   private map!: L.Map;
   private marker: L.Marker = L.marker([0,0], {icon: defaultMarker, opacity: 0});
@@ -52,6 +63,27 @@ export class SelectionMapComponent implements AfterViewInit{
     this.marker.setLatLng([lat, lng]);
 
     this.selectedLocation.emit({latitude: lat, longitude: lng});
+  }
+
+  onSearchChange(event: any){
+    if(event == undefined || event.target == undefined || event.target.value === "") return;
+    const searchText = event.target.value;
+    this.dataService.getLocationsNominatim(searchText).subscribe(results => {
+      this.searchList = results;
+      if(this.searchList.length == 1){
+        this.onSearchEntrySelected(this.searchList[0]);
+      }
+    });
+  }
+
+  onSearchEntrySelected(search: QueryLocationResponse){
+    console.log(search);
+    this.map.flyTo([search.latitude, search.longitude], 13, {
+      animate: true,
+      duration: 0.8
+    });
+    this.searchList = [];
+    this.searchbar.value = "";
   }
 
 }
