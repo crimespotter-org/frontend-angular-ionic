@@ -19,6 +19,7 @@ import {SupabaseService} from "../../../services/supabase.service";
 import {addIcons} from "ionicons";
 import {bookOutline, linkOutline, micCircleOutline, newspaperOutline, openOutline} from "ionicons/icons";
 import {HelperUtils} from "../../../shared/helperutils";
+import {Browser} from "@capacitor/browser"
 
 @Component({
   selector: 'app-case-links',
@@ -83,8 +84,11 @@ export class CaseLinksComponent implements OnInit {
   }
 
 
-  openLink(url: string): void {
-    window.open(url, '_blank');
+  async openLink(url: string) {
+    await Browser.open({
+      url: url,
+      presentationStyle: 'fullscreen'
+    });
   }
 
   getLinkIcon(type: string):
