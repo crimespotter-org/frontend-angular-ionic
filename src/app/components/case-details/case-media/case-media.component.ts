@@ -1,9 +1,10 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SupabaseService} from "../../../services/supabase.service";
 import {images} from "ionicons/icons";
-import {IonCol, IonGrid, IonImg, IonRow, ModalController} from "@ionic/angular/standalone";
-import {NgForOf} from "@angular/common";
+import {IonCard, IonCol, IonGrid, IonImg, IonRow, ModalController} from "@ionic/angular/standalone";
+import {NgForOf, NgIf} from "@angular/common";
 import {ImageViewerComponent} from "./components/image-viewer/image-viewer.component";
+import {HelperUtils} from "../../../shared/helperutils";
 
 @Component({
   selector: 'app-case-media',
@@ -14,7 +15,9 @@ import {ImageViewerComponent} from "./components/image-viewer/image-viewer.compo
     IonRow,
     IonCol,
     IonImg,
-    NgForOf
+    NgForOf,
+    IonCard,
+    NgIf
   ],
   standalone: true
 })
@@ -52,4 +55,6 @@ export class CaseMediaComponent implements OnInit {
     });
     return await modal.present();
   }
+
+  protected readonly HelperUtils = HelperUtils;
 }
