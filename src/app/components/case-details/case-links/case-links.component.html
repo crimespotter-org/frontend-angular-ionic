@@ -8,10 +8,10 @@
     </ion-card-header>
     <ion-card-content>
       <ion-list>
-        <ion-item *ngFor="let link of group.links">
+        <ion-item *ngFor="let link of group.links" (click)="openLink(link.url)">
           <ion-icon name="link-outline" slot="start"></ion-icon>
           <ion-label>
-            <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+            <p>{{ link.url }} </p>
           </ion-label>
         </ion-item>
       </ion-list>
