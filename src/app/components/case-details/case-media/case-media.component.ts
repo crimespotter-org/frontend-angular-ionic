@@ -50,7 +50,7 @@ export class CaseMediaComponent implements OnInit {
       component: ImageViewerComponent,
       componentProps: {
         imageUrls: this.imageUrls,
-        activeIndex: activeIndex  // Übergabe des Index des angeklickten Bildes
+        activeIndex: activeIndex
       }
     });
     return await modal.present();
