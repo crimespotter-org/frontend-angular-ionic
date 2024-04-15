@@ -114,6 +114,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
   }
 
+
+  private createPopupContent(caseData: CaseFiltered): string {
+    return `
+    <div class="popup-content">
+      <h3>${caseData.title}</h3>
+      <p><strong>Typ:</strong> ${caseData.case_type}</p>
+      <p><strong>Status:</strong> ${caseData.status}</p>
+      <p>${caseData.crime_date_time}</p>
+      <button onclick="window.redirectToCaseDetails('${caseData.id}')">Details ansehen</button>
+    </div>
+  `;
+  }
+
   clearMarkers() {
     this.markers.forEach(marker => marker.remove());
     this.markers = [];
