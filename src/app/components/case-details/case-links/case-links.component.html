@@ -1,3 +1,18 @@
-<p>
-  case-links works!
-</p>
+<ion-grid>
+  <ion-row *ngFor="let group of linkGroups">
+    <ion-col size="12">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>
+            <ion-icon [name]="getLinkIcon(group.type)"></ion-icon>
+            {{ HelperUtils.formatLinkType(group.type) }}</ion-card-title>
+        </ion-card-header>
+        <ion-card-content>
+          <div *ngFor="let link of group.links" class="link-item">
+            <a href="{{ link.url }}" target="_blank" class="link-url">{{ link.url }}</a>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </ion-col>
+  </ion-row>
+</ion-grid>

@@ -42,9 +42,13 @@ export class CaseMediaComponent implements OnInit {
   protected readonly images = images;
 
   async openFullscreen(imageUrl: string) {
+    const activeIndex = this.imageUrls.indexOf(imageUrl);
     const modal = await this.modalController.create({
       component: ImageViewerComponent,
-      componentProps: { imageUrl }
+      componentProps: {
+        imageUrls: this.imageUrls,
+        activeIndex: activeIndex  // Übergabe des Index des angeklickten Bildes
+      }
     });
     return await modal.present();
   }

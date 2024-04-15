@@ -20,7 +20,7 @@
 <ion-content [scrollEvents]="true">
   <ng-container [ngSwitch]="segment">
     <app-case-facts *ngSwitchCase="'facts'"></app-case-facts>
-    <app-case-links *ngSwitchCase="'links'"></app-case-links>
+    <app-case-links *ngSwitchCase="'links'" [caseId]="caseId" ></app-case-links>
     <app-case-media *ngSwitchCase="'media'" [caseId]="caseId"></app-case-media>
     <app-case-chat *ngSwitchCase="'comments'" [caseId]="caseId"></app-case-chat>
   </ng-container>

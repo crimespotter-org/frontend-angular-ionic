@@ -294,8 +294,23 @@ export class SupabaseService {
       console.log(data.error)
     }
 
-    console.log(data.data)
+    return data.data ? data.data : [];
+  }
 
+  async getLinksByCaseId(caseId: string) {
+    const data: any = await this.supabase
+      .from('furtherlinks')
+      .select(`
+      id,
+      url,
+      link_type
+    `)
+      .eq('case_id', caseId)
+      .order('link_type', {ascending: true});
+
+    if (data.error) {
+      console.log(data.error)
+    }
     return data.data ? data.data : [];
   }
 
