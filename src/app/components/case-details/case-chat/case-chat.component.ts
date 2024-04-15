@@ -1,4 +1,4 @@
-import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
 import {
   IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol,
   IonContent,
@@ -14,7 +14,7 @@ import {FormsModule} from "@angular/forms";
 import {SupabaseService} from "../../../services/supabase.service";
 import {StorageService} from "../../../services/storage.service";
 import {addIcons} from "ionicons";
-import {chevronBackOutline, send} from "ionicons/icons";
+import {send} from "ionicons/icons";
 
 @Component({
   selector: 'app-case-chat',

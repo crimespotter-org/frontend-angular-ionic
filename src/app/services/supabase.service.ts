@@ -151,6 +151,35 @@ export class SupabaseService {
     return details && details.length > 0 ? details[0] : null;
   }
 
+  async getImageUrlsForCase(caseId: string): Promise<string[]> {
+    const {data, error} = await this.supabase
+      .storage
+      .from('media')
+      .list(`case-${caseId}`, {limit: 100, offset: 0}); // Passen Sie den Pfad und die Optionen an Ihre Bedürfnisse an.
+
+    if (error) {
+      console.error(error);
+      return [];
+    }
+
+    const urlPromises = await Promise.all(data.map(async file => {
+      const expiresIn = 300;
+      const {data: signedData, error: signedError} = await this.supabase
+        .storage
+        .from('media')
+        .createSignedUrl(`case-${caseId}/${file.name}`, expiresIn);
+
+      if (signedError) {
+        console.error(signedError);
+        return null;
+      }
+      return signedData.signedUrl;
+    }));
+
+    const urls = await Promise.all(urlPromises);
+    return urls.filter((url): url is string => url !== null);
+  }
+
   async updateCaseTypes() {
     try {
       let {data, error, status} = await this.supabase
@@ -226,7 +255,6 @@ export class SupabaseService {
         schema: 'public',
         table: 'comments'
       }, async (payload) => {
-        console.log(payload.new)
         const username = await this.getUserName(payload.new['user_id']);
         callback({
           case_id: payload.new['case_id'],
