@@ -12,12 +12,13 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
-  IonRow, IonText
+  IonRow,
+  IonText
 } from "@ionic/angular/standalone";
 import {NgForOf, NgIf, TitleCasePipe} from "@angular/common";
 import {SupabaseService} from "../../../services/supabase.service";
 import {addIcons} from "ionicons";
-import {bookOutline, linkOutline, micCircleOutline, newspaperOutline, openOutline} from "ionicons/icons";
+import {bookOutline, linkOutline, micCircleOutline, micOutline, newspaperOutline, openOutline} from "ionicons/icons";
 import {HelperUtils} from "../../../shared/helperutils";
 import {Browser} from "@capacitor/browser"
 
@@ -56,7 +57,8 @@ export class CaseLinksComponent implements OnInit {
       micCircleOutline,
       newspaperOutline,
       linkOutline,
-      openOutline
+      openOutline,
+      micOutline,
     });
   }
 
@@ -92,20 +94,6 @@ export class CaseLinksComponent implements OnInit {
       url: url,
       presentationStyle: 'fullscreen'
     });
-  }
-
-  getLinkIcon(type: string):
-    string {
-    switch (type) {
-      case 'podcast':
-        return 'mic-circle-outline';
-      case 'newspaper':
-        return 'newspaper-outline';
-      case 'book':
-        return 'book-outline';
-      default:
-        return 'link-outline';
-    }
   }
 
   protected readonly HelperUtils = HelperUtils;

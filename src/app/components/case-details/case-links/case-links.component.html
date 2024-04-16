@@ -2,7 +2,7 @@
   <ion-card>
     <ion-card-header>
       <ion-card-title>
-        <ion-icon [name]="getLinkIcon(group.type)"></ion-icon>
+        <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(group.type)"></ion-icon>
         {{ HelperUtils.formatLinkType(group.type) | titlecase }}
       </ion-card-title>
     </ion-card-header>

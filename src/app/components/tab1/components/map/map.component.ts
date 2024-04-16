@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
 import {Location} from "../../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
@@ -6,9 +6,13 @@ import {murderMarker} from './markers';
 import {FilterStateService} from 'src/app/services/filter-state.service';
 import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
-import {locateOutline} from "ionicons/icons";
+import {locateOutline,  searchOutline} from "ionicons/icons";
 import {Geolocation} from "@capacitor/geolocation";
 import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
+import {Router} from "@angular/router";
+import {HelperUtils} from "../../../../shared/helperutils";
+import * as moment from "moment";
+
 
 @Component({
   selector: 'app-map',
@@ -31,8 +35,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   cases: CaseFiltered[] = [];
   location?: Location;
 
-  constructor(private filterStateService: FilterStateService) {
-    addIcons({locateOutline});
+  constructor(private filterStateService: FilterStateService, private router: Router, private ngZone: NgZone) {
+    addIcons({locateOutline, searchOutline});
   }
 
   ngOnInit() {
@@ -50,6 +54,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.filterStateService.updateTrigger$.subscribe(() => {
       this.reloadMap();
     });
+    (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -83,8 +88,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.map.on('zoom', () => {
       this.adjustMarkers();
-   });
-   
+    });
+
 
     setTimeout(() => {
       this.map.invalidateSize();
@@ -94,7 +99,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private reloadMap(): void {
-    if (this.location){
+    if (this.location) {
       this.initMap(this.location);
     }
   }
@@ -111,25 +116,45 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   updateMapWithCases() {
     this.clearMarkers();
-
     this.cases.forEach((caze) => {
-      const marker = L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title}<br/>`);
+      const marker = L.marker([caze.lat, caze.long], {icon: murderMarker})
+        .bindPopup(this.createPopupContent(caze));
       marker.addTo(this.map);
       this.markers.push(marker);
     });
   }
 
-
   private createPopupContent(caseData: CaseFiltered): string {
     return `
-    <div class="popup-content">
-      <h3>${caseData.title}</h3>
-      <p><strong>Typ:</strong> ${caseData.case_type}</p>
-      <p><strong>Status:</strong> ${caseData.status}</p>
-      <p>${caseData.crime_date_time}</p>
-      <button onclick="window.redirectToCaseDetails('${caseData.id}')">Details ansehen</button>
-    </div>
-  `;
+      <div class="popup-content">
+        <h3 style="margin:0;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
+            ${caseData.title}
+        </h3>
+        <h6 style="margin:1px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
+            ${HelperUtils.formatCrimeType(caseData.case_type)} | ${HelperUtils.formatStatus(caseData.status)}
+        </h6>
+        <h6 style="margin:1px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
+            Am ${new Date(caseData.crime_date_time).toLocaleDateString()} in ${caseData.zip_code}, ${caseData.place_name}
+        </h6>
+        <p style="margin:1px;overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; font-size: 0.8rem;">
+            ${caseData.summary}
+        </p>
+        <p style="font-size: 0.6rem; margin-top: 4px;">
+            Erstellt am: ${moment(caseData.created_at).format('DD.MM.YYYY, HH:mm')}
+        </p>
+        <ion-chip color="primary" onClick="navigateToCaseDetails('${caseData.id}', '${caseData.lat}', '${caseData.long}')">
+            <ion-icon name="search-outline"></ion-icon>
+            <ion-label>Details ansehen</ion-label>
+        </ion-chip>
+      </div>
+    `;
+  }
+
+  navigateToCaseDetails(caseId: string, lat: number, long: number) {
+    this.ngZone.run(() => {
+      this.updateLocation({latitude: lat, longitude: long})
+      this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
+    });
   }
 
   clearMarkers() {
@@ -147,15 +172,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   adjustMarkers() {
-    console.log(this.map.getZoom());
     this.markers.forEach(marker => {
-      if(this.map.getZoom() < 5){
+      if (this.map.getZoom() < 5) {
         marker.setOpacity(0);
-      }
-      else{
+      } else {
         marker.setOpacity(1);
       }
-      
     });
   }
 
