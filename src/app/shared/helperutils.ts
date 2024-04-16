@@ -29,6 +29,17 @@ export class HelperUtils {
     }
   }
 
+  static formatStatus(type: string): string {
+    switch (type) {
+      case 'open':
+        return 'Offen'
+      case 'closed':
+        return 'Geschlossen'
+      default:
+        return ''
+    }
+  }
+
   static convertLinkTypeToIcon(type: string): string {
     switch (type) {
       case 'newspaper':
