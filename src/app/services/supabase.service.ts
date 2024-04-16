@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {createClient, SupabaseClient} from "@supabase/supabase-js";
+import {AuthTokenResponsePassword, createClient, SupabaseClient} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
 import {StorageService} from "./storage.service";
 import {Case, CaseDetails, CaseFiltered} from '../shared/types/supabase';
@@ -7,6 +7,7 @@ import {FilterOptions} from "../shared/interfaces/filter.options";
 import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +23,19 @@ export class SupabaseService {
     return this.supabase.auth.signUp({email, password});
   }
 
-  signIn(email: string, password: string) {
-    const data = this.supabase.auth.signInWithPassword({email, password})
+  async signIn(email: string, password: string) {
+    const data = this.supabase.auth.signInWithPassword({email, password});
+
+
+    //poc: get user_role and username from jwt
+    //Todo: use these values instead of getting them with extra db queries
+    const jwt: any = jwtDecode((await data).data.session?.access_token ?? '');
+
+    const user_role = jwt.user_role;
+    const username = jwt.username;
+
+    console.log(username);
+    console.log(user_role);
 
     this.updateLocalUser();
 
@@ -369,5 +381,4 @@ export class SupabaseService {
     }
   }
 }
-
 
