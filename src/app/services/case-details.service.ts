@@ -8,6 +8,7 @@ import {SupabaseService} from "./supabase.service";
 })
 export class CaseDetailsService {
   private _caseDetails = new BehaviorSubject<CaseDetails | null>(null);
+  private returnRoute = new BehaviorSubject<string>('/');
 
   caseDetails$: Observable<CaseDetails | null> = this._caseDetails.asObservable();
 
@@ -21,5 +22,13 @@ export class CaseDetailsService {
       console.error(error);
       this._caseDetails.next(null);
     }
+  }
+
+  setReturnRoute(route: string) {
+    this.returnRoute.next(route);
+  }
+
+  getReturnRoute() {
+    return this.returnRoute.asObservable();
   }
 }

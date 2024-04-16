@@ -14,6 +14,7 @@ import {Router} from "@angular/router";
 import {HelperUtils} from "../../../../shared/helperutils";
 import * as moment from "moment";
 import {NgClass} from "@angular/common";
+import {CaseDetailsService} from "../../../../services/case-details.service";
 
 
 @Component({
@@ -40,7 +41,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   cases: CaseFiltered[] = [];
   location?: Location;
 
-  constructor(private filterStateService: FilterStateService, private router: Router, private ngZone: NgZone) {
+  constructor(private filterStateService: FilterStateService,
+              private caseDetailsService: CaseDetailsService, private router: Router, private ngZone: NgZone) {
     addIcons({locateOutline, searchOutline, flame});
   }
 
@@ -168,6 +170,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   navigateToCaseDetails(caseId: string, lat: number, long: number) {
+    this.caseDetailsService.loadCaseDetails(caseId);
+    this.caseDetailsService.setReturnRoute(this.router.url);
     this.ngZone.run(() => {
       this.updateLocation({latitude: lat, longitude: long})
       this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});

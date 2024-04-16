@@ -35,6 +35,7 @@ import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
 import { HelperUtils } from 'src/app/shared/helperutils';
+import {CaseDetailsService} from "../../../../services/case-details.service";
 
 @Component({
   selector: 'app-caselist',
@@ -70,7 +71,8 @@ export class CaselistComponent implements OnInit {
 
   cases: CaseFiltered[] = [];
 
-  constructor(private supabaseService: SupabaseService, private filterStateService: FilterStateService, private router: Router) {
+  constructor(private supabaseService: SupabaseService,
+              private caseDetailsService: CaseDetailsService, private filterStateService: FilterStateService, private router: Router) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -110,6 +112,8 @@ export class CaselistComponent implements OnInit {
   }
 
   navigateToCaseDetails(caseId: string,  event: MouseEvent) {
+    this.caseDetailsService.loadCaseDetails(caseId);
+    this.caseDetailsService.setReturnRoute(this.router.url);
     let target: HTMLElement | null = event.target as HTMLElement | null;
     while (target !== null) {
       if (target.classList && target.classList.contains('vote-button')) {
@@ -117,6 +121,6 @@ export class CaselistComponent implements OnInit {
       }
       target = target.parentElement;
     }
-    this.router.navigate(['tabs/case-details', caseId], { state: { returnRoute: '/tabs/tab2' } });
+    this.router.navigate(['tabs/case-details', caseId]);
   }
 }
