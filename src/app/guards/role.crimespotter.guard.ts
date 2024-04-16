@@ -6,10 +6,6 @@ import {Router} from "@angular/router";
 export const RoleCrimespotterGuard = async () => {
     const supabaseService = inject(SupabaseService), storageService = inject(StorageService), router = inject(Router);
     let role = storageService.getUserRole();
-    if (role == null) {
-      await supabaseService.updateLocalUser();
-      role = storageService.getUserRole();
-    }
     if (role == 'crimespotter' || role == 'crimefluencer' || role == 'admin') {
       return true;
     }

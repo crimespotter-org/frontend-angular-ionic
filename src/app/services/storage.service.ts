@@ -5,6 +5,7 @@ const USER_EMAIL_KEY = "user_email";
 const USER_ID_KEY = "user_id";
 const CASE_TYPE_KEY = "case_type";
 const LINK_TYPE_KEY = "link_type";
+const USER_NAME_KEY = "user_name";
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,7 @@ export class StorageService {
   }
 
   public saveUserEmail(email: string) {
-    sessionStorage.setItem(USER_ROLE_KEY, email);
+    sessionStorage.setItem(USER_EMAIL_KEY, email);
   }
 
   public getUserEmail() {
@@ -60,5 +61,13 @@ export class StorageService {
       return JSON.parse(data);
     }
     return [];
+  }
+
+  public saveUsername(username: string){
+    sessionStorage.setItem(USER_NAME_KEY, username);
+  }
+
+  public getUsername(){
+    return sessionStorage.getItem(USER_NAME_KEY);
   }
 }

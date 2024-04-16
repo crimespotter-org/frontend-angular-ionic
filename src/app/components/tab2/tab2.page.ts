@@ -12,6 +12,7 @@ import {CaselistComponent} from "./components/caselist/caselist.component";
 import {FilterSearchComponent} from "../filter-search/filter.search.component";
 import {FilterStateService} from "../../services/filter-state.service";
 import {Router} from "@angular/router";
+import { StorageService } from 'src/app/services/storage.service';
 
 @Component({
   selector: 'app-tab2',
@@ -22,7 +23,14 @@ import {Router} from "@angular/router";
 })
 export class Tab2Page {
 
-  constructor(private filterStateService:FilterStateService, private router: Router) {}
+  constructor(private filterStateService:FilterStateService, private router: Router, private storageService: StorageService) {}
+
+ngAfterViewInit(){
+  console.log(this.storageService.getUserId());
+  console.log(this.storageService.getUserEmail());
+  console.log(this.storageService.getUserRole());
+  console.log(this.storageService.getUsername());
+}
 
   refreshCaselist($event: CustomEvent) {
     this.filterStateService.applyFilters();

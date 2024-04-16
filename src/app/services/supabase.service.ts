@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthTokenResponsePassword, createClient, SupabaseClient} from "@supabase/supabase-js";
+import {AuthSession, AuthTokenResponsePassword, createClient, SupabaseClient} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
 import {StorageService} from "./storage.service";
 import {Case, CaseDetails, CaseFiltered} from '../shared/types/supabase';
@@ -24,18 +24,7 @@ export class SupabaseService {
   }
 
   async signIn(email: string, password: string) {
-    const data = this.supabase.auth.signInWithPassword({email, password});
-
-
-    //poc: get user_role and username from jwt
-    //Todo: use these values instead of getting them with extra db queries
-    const jwt: any = jwtDecode((await data).data.session?.access_token ?? '');
-
-    const user_role = jwt.user_role;
-    const username = jwt.username;
-
-    console.log(username);
-    console.log(user_role);
+    const data = await this.supabase.auth.signInWithPassword({email, password});
 
     this.updateLocalUser();
 
@@ -57,21 +46,25 @@ export class SupabaseService {
   }
 
   async updateLocalUser() {
-    const {data: user, error} = await this.supabase.auth.getUser();
 
-    if (error) {
-      console.error('Fehler beim Holen des Users:', error);
-      return null;
+    const session = await this.getSession();
+
+    if (session === null) {
+      console.log('No session found');
+      return;
     }
 
-    if (user.user?.email) this.storageService.saveUserEmail(user.user?.email);
-    if (user.user?.id) this.storageService.saveUserId(user.user?.id);
+    const jwt: any = jwtDecode(session.access_token);
+    
+    const email = jwt.email;
+    const user_id = jwt.sub;
+    const user_role = jwt.user_role;
+    const username = jwt.username;
 
-    const {data: role} = await this.getUserRole(user.user?.id);
-
-    if (role?.role && role?.role !== '') this.storageService.saveUserRole(role.role);
-
-    return user.user
+    this.storageService.saveUserEmail(email);
+    this.storageService.saveUserId(user_id);
+    this.storageService.saveUserRole(user_role);
+    this.storageService.saveUsername(username);
   }
 
   async getUserName(userId: string) {

@@ -10,5 +10,5 @@ export const defaultMarker = new L.Icon({
 export const murderMarker = new L.Icon({
     iconUrl: '../../assets/images/marker-murder.svg',
     iconSize: [25, 30],
-    iconAnchor: [12.5, 30],
+    iconAnchor: [12.5, 30]
 });
