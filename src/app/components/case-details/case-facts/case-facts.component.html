@@ -24,7 +24,7 @@
       <p>{{ caseDetails.summary }}</p>
     </ion-text>
     <div style="display: flex; justify-content: flex-end;">
-      User am: {{ caseDetails.created_at | date: 'dd.MM.YYYY, hh:mm' }}
+      {{caseDetails.username}} am: {{ caseDetails.created_at | date: 'dd.MM.YYYY, hh:mm' }}
     </div>
   </ion-card-content>
 </ion-card>

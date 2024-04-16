@@ -51,11 +51,8 @@ import {CaseChatComponent} from "./case-chat/case-chat.component";
   standalone: true
 })
 export class CaseDetailsComponent implements OnInit {
-  returnRoute: string = '';
   caseId: string | null = '';
   segment: string  = 'facts';
-
-
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -72,15 +69,12 @@ export class CaseDetailsComponent implements OnInit {
         this.caseDetailsService.loadCaseDetails(this.caseId);
       }
     }
-
-    const currentNavigation = this.router.getCurrentNavigation();
-    if (currentNavigation?.extras.state && 'returnRoute' in currentNavigation.extras.state) {
-      this.returnRoute = currentNavigation.extras.state['returnRoute'];
-    }
   }
 
   goBack() {
-    this.router.navigateByUrl(this.returnRoute);
+    this.caseDetailsService.getReturnRoute().subscribe(x=>{
+      this.router.navigateByUrl(x);
+    })
   }
 
   segmentChanged(event: any) {
