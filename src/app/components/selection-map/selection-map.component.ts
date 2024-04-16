@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, ViewChil
 import * as L from 'leaflet';
 import { Location } from 'src/app/shared/interfaces/location.interface';
 import { defaultMarker } from 'src/app/components/tab1/components/map/markers';
-import { ViewDidEnter, IonSearchbar, IonItem, IonLabel, IonList } from '@ionic/angular/standalone';
+import { ViewDidEnter, IonSearchbar, IonItem, IonLabel, IonList, IonContent } from '@ionic/angular/standalone';
 import { NominatimResponse } from 'src/app/shared/interfaces/nominatim-response';
 import { DataService } from 'src/app/services/data.service';
 import { CommonModule } from '@angular/common';
@@ -12,7 +12,7 @@ import { NgModel } from '@angular/forms';
   selector: 'app-seletion-map',
   templateUrl: './selection-map.component.html',
   styleUrls: ['./selection-map.component.scss'],
-  imports: [IonSearchbar, IonItem, IonLabel, IonList, CommonModule],
+  imports: [IonSearchbar, IonItem, IonLabel, IonList, CommonModule, IonContent],
   standalone: true
 })
 export class SelectionMapComponent implements AfterViewInit {
@@ -39,7 +39,7 @@ export class SelectionMapComponent implements AfterViewInit {
 
   initMap(coordinates: Location) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('selectormap').setView([coordinates.latitude, coordinates.longitude], 13);
+    this.map = L.map('selectormap', { zoomControl: false }).setView([coordinates.latitude, coordinates.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'

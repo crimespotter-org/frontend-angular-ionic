@@ -1,7 +1,8 @@
-<div id="selectormap" style="height: 100%;"></div>
+<div id="selectormap"></div>
 <div id="overlapping">
 <ion-searchbar #searchbar (ionChange)="onSearchChange($event)"></ion-searchbar>
-<ion-list *ngIf="searchList.length > 0">
+<ion-content style="height:150px;" *ngIf="searchList.length > 0">
+<ion-list>
     <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
       <ion-label *ngIf="search.city !== undefined">
         {{search.city}} <span *ngIf="search.sub"> {{ ' ' + search.sub }} </span>
@@ -9,4 +10,5 @@
       </ion-label>
     </ion-item>
   </ion-list>
+</ion-content>
 </div>
