@@ -14,6 +14,11 @@
       </ion-card-content>
     </ion-card>
   </div>
+  <div *ngIf="comments.length === 0">
+    <ion-text color="medium">
+      <p>Keine Links vorhanden.</p>
+    </ion-text>
+  </div>
 </div>
 
 <div class="message-input">

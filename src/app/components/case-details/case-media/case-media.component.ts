@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SupabaseService} from "../../../services/supabase.service";
 import {images} from "ionicons/icons";
-import {IonCard, IonCol, IonGrid, IonImg, IonRow, ModalController} from "@ionic/angular/standalone";
+import {IonCard, IonCol, IonGrid, IonImg, IonRow, IonText, ModalController} from "@ionic/angular/standalone";
 import {NgForOf, NgIf} from "@angular/common";
 import {ImageViewerComponent} from "./components/image-viewer/image-viewer.component";
 import {HelperUtils} from "../../../shared/helperutils";
@@ -17,7 +17,8 @@ import {HelperUtils} from "../../../shared/helperutils";
     IonImg,
     NgForOf,
     IonCard,
-    NgIf
+    NgIf,
+    IonText
   ],
   standalone: true
 })
