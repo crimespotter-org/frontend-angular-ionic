@@ -67,12 +67,14 @@ export class SelectionMapComponent implements AfterViewInit {
 
   onSearchChange(event: any) {
     if (event == undefined || event.target == undefined || event.target.value === "") return;
-    const searchText = event.target.value;
+    let searchText: string = event.target.value;
 
-    const coordinatePattern = /^-?\d+(.\d+)?,\s*-?\d+(.\d+)?$/;
+    //(lat, lng) | lat, lng
+    const coordinatePattern = /^(\(-?\d+(.\d+)?,\s*-?\d+(.\d+)?\))$|^-?\d+(.\d+)?,\s*-?\d+(.\d+)?$/;
     if (coordinatePattern.test(searchText)) {
       console.log("Coordinates detected");
-      const [latitude, longitude] = searchText.split(',').map(Number);
+      const coordinates = searchText.replace('(', '').replace(')', '');
+      const [latitude, longitude] = coordinates.split(',').map(Number);
       console.log(latitude, longitude);
       this.marker.setOpacity(1);
       this.marker.setLatLng([latitude, longitude]);
