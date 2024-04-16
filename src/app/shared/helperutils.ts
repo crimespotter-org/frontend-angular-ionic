@@ -1,3 +1,5 @@
+import {Location} from "./interfaces/location.interface";
+
 export class HelperUtils {
 
   static formatCrimeType(crimeType: string): string {
@@ -51,6 +53,22 @@ export class HelperUtils {
       default:
         return 'link-outline'
     }
+  }
+
+  static calculateDistance(coord1: Location, coord2: Location): number {
+    const R = 6371;
+    const lat1 = coord1.latitude * Math.PI / 180;
+    const lat2 = coord2.latitude * Math.PI / 180;
+    const deltaLat = (coord2.latitude - coord1.latitude) * Math.PI / 180;
+    const deltaLon = (coord2.longitude - coord1.longitude) * Math.PI / 180;
+
+    const a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+      Math.cos(lat1) * Math.cos(lat2) *
+      Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    const distance = R * c; // Distanz in Kilometern
+    return distance;
   }
 
   // Function to convert data URI to base64

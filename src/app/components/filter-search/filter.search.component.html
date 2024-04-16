@@ -23,6 +23,7 @@
             <ion-select-option value="title">Titel</ion-select-option>
             <ion-select-option value="crime_date_time">Tatzeitpunkt</ion-select-option>
             <ion-select-option value="created_at">Erstellt</ion-select-option>
+            <ion-select-option value="distance_to_location">Entfernung</ion-select-option>
           </ion-select>
         </ion-item>
       </ion-list>
@@ -143,7 +144,8 @@
           {{
           selectedSortOrder === 'created_at' ? 'Erstellt' :
             (selectedSortOrder === 'crime_date_time' ? 'Tatzeitpunkt' :
-              (selectedSortOrder === 'title' ? 'Titel' : ''))
+              (selectedSortOrder === 'title' ? 'Titel' :
+                (selectedSortOrder === 'distance_to_location' ? 'Entfernung' : '')))
           }}
         </ion-label>
         <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>

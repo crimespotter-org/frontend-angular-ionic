@@ -414,6 +414,7 @@ export type Database = {
           has_book: boolean
           has_media: boolean
           crime_date_time: string
+          distance_to_location: number
         }
       }
       update_case: {

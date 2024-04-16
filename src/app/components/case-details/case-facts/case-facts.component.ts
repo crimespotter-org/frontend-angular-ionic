@@ -50,8 +50,6 @@ import {addIcons} from "ionicons";
 })
 export class CaseFactsComponent implements OnInit {
 
-  HelperUtils = HelperUtils;
-
   caseDetails: any
 
   constructor(private caseDetailsService: CaseDetailsService) {
@@ -69,4 +67,5 @@ export class CaseFactsComponent implements OnInit {
     });
   }
 
+  protected readonly HelperUtils = HelperUtils;
 }

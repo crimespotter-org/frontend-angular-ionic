@@ -6,6 +6,7 @@ import {CaseFiltered} from "../shared/types/supabase";
 import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
 import {Geolocation} from "@capacitor/geolocation";
+import {HelperUtils} from "../shared/helperutils";
 
 @Injectable({
   providedIn: 'root'
@@ -25,13 +26,15 @@ export class FilterStateService {
   public readonly filteredCases$ = this._filteredCases.asObservable();
   public readonly searchLocation$ = this._searchLocation.asObservable();
   public readonly searchQuery$ = this._searchQuery.asObservable();
+  myLocation?: Location
 
   sortOrder = 'created_at';
   isAscending = false;
 
   constructor(private supabaseService: SupabaseService) {
-    this.initializeCases();
-    this.initializeLocation();
+    this.initializeLocation().then(() => {
+      this.initializeCases();
+    });
   }
 
   private async initializeCases(): Promise<void> {
@@ -39,8 +42,10 @@ export class FilterStateService {
   }
 
   private async initializeLocation() {
-    const userPosition = await Geolocation.getCurrentPosition();
-    this._searchLocation.next({latitude: userPosition.coords.latitude, longitude: userPosition.coords.longitude})
+    Geolocation.getCurrentPosition().then(x => {
+      this.myLocation = {latitude: x.coords.latitude, longitude: x.coords.longitude}
+      this._searchLocation.next({latitude: x.coords.latitude, longitude: x.coords.longitude})
+    });
   }
 
   setFilters(newFilters: Filter[]): void {
@@ -72,6 +77,22 @@ export class FilterStateService {
       cases = cases.filter(caze => caze.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
+    if (!this.myLocation) {
+      await Geolocation.getCurrentPosition().then(x => {
+        this.myLocation = {latitude: x.coords.latitude, longitude: x.coords.longitude}
+      });
+    }
+
+    cases = cases.map(caze => {
+      if (caze.lat && caze.long && this.myLocation) {
+        caze.distance_to_location = HelperUtils.calculateDistance(
+          {latitude: caze.lat, longitude: caze.long},
+          this.myLocation
+        );
+      }
+      return caze;
+    });
+
     this._filteredCases.next(cases);
     if (this.sortOrder && this.isAscending !== undefined) {
       this.sortCases(this.sortOrder, this.isAscending);
@@ -91,6 +112,9 @@ export class FilterStateService {
         break;
       case 'created_at':
         sortedCases = cases.sort((a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+        break;
+      case 'distance_to_location':
+        sortedCases = cases.sort((a, b) => a.distance_to_location - b.distance_to_location);
         break;
       case 'crime_date_time':
         sortedCases = cases.sort((a, b) => new Date(a.crime_date_time).getTime() - new Date(b.crime_date_time).getTime());

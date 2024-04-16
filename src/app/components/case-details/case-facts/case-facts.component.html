@@ -16,7 +16,7 @@
       <ion-chip [color]="caseDetails.status === 'open' ? 'danger' : 'success'">
         <ion-icon name="lock-open-outline" *ngIf="caseDetails.status === 'open'"></ion-icon>
         <ion-icon name="lock-closed-outline" *ngIf="caseDetails.status !== 'open'"></ion-icon>
-        <ion-label>{{ caseDetails.status === 'open' ? 'Offen' : 'Geschlossen' }}</ion-label>
+        <ion-label>{{ HelperUtils.formatStatus(caseDetails.status) }}</ion-label>
       </ion-chip>
     </div>
     <ion-text>

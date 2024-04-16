@@ -8,6 +8,7 @@ import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
 import { jwtDecode } from 'jwt-decode';
+import {LocationService} from "./location.service";
 
 @Injectable({
   providedIn: 'root'
@@ -70,7 +71,7 @@ export class SupabaseService {
     }
 
     const jwt: any = jwtDecode(session.access_token);
-    
+
     const email = jwt.email;
     const user_id = jwt.sub;
     const user_role = jwt.user_role;

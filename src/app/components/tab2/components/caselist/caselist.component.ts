@@ -11,13 +11,16 @@ import {
   IonItemOptions,
   IonItemSliding,
   IonLabel,
-  IonList, IonRefresher, IonRefresherContent
+  IonList,
+  IonRefresher,
+  IonRefresherContent
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
 import {
   add,
   bookOutline,
+  chevronDownCircleOutline,
   chevronDownOutline,
   chevronUpOutline,
   createOutline,
@@ -26,15 +29,14 @@ import {
   micCircleOutline,
   newspaperOutline,
   thumbsDownOutline,
-  thumbsUpOutline,
-  chevronDownCircleOutline
+  thumbsUpOutline
 } from "ionicons/icons";
 import {Router, RouterLink} from '@angular/router';
 import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
 import {CaseFiltered} from "../../../../shared/types/supabase";
 import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
-import { HelperUtils } from 'src/app/shared/helperutils';
+import {HelperUtils} from 'src/app/shared/helperutils';
 import {CaseDetailsService} from "../../../../services/case-details.service";
 
 @Component({
@@ -111,7 +113,7 @@ export class CaselistComponent implements OnInit {
     });
   }
 
-  navigateToCaseDetails(caseId: string,  event: MouseEvent) {
+  navigateToCaseDetails(caseId: string, event: MouseEvent) {
     this.caseDetailsService.loadCaseDetails(caseId);
     this.caseDetailsService.setReturnRoute(this.router.url);
     let target: HTMLElement | null = event.target as HTMLElement | null;
