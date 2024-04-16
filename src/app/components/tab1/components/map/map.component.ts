@@ -81,6 +81,11 @@ export class MapComponent implements OnInit, AfterViewInit {
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
+    this.map.on('zoom', () => {
+      this.adjustMarkers();
+   });
+   
+
     setTimeout(() => {
       this.map.invalidateSize();
     }, 100);
@@ -128,5 +133,17 @@ export class MapComponent implements OnInit, AfterViewInit {
     await this.filterStateService.goToCurrentLocation();
   }
 
-}
+  adjustMarkers() {
+    console.log(this.map.getZoom());
+    this.markers.forEach(marker => {
+      if(this.map.getZoom() < 5){
+        marker.setOpacity(0);
+      }
+      else{
+        marker.setOpacity(1);
+      }
+      
+    });
+  }
 
+}
