@@ -12,9 +12,9 @@ import {
   IonItemSliding,
   IonLabel,
   IonList,
-  IonRow
+  IonRow, IonText
 } from "@ionic/angular/standalone";
-import {NgForOf} from "@angular/common";
+import {NgForOf, NgIf, TitleCasePipe} from "@angular/common";
 import {SupabaseService} from "../../../services/supabase.service";
 import {addIcons} from "ionicons";
 import {bookOutline, linkOutline, micCircleOutline, newspaperOutline, openOutline} from "ionicons/icons";
@@ -39,7 +39,10 @@ import {Browser} from "@capacitor/browser"
     IonCol,
     IonCardContent,
     IonCardHeader,
-    IonCardTitle
+    IonCardTitle,
+    TitleCasePipe,
+    IonText,
+    NgIf
   ],
   standalone: true
 })
