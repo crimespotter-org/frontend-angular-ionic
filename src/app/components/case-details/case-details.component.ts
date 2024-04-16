@@ -55,6 +55,7 @@ export class CaseDetailsComponent implements OnInit {
   caseId: string | null = '';
   segment: string  = 'facts';
 
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

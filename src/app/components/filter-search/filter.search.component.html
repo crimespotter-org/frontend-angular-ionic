@@ -1,16 +1,17 @@
 <ion-menu side="end" [menuId]="menuId" contentId="searchbar">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title>Optionen</ion-title>
+      <ion-title *ngIf="menuId!=='mapMenu'" >Optionen</ion-title>
+      <ion-title *ngIf="menuId==='mapMenu'" >Filter</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
-    <ion-segment [(ngModel)]="segmentValue" (ionChange)="segmentChanged($event)">
-      <ion-segment-button value="sort">
-        <ion-label>Sortieren</ion-label>
-      </ion-segment-button>
+    <ion-segment [(ngModel)]="segmentValue" (ionChange)="segmentChanged($event)" *ngIf="menuId!=='mapMenu'">
       <ion-segment-button value="filter">
         <ion-label>Filtern</ion-label>
+      </ion-segment-button>
+      <ion-segment-button *ngIf="menuId!=='mapMenu'" value="sort">
+        <ion-label>Sortieren</ion-label>
       </ion-segment-button>
     </ion-segment>
 
@@ -115,7 +116,6 @@
 
       </ion-list>
     </div>
-
   </ion-content>
 </ion-menu>
 

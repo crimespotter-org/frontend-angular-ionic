@@ -4,7 +4,7 @@ import { FormGroup, FormsModule } from '@angular/forms';
 import { StorageService } from 'src/app/services/storage.service';
 import { addOutline, chevronForwardOutline, locationOutline, lockClosedOutline, lockOpenOutline, trashOutline, warningOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonRow, IonCol, IonGrid, IonChip, IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import { IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonChip, IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AddService } from 'src/app/services/add.service';
@@ -43,6 +43,9 @@ import { HelperUtils } from 'src/app/shared/helperutils';
       IonGrid,
       IonRow,
       IonCol,
+      IonText,
+      IonCardContent,
+      IonCard,
     ]
 })
 export class Add1Page implements AfterViewInit {

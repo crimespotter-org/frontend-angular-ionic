@@ -1,0 +1,11 @@
+<ion-fab  vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button color="clear" (click)="dismissModal()">
+    <ion-icon name="close-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+<swiper-container loop="true" pagination="true" navigation="true" initialslide="1">
+  <swiper-slide *ngFor="let url of imageUrls">
+    <ion-img [src]="url" style="display: block; width: 100%; height: 100%; object-fit: contain;"></ion-img>
+  </swiper-slide>
+</swiper-container>
+

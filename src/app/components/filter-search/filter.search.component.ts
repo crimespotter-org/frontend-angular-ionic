@@ -103,7 +103,7 @@ export class FilterSearchComponent implements OnInit {
   inputSearch?: any;
   searchList: any[] = [];
   selectedSortOrder = 'created_at';
-  segmentValue = 'sort';
+  segmentValue = 'filter';
   isAscendingSort = false;
 
   constructor(private menu: MenuController,
