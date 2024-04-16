@@ -38,7 +38,8 @@
     <ion-item>
       <ion-label position="stacked">Beschreibung</ion-label>
       <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" autosize
-        rows="3"></ion-textarea>
+        rows="3" [autoGrow]="true">
+      </ion-textarea>
     </ion-item>
   </ion-col>
   </ion-row>

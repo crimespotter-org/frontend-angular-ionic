@@ -23,6 +23,21 @@ export class SupabaseService {
     return this.supabase.auth.signUp({email, password});
   }
 
+  async createUserProfile(user_id: string, username: string, role: string): Promise<boolean> {
+    const {error, data} = await this.supabase.rpc('add_user_profile_angular', {
+      "user_id": user_id,
+      "username": username,
+      "role": role
+    }).returns<void>();
+
+    if (error) {
+      console.error(error);
+      return false;
+    }
+    return true;
+
+  }
+
   async signIn(email: string, password: string) {
     const data = await this.supabase.auth.signInWithPassword({email, password});
 

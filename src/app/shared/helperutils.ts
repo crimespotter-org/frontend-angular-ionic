@@ -19,7 +19,7 @@ export class HelperUtils {
   static formatLinkType(type: string): string {
     switch (type) {
       case 'newspaper':
-        return 'Zeitung'
+        return 'Artikel'
       case 'book':
         return 'Buch'
       case 'podcast':
