@@ -19,9 +19,11 @@ export class FilterStateService {
     longitude: 13.4050
   });
   private _searchQuery = new BehaviorSubject<string>('');
-  private updateTrigger = new Subject<void>();
+  private updateMapTrigger = new Subject<void>();
+  private updateMapLocationTrigger = new Subject<void>();
 
-  public updateTrigger$ = this.updateTrigger.asObservable();
+  public updateMapTrigger$ = this.updateMapTrigger.asObservable();
+  public updateMapLocationTrigger$ = this.updateMapLocationTrigger.asObservable();
   public readonly filters$ = this._filters.asObservable();
   public readonly filteredCases$ = this._filteredCases.asObservable();
   public readonly searchLocation$ = this._searchLocation.asObservable();
@@ -181,6 +183,10 @@ export class FilterStateService {
   }
 
   public triggerMapUpdate() {
-    this.updateTrigger.next();
+    this.updateMapTrigger.next();
+  }
+
+  public triggerMapLocationUpdate() {
+    this.updateMapLocationTrigger.next();
   }
 }

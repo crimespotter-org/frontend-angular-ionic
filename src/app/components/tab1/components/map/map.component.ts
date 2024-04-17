@@ -58,12 +58,15 @@ export class MapComponent implements OnInit, AfterViewInit {
         this.updateLocation(location);
       }
     });
-    this.filterStateService.updateTrigger$.subscribe(() => {
+    this.filterStateService.updateMapTrigger$.subscribe(() => {
       this.reloadMap();
+    });
+    this.filterStateService.updateMapLocationTrigger$.subscribe(() => {
+      this.location = {latitude: this.map.getCenter().lat, longitude: this.map.getCenter().lng}
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
-    this.heatLayer = L.heatLayer([], { radius: 25, blur: 15 }); // Initiale leere Heatmap
+    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15}); // Initiale leere Heatmap
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -113,28 +116,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private reloadMap(): void {
-    let loca = this.map.getCenter();
-    let zoom = this.map.getZoom();
-
-    if (this.map != undefined) this.map.remove();
-    this.map = L.map('map').setView(loca, zoom);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© OpenStreetMap'
-    }).addTo(this.map);
-
-    this.map.on('zoom', () => {
-      this.adjustMarkers();
-    });
-
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 100);
-
-    this.markerLayer.addTo(this.map);
-
-    this.updateMapWithCases();
+    if (this.location) {
+      this.initMap(this.location);
+    }
   }
+
 
   updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
     this.location = location;
@@ -151,7 +137,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const heatPoints: number[][] = [];
 
     this.cases.forEach((caze) => {
-      const marker = L.marker([caze.lat, caze.long], { icon: murderMarker })
+      const marker = L.marker([caze.lat, caze.long], {icon: murderMarker})
         .bindPopup(this.createPopupContent(caze));
       this.markerLayer.addLayer(marker);
 
@@ -191,8 +177,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.caseDetailsService.loadCaseDetails(caseId);
     this.caseDetailsService.setReturnRoute(this.router.url);
     this.ngZone.run(() => {
-      this.updateLocation({latitude: lat, longitude: long})
       this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
+      this.map.setView([lat, long], 13);
     });
   }
 

@@ -18,4 +18,8 @@ export class Tab1Page {
   ionViewDidEnter() {
     this.filterStateService.triggerMapUpdate();
   }
+
+  ionViewWillLeave() {
+    this.filterStateService.triggerMapLocationUpdate();
+  }
 }
