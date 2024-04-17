@@ -35,7 +35,7 @@
         <ion-item>
           <ion-label position="stacked">Crimefluencer</ion-label>
           <ion-select multiple="true" placeholder="Crimefluencer auswählen" [(ngModel)]="selectedCrimefluencerIds" interface="popover">
-            <ion-select-option *ngFor="let user of crimefluencers" [value]="{ user_id: user.id, username: user.username }">
+            <ion-select-option *ngFor="let user of crimefluencers" [value]="user">
               {{ user.username }}
             </ion-select-option>
           </ion-select>

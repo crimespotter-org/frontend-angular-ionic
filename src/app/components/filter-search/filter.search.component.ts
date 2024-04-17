@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
+import {Component, Inject, Input, LOCALE_ID, OnInit} from '@angular/core';
 import {
   IonButton,
   IonButtons,
@@ -14,9 +14,12 @@ import {
   IonLabel,
   IonList,
   IonMenu,
-  IonModal, IonNote,
+  IonModal,
+  IonNote,
   IonRange,
-  IonSearchbar, IonSegment, IonSegmentButton,
+  IonSearchbar,
+  IonSegment,
+  IonSegmentButton,
   IonSelect,
   IonSelectOption,
   IonTitle,
@@ -26,7 +29,7 @@ import {
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, formatDate, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
-import {closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline} from "ionicons/icons";
+import {arrowDownOutline, arrowUpOutline, closeCircle, optionsOutline} from "ionicons/icons";
 import {FormsModule} from "@angular/forms";
 import {FilterStateService} from "../../services/filter-state.service";
 import {DataService} from "../../services/data.service";
@@ -99,7 +102,7 @@ export class FilterSearchComponent implements OnInit {
   radius?: number;
   selectedCaseTypes: string[] = [];
   selectedCrimefluencerIds: { user_id: string, username: string }[] = []
-  crimefluencers: any;
+  crimefluencers: { user_id: string, username: string }[] = [];
   selectedStatus?: string;
   caseTypes: string[] = [];
   searchDebounceTime?: any;
@@ -123,7 +126,15 @@ export class FilterSearchComponent implements OnInit {
       this.filters = filters;
     });
     this.supabaseService.getCrimefluencer().then(x => {
-      this.crimefluencers = x;
+      if (x) {
+        x.forEach(y => {
+          this.crimefluencers.push({
+            user_id: y.id,
+            username: y.username
+          })
+        })
+      }
+      ;
     });
   }
 
@@ -164,15 +175,17 @@ export class FilterSearchComponent implements OnInit {
     const statusFilter = this.filters.find(f => f.type === 'status');
     this.selectedStatus = statusFilter ? statusFilter.value.toString() : undefined;
 
-    const crimefluencerFilter = this.filters.find(f => f.type === 'crimefluencer');
-    if (crimefluencerFilter && typeof crimefluencerFilter.value !== 'string' && 'user_id' in crimefluencerFilter.value) {
-      this.selectedCrimefluencerIds.push({
-        user_id: crimefluencerFilter.value.user_id,
-        username: crimefluencerFilter.value.username
-      })
-    } else {
-      this.selectedCrimefluencerIds = [];
-    }
+    this.selectedCrimefluencerIds = []
+    const crimefluencerFilters = this.filters.filter(f => f.type === 'crimefluencer');
+    crimefluencerFilters.forEach(cf => {
+      const cfvalue = cf.value
+      if (typeof cfvalue !== 'string' && 'user_id' in cfvalue) {
+        let user = this.crimefluencers.find(c => c.user_id === cfvalue.user_id);
+        if (user) {
+          this.selectedCrimefluencerIds.push(user);
+        }
+      }
+    });
   }
 
   addTempFilter(type: 'caseType' | 'status' | 'dateRange' | 'location' | 'crimefluencer', value: any): void {
