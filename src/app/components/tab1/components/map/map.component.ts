@@ -113,9 +113,27 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private reloadMap(): void {
-    if (this.location) {
-      this.initMap(this.location);
-    }
+    let loca = this.map.getCenter();
+    let zoom = this.map.getZoom();
+
+    if (this.map != undefined) this.map.remove();
+    this.map = L.map('map').setView(loca, zoom);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© OpenStreetMap'
+    }).addTo(this.map);
+
+    this.map.on('zoom', () => {
+      this.adjustMarkers();
+    });
+
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 100);
+
+    this.markerLayer.addTo(this.map);
+
+    this.updateMapWithCases();
   }
 
   updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
