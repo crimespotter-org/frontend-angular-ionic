@@ -159,7 +159,7 @@ export class MapComponent implements OnInit, AfterViewInit {
             ${caseData.summary}
         </p>
         <p style="font-size: 0.6rem; margin-top: 4px;">
-            Erstellt am: ${moment(caseData.created_at).format('DD.MM.YYYY, HH:mm')}
+            Erstellt am: ${moment(caseData.created_at).format('DD.MM.YYYY, HH:mm')} von ${caseData.creator_username}
         </p>
         <ion-chip color="primary" onClick="navigateToCaseDetails('${caseData.id}', '${caseData.lat}', '${caseData.long}')">
             <ion-icon name="search-outline"></ion-icon>

@@ -147,6 +147,11 @@ export class FilterStateService {
           filterOptions.caseTypes.push(filter.value);
         } else if (filter.type === 'status' && typeof filter.value === 'string') {
           filterOptions.status = filter.value;
+        } else if (filter.type === 'crimefluencer' && typeof filter.value !== 'string' && 'username' in filter.value) {
+          if (filterOptions.crimefluencerIds == undefined) {
+            filterOptions.crimefluencerIds = [];
+          }
+          filterOptions.crimefluencerIds.push(filter.value.user_id);
         }
       }
     );

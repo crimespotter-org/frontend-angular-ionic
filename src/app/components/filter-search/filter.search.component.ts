@@ -34,7 +34,8 @@ import {Geolocation} from "@capacitor/geolocation";
 import {StorageService} from "../../services/storage.service";
 import {Filter} from "../../shared/interfaces/filter";
 import {QueryLocationResponse} from "../../shared/interfaces/query-location-response";
-import { HelperUtils } from 'src/app/shared/helperutils';
+import {HelperUtils} from 'src/app/shared/helperutils';
+import {SupabaseService} from "../../services/supabase.service";
 
 
 @Component({
@@ -97,6 +98,8 @@ export class FilterSearchComponent implements OnInit {
   locations: QueryLocationResponse[] = [];
   radius?: number;
   selectedCaseTypes: string[] = [];
+  selectedCrimefluencerIds: { user_id: string, username: string }[] = []
+  crimefluencers: any;
   selectedStatus?: string;
   caseTypes: string[] = [];
   searchDebounceTime?: any;
@@ -110,6 +113,7 @@ export class FilterSearchComponent implements OnInit {
               private filterStateService: FilterStateService,
               private dataService: DataService,
               private storageService: StorageService,
+              private supabaseService: SupabaseService,
               @Inject(LOCALE_ID) private locale: string) {
     addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
@@ -117,6 +121,9 @@ export class FilterSearchComponent implements OnInit {
   ngOnInit() {
     this.filterStateService.filters$.subscribe(filters => {
       this.filters = filters;
+    });
+    this.supabaseService.getCrimefluencer().then(x => {
+      this.crimefluencers = x;
     });
   }
 
@@ -156,9 +163,19 @@ export class FilterSearchComponent implements OnInit {
 
     const statusFilter = this.filters.find(f => f.type === 'status');
     this.selectedStatus = statusFilter ? statusFilter.value.toString() : undefined;
+
+    const crimefluencerFilter = this.filters.find(f => f.type === 'crimefluencer');
+    if (crimefluencerFilter && typeof crimefluencerFilter.value !== 'string' && 'user_id' in crimefluencerFilter.value) {
+      this.selectedCrimefluencerIds.push({
+        user_id: crimefluencerFilter.value.user_id,
+        username: crimefluencerFilter.value.username
+      })
+    } else {
+      this.selectedCrimefluencerIds = [];
+    }
   }
 
-  addTempFilter(type: 'caseType' | 'status' | 'dateRange' | 'location', value: any): void {
+  addTempFilter(type: 'caseType' | 'status' | 'dateRange' | 'location' | 'crimefluencer', value: any): void {
     this.tempFilters.push({type, value});
   }
 
@@ -195,6 +212,15 @@ export class FilterSearchComponent implements OnInit {
 
     if (this.selectedStatus) {
       this.addTempFilter('status', this.selectedStatus);
+    }
+
+    if (this.selectedCrimefluencerIds.length > 0) {
+      this.selectedCrimefluencerIds.forEach(crimefluencer => {
+        this.addTempFilter('crimefluencer', {
+          user_id: crimefluencer.user_id,
+          username: crimefluencer.username
+        });
+      });
     }
 
     if (!valid) {
@@ -294,8 +320,7 @@ export class FilterSearchComponent implements OnInit {
         .subscribe((locations) => {
           this.searchList = locations;
         });
-    }
-    else {
+    } else {
       this.searchList = []
     }
   }
@@ -314,7 +339,7 @@ export class FilterSearchComponent implements OnInit {
   onLocationFilterSelected(location: QueryLocationResponse) {
     this.selectedLocation = location;
     this.locations = [];
-    this.inputLocation = location.city + (location.sub? location.sub : '') + (location.postalCode ? ', ' + location.postalCode : '');
+    this.inputLocation = location.city + (location.sub ? location.sub : '') + (location.postalCode ? ', ' + location.postalCode : '');
   }
 
   onLocationFilterChange(searchText: string) {
@@ -345,6 +370,13 @@ export class FilterSearchComponent implements OnInit {
   formatLocation(filterValue: Filter['value']): string {
     if (typeof filterValue !== 'string' && 'city' in filterValue) {
       return `Ort: ${filterValue.city}, Radius: ${filterValue.radius}km`;
+    }
+    return ''
+  }
+
+  formatCrimefluencer(filterValue: Filter['value']): string {
+    if (typeof filterValue !== 'string' && 'username' in filterValue) {
+      return `Crimefluencer: ${filterValue.username}`;
     }
     return ''
   }

@@ -393,6 +393,7 @@ export type Database = {
           distance?: number
           crime_types?: Database["public"]["Enums"]["casetype"][]
           case_status?: Database["public"]["Enums"]["status"]
+          crimefluencer_ids?: string[]
         }
         Returns: {
           id: string
@@ -403,6 +404,7 @@ export type Database = {
           lat: number
           long: number
           created_by: string
+          creator_username: string,
           place_name: string
           zip_code: number
           case_type: Database["public"]["Enums"]["casetype"]

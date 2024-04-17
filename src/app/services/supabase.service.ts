@@ -7,8 +7,9 @@ import {FilterOptions} from "../shared/interfaces/filter.options";
 import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
-import { jwtDecode } from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import {LocationService} from "./location.service";
+import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -103,6 +104,19 @@ export class SupabaseService {
     return user ? user.role : '';
   }
 
+  async getCrimefluencer() {
+    return this.supabase
+      .from('user_profiles')
+      .select('id, username, role')
+      .or(`role.eq.crimefluencer,role.eq.admin`)
+      .then(({ data, error }) => {
+        if (error) {
+          console.error(error);
+        }
+        return data;
+      });
+  }
+
   async getAllCases(): Promise<Case[] | []> {
     const {data: cases, error} = await this.supabase.rpc("get_all_cases").returns<Case[]>();
     if (error) {
@@ -124,7 +138,8 @@ export class SupabaseService {
         case_status: filterOptions.status,
         currentlat: filterOptions.currentLat,
         currentlong: filterOptions.currentLong,
-        distance: filterOptions.radius
+        distance: filterOptions.radius,
+        crimefluencer_ids: filterOptions.crimefluencerIds
       };
     }
 
@@ -176,7 +191,7 @@ export class SupabaseService {
     const {data, error} = await this.supabase
       .storage
       .from('media')
-      .list(`case-${caseId}`, {limit: 100, offset: 0}); // Passen Sie den Pfad und die Optionen an Ihre Bedürfnisse an.
+      .list(`case-${caseId}`, {limit: 100, offset: 0});
 
     if (error) {
       console.error(error);

@@ -15,7 +15,7 @@
         <h5>{{ HelperUtils.formatCrimeType(case.case_type) }} | {{ HelperUtils.formatStatus(case.status)}} | {{case.distance_to_location | number : '1.0-0'  }}km entfernt</h5>
         <h5>Am {{ case.crime_date_time | date: 'dd.MM.YYYY' }} in {{ case.zip_code }}, {{ case.place_name}}</h5>
         <p>{{ case.summary }}</p>
-        <p class="created-at">Erstellt am: {{ case.created_at | date: 'dd.MM.yyyy, HH:mm' }}</p>
+        <p class="created-at">Erstellt am: {{ case.created_at | date: 'dd.MM.yyyy, HH:mm' }} von {{case.creator_username}}</p>
       </ion-label>
 
       <div class="media-icons" slot="end">

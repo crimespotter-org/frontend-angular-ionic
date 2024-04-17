@@ -1,4 +1,5 @@
 export interface FilterOptions {
+  crimefluencerIds?: string[];
   startDate?: Date;
   endDate?: Date;
   caseTypes?: string[];

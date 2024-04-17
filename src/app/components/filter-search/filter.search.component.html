@@ -33,6 +33,16 @@
       <ion-list lines="full" class="ion-padding-vertical">
 
         <ion-item>
+          <ion-label position="stacked">Crimefluencer</ion-label>
+          <ion-select multiple="true" placeholder="Crimefluencer auswählen" [(ngModel)]="selectedCrimefluencerIds" interface="popover">
+            <ion-select-option *ngFor="let user of crimefluencers" [value]="{ user_id: user.id, username: user.username }">
+              {{ user.username }}
+            </ion-select-option>
+          </ion-select>
+        </ion-item>
+
+
+        <ion-item>
           <ion-label position="stacked">Datumsbereich Tatzeitpunkt</ion-label>
           <ion-toggle [(ngModel)]="enableDateRangeSearch"
                       (ionChange)="toggleEnableDateRangeSearch($event)"></ion-toggle>
@@ -152,9 +162,10 @@
       </ion-chip>
       <ion-chip *ngFor="let filter of filters" color="primary">
         <ion-label>
+          {{ filter.type === 'crimefluencer' ? formatCrimefluencer(filter.value) : '' }}
+          {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
           {{ filter.type === 'caseType' ? 'Falltyp: ' + HelperUtils.formatCrimeType(filter.value.toString()) : '' }}
           {{ filter.type === 'status' ? 'Status: ' + (filter.value === "open" ? 'Offen' : 'Geschlossen') : '' }}
-          {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}
           {{ filter.type === 'location' ? formatLocation(filter.value) : '' }}
         </ion-label>
         <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
