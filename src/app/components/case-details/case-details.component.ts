@@ -77,8 +77,4 @@ export class CaseDetailsComponent implements OnInit {
     })
   }
 
-  segmentChanged(event: any) {
-    this.segment = event.detail.value;
-  }
-
 }

@@ -111,16 +111,17 @@ export class CaselistComponent implements OnInit {
   async navigateToCaseDetails(caseId: string, event: MouseEvent) {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
-      this.caseDetailsService.loadCaseDetails(caseId);
-      this.caseDetailsService.setReturnRoute(this.router.url);
-      let target: HTMLElement | null = event.target as HTMLElement | null;
-      while (target !== null) {
-        if (target.classList && target.classList.contains('vote-button')) {
-          return;
+      this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+        this.caseDetailsService.setReturnRoute(this.router.url);
+        let target: HTMLElement | null = event.target as HTMLElement | null;
+        while (target !== null) {
+          if (target.classList && target.classList.contains('vote-button')) {
+            return;
+          }
+          target = target.parentElement;
         }
-        target = target.parentElement;
-      }
-      this.router.navigate(['tabs/case-details', caseId]);
+        this.router.navigate(['tabs/case-details', caseId]);
+      })
     } catch (error) {
     } finally {
       await this.dismissLoading();

@@ -202,12 +202,13 @@ export class MapComponent implements OnInit, AfterViewInit {
   async navigateToCaseDetails(caseId: string, lat: number, long: number) {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
-      await this.caseDetailsService.loadCaseDetails(caseId);
-      this.caseDetailsService.setReturnRoute(this.router.url);
-      this.ngZone.run(() => {
-        this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
-        this.map.setView([lat, long], 13);
-      });
+      this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+        this.caseDetailsService.setReturnRoute(this.router.url);
+        this.ngZone.run(() => {
+          this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
+          this.map.setView([lat, long], 13);
+        });
+      })
     } catch (error) {
     } finally {
       await this.dismissLoading();
