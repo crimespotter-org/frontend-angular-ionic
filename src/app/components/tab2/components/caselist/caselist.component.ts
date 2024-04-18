@@ -112,7 +112,6 @@ export class CaselistComponent implements OnInit {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
       this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
-        this.caseDetailsService.setReturnRoute(this.router.url);
         let target: HTMLElement | null = event.target as HTMLElement | null;
         while (target !== null) {
           if (target.classList && target.classList.contains('vote-button')) {
@@ -120,7 +119,7 @@ export class CaselistComponent implements OnInit {
           }
           target = target.parentElement;
         }
-        this.router.navigate(['tabs/case-details', caseId]);
+        this.router.navigate(['tabs/tab2/case-details', caseId]);
       })
     } catch (error) {
     } finally {

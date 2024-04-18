@@ -203,9 +203,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
       this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
-        this.caseDetailsService.setReturnRoute(this.router.url);
         this.ngZone.run(() => {
-          this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
+          this.router.navigate(['tabs/tab1/case-details', caseId]);
           this.map.setView([lat, long], 13);
         });
       })

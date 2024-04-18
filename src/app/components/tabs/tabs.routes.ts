@@ -8,8 +8,16 @@ export const routes: Routes = [
     children: [
       {
         path: 'tab1',
-        loadComponent: () =>
-          import('../tab1/tab1.page').then((m) => m.Tab1Page)
+        children: [
+          {
+            path: '',
+            loadComponent: () =>  import('../tab1/tab1.page').then((m) => m.Tab1Page)
+          },
+          {
+            path: 'case-details/:id',
+            loadComponent: () => import('../../components/case-details/case-details.component').then((m) => m.CaseDetailsComponent)
+          },
+        ]
       },
       {
         path: 'tab2',
@@ -25,6 +33,10 @@ export const routes: Routes = [
           {
             path: 'add2',
             loadComponent: () => import('../tab2/components/add/add2/add2.page').then((m) => m.Add2Page)
+          },
+          {
+            path: 'case-details/:id',
+            loadComponent: () => import('../../components/case-details/case-details.component').then((m) => m.CaseDetailsComponent)
           },
         ]
       },
@@ -44,10 +56,6 @@ export const routes: Routes = [
             loadComponent: () => import('../tab3/components/password-change/password-change.page').then(m => m.PasswordChangePage)
           },
         ]
-      },
-      {
-        path: 'case-details/:id',
-        loadComponent: () => import('../../components/case-details/case-details.component').then((m) => m.CaseDetailsComponent)
       },
       {
         path: '',

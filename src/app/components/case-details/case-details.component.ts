@@ -3,6 +3,7 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule, NgSwitch} from "@angular/common";
 import {CaseFactsComponent} from "./case-facts/case-facts.component";
 import {
+  IonBackButton,
   IonButton,
   IonButtons,
   IonContent,
@@ -12,9 +13,7 @@ import {
   IonIcon, IonLabel, IonSegment, IonSegmentButton, IonTitle,
   IonToolbar
 } from "@ionic/angular/standalone";
-import {CaseDetails} from "../../shared/types/supabase";
 import {ActivatedRoute, Router} from "@angular/router";
-import {SupabaseService} from "../../services/supabase.service";
 import {addIcons} from "ionicons";
 import {chevronBackOutline} from "ionicons/icons";
 import {CaseDetailsService} from "../../services/case-details.service";
@@ -26,6 +25,7 @@ import {CaseChatComponent} from "./case-chat/case-chat.component";
 @Component({
   selector: 'app-case-details',
   templateUrl: './case-details.component.html',
+  standalone: true,
   styleUrls: ['./case-details.component.scss'],
   imports: [
     FormsModule,
@@ -46,9 +46,9 @@ import {CaseChatComponent} from "./case-chat/case-chat.component";
     IonLabel,
     CaseLinksComponent,
     CaseMediaComponent,
-    CaseChatComponent
-  ],
-  standalone: true
+    CaseChatComponent,
+    IonBackButton
+  ]
 })
 export class CaseDetailsComponent implements OnInit {
   caseId: string | null = '';
@@ -69,12 +69,6 @@ export class CaseDetailsComponent implements OnInit {
         this.caseDetailsService.loadCaseDetails(this.caseId);
       }
     }
-  }
-
-  goBack() {
-    this.caseDetailsService.getReturnRoute().subscribe(x=>{
-      this.router.navigateByUrl(x);
-    })
   }
 
 }

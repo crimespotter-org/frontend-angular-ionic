@@ -1,5 +1,13 @@
 <ion-header>
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button disabled="true">
+        <ion-icon></ion-icon>
+      </ion-button>
+    </ion-buttons>
     <ion-segment [(ngModel)]="segment" swipe-gesture="true">
       <ion-segment-button value="facts">
         <ion-label>Fakten</ion-label>
@@ -22,10 +30,4 @@
   <app-case-links *ngIf="segment === 'links'" [caseId]="caseId" ></app-case-links>
   <app-case-media *ngIf="segment === 'media'" [caseId]="caseId"></app-case-media>
   <app-case-chat *ngIf="segment === 'comments'" [caseId]="caseId"></app-case-chat>
-
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed">
-    <ion-fab-button (click)="goBack()">
-      <ion-icon name="chevron-back-outline"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
 </ion-content>

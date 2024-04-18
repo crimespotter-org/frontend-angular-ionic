@@ -23,12 +23,4 @@ export class CaseDetailsService {
       this._caseDetails.next(null);
     }
   }
-
-  setReturnRoute(route: string) {
-    this.returnRoute.next(route);
-  }
-
-  getReturnRoute() {
-    return this.returnRoute.asObservable();
-  }
 }
