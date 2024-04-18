@@ -50,9 +50,9 @@ export class FilterStateService {
     });
   }
 
-  setFilters(newFilters: Filter[]): void {
+  async setFilters(newFilters: Filter[]) {
     this._filters.next([...newFilters]);
-    this.applyFilters();
+     await this.applyFilters();
   }
 
   setSearchLocation(location: Location): void {
@@ -160,13 +160,13 @@ export class FilterStateService {
     return filterOptions;
   }
 
-  removeFilter(filterToRemove: Filter): void {
+  async removeFilter(filterToRemove: Filter) {
     const currentFilters = this._filters.getValue();
     const newFilters = currentFilters.filter(f =>
       !(f.type === filterToRemove.type && JSON.stringify(f.value) === JSON.stringify(filterToRemove.value))
     );
     this._filters.next(newFilters);
-    this.applyFilters();
+    await this.applyFilters();
   }
 
   resetFilters(): void {

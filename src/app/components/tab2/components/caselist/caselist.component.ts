@@ -13,7 +13,7 @@ import {
   IonLabel,
   IonList,
   IonRefresher,
-  IonRefresherContent
+  IonRefresherContent, LoadingController
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
@@ -74,7 +74,10 @@ export class CaselistComponent implements OnInit {
   cases: CaseFiltered[] = [];
 
   constructor(private supabaseService: SupabaseService,
-              private caseDetailsService: CaseDetailsService, private filterStateService: FilterStateService, private router: Router) {
+              private caseDetailsService: CaseDetailsService,
+              private filterStateService: FilterStateService,
+              private router: Router,
+              private loadingController: LoadingController) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -113,16 +116,33 @@ export class CaselistComponent implements OnInit {
     });
   }
 
-  navigateToCaseDetails(caseId: string, event: MouseEvent) {
-    this.caseDetailsService.loadCaseDetails(caseId);
-    this.caseDetailsService.setReturnRoute(this.router.url);
-    let target: HTMLElement | null = event.target as HTMLElement | null;
-    while (target !== null) {
-      if (target.classList && target.classList.contains('vote-button')) {
-        return;
+  async navigateToCaseDetails(caseId: string, event: MouseEvent) {
+    await this.presentLoading('Steckbrief wird geladen...');
+    try {
+      this.caseDetailsService.loadCaseDetails(caseId);
+      this.caseDetailsService.setReturnRoute(this.router.url);
+      let target: HTMLElement | null = event.target as HTMLElement | null;
+      while (target !== null) {
+        if (target.classList && target.classList.contains('vote-button')) {
+          return;
+        }
+        target = target.parentElement;
       }
-      target = target.parentElement;
+      this.router.navigate(['tabs/case-details', caseId]);
+    } catch (error) {
+    } finally {
+      await this.dismissLoading();
     }
-    this.router.navigate(['tabs/case-details', caseId]);
+  }
+
+  async presentLoading(message: string = 'Bitte warten...') {
+    const loading = await this.loadingController.create({
+      message: message,
+    });
+    await loading.present();
+  }
+
+  async dismissLoading() {
+    await this.loadingController.dismiss();
   }
 }

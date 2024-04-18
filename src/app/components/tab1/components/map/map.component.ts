@@ -5,7 +5,7 @@ import 'leaflet.heat';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
 import {murderMarker} from './markers';
 import {FilterStateService} from 'src/app/services/filter-state.service';
-import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon} from "@ionic/angular/standalone";
+import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon, LoadingController} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
 import {flame, locateOutline, searchOutline} from "ionicons/icons";
 import {Geolocation} from "@capacitor/geolocation";
@@ -42,7 +42,10 @@ export class MapComponent implements OnInit, AfterViewInit {
   location?: Location;
 
   constructor(private filterStateService: FilterStateService,
-              private caseDetailsService: CaseDetailsService, private router: Router, private ngZone: NgZone) {
+              private caseDetailsService: CaseDetailsService,
+              private router: Router,
+              private ngZone: NgZone,
+              private loadingController: LoadingController) {
     addIcons({locateOutline, searchOutline, flame});
   }
 
@@ -173,13 +176,19 @@ export class MapComponent implements OnInit, AfterViewInit {
     `;
   }
 
-  navigateToCaseDetails(caseId: string, lat: number, long: number) {
-    this.caseDetailsService.loadCaseDetails(caseId);
-    this.caseDetailsService.setReturnRoute(this.router.url);
-    this.ngZone.run(() => {
-      this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
-      this.map.setView([lat, long], 13);
-    });
+  async navigateToCaseDetails(caseId: string, lat: number, long: number) {
+    await this.presentLoading('Steckbrief wird geladen...');
+    try {
+      await this.caseDetailsService.loadCaseDetails(caseId);
+      this.caseDetailsService.setReturnRoute(this.router.url);
+      this.ngZone.run(() => {
+        this.router.navigate(['tabs/case-details', caseId], {state: {returnRoute: '/tabs/tab1'}});
+        this.map.setView([lat, long], 13);
+      });
+    } catch (error) {
+    } finally {
+      await this.dismissLoading();
+    }
   }
 
   clearMarkers() {
@@ -215,6 +224,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.map.addLayer(this.heatLayer);
       this.map.removeLayer(this.markerLayer);
     }
+  }
+
+  async presentLoading(message: string = 'Bitte warten...') {
+    const loading = await this.loadingController.create({
+      message: message,
+    });
+    await loading.present();
+  }
+
+  async dismissLoading() {
+    await this.loadingController.dismiss();
   }
 
 }

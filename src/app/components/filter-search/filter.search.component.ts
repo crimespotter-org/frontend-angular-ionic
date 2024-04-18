@@ -24,7 +24,7 @@ import {
   IonSelectOption,
   IonTitle,
   IonToggle,
-  IonToolbar,
+  IonToolbar, LoadingController,
   MenuController
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, formatDate, NgForOf, NgIf} from "@angular/common";
@@ -117,6 +117,7 @@ export class FilterSearchComponent implements OnInit {
               private dataService: DataService,
               private storageService: StorageService,
               private supabaseService: SupabaseService,
+              private loadingController: LoadingController,
               @Inject(LOCALE_ID) private locale: string) {
     addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
@@ -240,11 +241,18 @@ export class FilterSearchComponent implements OnInit {
       this.tempFilters = [];
       return;
     }
-    this.filterStateService.setFilters([...new Set(this.tempFilters)]);
-    this.tempFilters = [];
-    this.initializeFilterVariables();
 
-    await this.menu.close(this.menuId);
+    await this.presentLoading('Filter wird angewendet...');
+    try {
+      await this.filterStateService.setFilters([...new Set(this.tempFilters)]);
+      this.tempFilters = [];
+      this.initializeFilterVariables();
+
+      await this.menu.close(this.menuId);
+    } catch (error) {
+    } finally {
+      await this.dismissLoading();
+    }
   }
 
   applySorting() {
@@ -264,8 +272,15 @@ export class FilterSearchComponent implements OnInit {
     this.caseTypes = this.storageService.getCaseTypes();
   }
 
-  removeFilter(filterToRemove: Filter): void {
-    this.filterStateService.removeFilter(filterToRemove);
+  async removeFilter(filterToRemove: Filter) {
+    await this.presentLoading('Filter wird aktualisiert...');
+    try {
+      await this.filterStateService.removeFilter(filterToRemove);
+
+    } catch (error) {
+    } finally {
+      await this.dismissLoading();
+    }
   }
 
   setStartDate(event: CustomEvent) {
@@ -396,5 +411,16 @@ export class FilterSearchComponent implements OnInit {
 
   segmentChanged(event: any) {
     this.segmentValue = event.detail.value;
+  }
+
+  async presentLoading(message: string = 'Bitte warten...') {
+    const loading = await this.loadingController.create({
+      message: message,
+    });
+    await loading.present();
+  }
+
+  async dismissLoading() {
+    await this.loadingController.dismiss();
   }
 }
