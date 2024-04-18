@@ -6,7 +6,7 @@ import {
   IonContent,
   IonDatetime,
   IonHeader,
-  IonIcon,
+  IonIcon, IonImg,
   IonInput,
   IonItem,
   IonItemOption,
@@ -21,7 +21,7 @@ import {
   IonSegment,
   IonSegmentButton,
   IonSelect,
-  IonSelectOption,
+  IonSelectOption, IonThumbnail,
   IonTitle,
   IonToggle,
   IonToolbar, LoadingController,
@@ -75,7 +75,9 @@ import {SupabaseService} from "../../services/supabase.service";
     IonToggle,
     IonNote,
     IonSegmentButton,
-    IonSegment
+    IonSegment,
+    IonImg,
+    IonThumbnail
   ],
   standalone: true
 })

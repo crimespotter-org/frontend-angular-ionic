@@ -1,8 +1,8 @@
 <ion-menu side="end" [menuId]="menuId" contentId="searchbar">
   <ion-header>
     <ion-toolbar color="primary">
-      <ion-title *ngIf="menuId!=='mapMenu'" >Optionen</ion-title>
-      <ion-title *ngIf="menuId==='mapMenu'" >Filter</ion-title>
+      <ion-title *ngIf="menuId!=='mapMenu'">Optionen</ion-title>
+      <ion-title *ngIf="menuId==='mapMenu'">Filter</ion-title>
     </ion-toolbar>
   </ion-header>
   <ion-content>
@@ -34,7 +34,8 @@
 
         <ion-item>
           <ion-label position="stacked">Crimefluencer</ion-label>
-          <ion-select multiple="true" placeholder="Crimefluencer auswählen" [(ngModel)]="selectedCrimefluencerIds" interface="popover">
+          <ion-select multiple="true" placeholder="Crimefluencer auswählen" [(ngModel)]="selectedCrimefluencerIds"
+                      interface="popover">
             <ion-select-option *ngFor="let user of crimefluencers" [value]="user">
               {{ user.username }}
             </ion-select-option>
@@ -133,12 +134,25 @@
 
 <ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
-    <ion-searchbar animated="true"
-                   placeholder="{{menuId === 'caselistMenu'? 'Suche in Falltiteln': 'Suche nach Ort oder PLZ'}}"
-                   show-cancel-button="focus" cancel-button-text="Abbrechen" (ionInput)="onSearchChange(inputSearch)"
-                   (ionBlur)="onSearchBlur()"
-                   (ionClear)="onSearchClear()" [(ngModel)]="inputSearch" (ionCancel)="onSearchClear()">
-    </ion-searchbar>
+    <ion-toolbar style="--border-style: none;">
+      <ion-buttons slot="start">
+        <ion-button>
+          <img src="./assets/icon/icon-cs.png">
+        </ion-button>
+      </ion-buttons>
+      <ion-searchbar animated="true"
+                     placeholder="{{menuId === 'caselistMenu'? 'Suche in Falltiteln': 'Suche nach Ort oder PLZ'}}"
+                     show-cancel-button="focus" cancel-button-text="Abbrechen"
+                     (ionInput)="onSearchChange(inputSearch)"
+                     (ionBlur)="onSearchBlur()"
+                     (ionClear)="onSearchClear()" [(ngModel)]="inputSearch" (ionCancel)="onSearchClear()">
+      </ion-searchbar>
+      <ion-buttons slot="end">
+        <ion-button (click)="openFilterMenu()">
+          <ion-icon slot="icon-only" name="options-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
     <ion-list *ngIf="searchList.length > 0">
       <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
         <ion-label *ngIf="search.city !== undefined">
@@ -147,7 +161,7 @@
         </ion-label>
       </ion-item>
     </ion-list>
-    <div class="chips-container">
+    <div class="chips-container" *ngIf="!(menuId && !filters)">
       <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'"
                 (click)="toggleSortDirection()">
         <ion-label>
@@ -171,11 +185,6 @@
         <ion-icon name="close-circle" (click)="removeFilter(filter)"></ion-icon>
       </ion-chip>
     </div>
-    <ion-buttons slot="end">
-      <ion-button (click)="openFilterMenu()">
-        <ion-icon slot="icon-only" name="options-outline"></ion-icon>
-      </ion-button>
-    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 

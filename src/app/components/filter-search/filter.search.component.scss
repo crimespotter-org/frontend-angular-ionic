@@ -6,6 +6,8 @@ ion-modal {
 }
 
 .chips-container {
+  margin-bottom: -3px;
+  margin-top: -4px;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: auto;
@@ -28,4 +30,20 @@ ion-modal {
 
 ion-chip {
   flex: 0 0 auto;
+}
+
+ion-searchbar {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+ion-buttons {
+  margin: -2px;
+  padding-left: 2px;
+  padding-right: 2px;
+}
+
+ion-button img {
+  height: 36px;
+  weight: 36px;
 }
