@@ -120,7 +120,30 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private reloadMap(): void {
     if (this.location) {
-      this.initMap(this.location);
+      let mapZoom = 13;
+
+      if (this.map != undefined) {
+        mapZoom = this.map.getZoom()
+        this.map.remove();
+      }
+      this.map = L.map('map').setView([this.location.latitude, this.location.longitude], mapZoom);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap'
+      }).addTo(this.map);
+
+      this.map.on('zoom', () => {
+        this.adjustMarkers();
+      });
+
+
+      setTimeout(() => {
+        this.map.invalidateSize();
+      }, 100);
+
+      this.markerLayer.addTo(this.map);
+
+      this.updateMapWithCases();
     }
   }
 
