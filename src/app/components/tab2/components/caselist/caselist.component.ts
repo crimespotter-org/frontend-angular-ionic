@@ -101,19 +101,11 @@ export class CaselistComponent implements OnInit {
   }
 
   upvote(caseId: string) {
-    this.supabaseService.upvote(caseId).then(() => {
-      this.filterStateService.applyFilters();
-    }).catch((error) => {
-      console.error(error);
-    });
+    this.filterStateService.upvoteCase(caseId);
   }
 
   downvote(caseId: string) {
-    this.supabaseService.downvote(caseId).then(() => {
-      this.filterStateService.applyFilters();
-    }).catch((error) => {
-      console.error(error);
-    });
+    this.filterStateService.downvoteCase(caseId);
   }
 
   async navigateToCaseDetails(caseId: string, event: MouseEvent) {

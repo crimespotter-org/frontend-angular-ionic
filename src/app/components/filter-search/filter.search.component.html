@@ -135,7 +135,7 @@
 <ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
     <div style="display: flex; align-items: center; margin-top: -2px; padding-bottom: 4px">
-      <ion-buttons slot="start">
+      <ion-buttons *ngIf="!searchActive" slot="start">
         <ion-button>
           <img src="./assets/icon/icon-cs.png">
         </ion-button>
@@ -143,11 +143,12 @@
       <ion-searchbar animated="true"
                      placeholder="{{menuId === 'caselistMenu'? 'Suche in Falltiteln': 'Suche nach Ort oder PLZ'}}"
                      show-cancel-button="focus" cancel-button-text="Abbrechen"
+                     (ionFocus)="onSearchFocus()"
                      (ionInput)="onSearchChange(inputSearch)"
                      (ionBlur)="onSearchBlur()"
-                     (ionClear)="onSearchClear()" [(ngModel)]="inputSearch" (ionCancel)="onSearchClear()">
+                     (ionClear)="onSearchClear()" [(ngModel)]="inputSearch" (ionCancel)="onSearchCancel()">
       </ion-searchbar>
-      <ion-buttons slot="end">
+      <ion-buttons *ngIf="!searchActive" slot="end">
         <ion-button (click)="openFilterMenu()">
           <ion-icon slot="icon-only" name="options-outline"></ion-icon>
         </ion-button>

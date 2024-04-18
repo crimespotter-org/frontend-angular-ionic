@@ -52,7 +52,7 @@ export class FilterStateService {
 
   async setFilters(newFilters: Filter[]) {
     this._filters.next([...newFilters]);
-     await this.applyFilters();
+    await this.applyFilters();
   }
 
   setSearchLocation(location: Location): void {
@@ -176,6 +176,41 @@ export class FilterStateService {
 
   getCurrentFilters(): Filter[] {
     return this._filters.getValue();
+  }
+
+  upvoteCase(caseId: string) {
+    const caze = this._filteredCases.value.find(c => c.id === caseId);
+    if (caze) {
+      this.supabaseService.upvote(caseId).then(x=>{
+        if (caze.user_vote === -1) {
+          caze.downvotes--;
+        }
+        caze.upvotes++;
+        caze.user_vote = 1;
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      this._filteredCases.next(this._filteredCases.value);
+    }
+  }
+
+
+  downvoteCase(caseId: string) {
+    const caze = this._filteredCases.value.find(c => c.id === caseId);
+    if (caze) {
+      this.supabaseService.downvote(caseId).then(x=>{
+        if (caze.user_vote === 1) {
+          caze.upvotes--;
+        }
+        caze.downvotes++;
+        caze.user_vote = -1;
+      }).catch((error) => {
+        console.error(error);
+      });
+
+      this._filteredCases.next(this._filteredCases.value);
+    }
   }
 
   async goToCurrentLocation() {

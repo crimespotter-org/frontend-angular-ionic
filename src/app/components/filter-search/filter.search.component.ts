@@ -110,9 +110,11 @@ export class FilterSearchComponent implements OnInit {
   searchDebounceTime?: any;
   inputSearch?: any;
   searchList: any[] = [];
+  searchActive: boolean = false;
   selectedSortOrder = 'created_at';
   segmentValue = 'filter';
   isAscendingSort = false;
+
 
   constructor(private menu: MenuController,
               private filterStateService: FilterStateService,
@@ -317,7 +319,12 @@ export class FilterSearchComponent implements OnInit {
     });
   }
 
+  onSearchFocus() {
+    this.searchActive = !this.searchActive;
+  }
+
   onSearchChange(query: string) {
+    this.searchActive = true;
     clearTimeout(this.searchDebounceTime);
 
     this.searchDebounceTime = setTimeout(() => {
@@ -331,6 +338,7 @@ export class FilterSearchComponent implements OnInit {
 
   onSearchBlur() {
     setTimeout(() => {
+      this.searchActive = false;
       if (this.menuId === 'mapMenu') {
         this.inputSearch = undefined;
         this.searchList = [];
@@ -342,6 +350,13 @@ export class FilterSearchComponent implements OnInit {
     this.filterStateService.setSearchQuery('');
     this.inputSearch = undefined;
     this.searchList = [];
+  }
+
+  onSearchCancel() {
+    this.filterStateService.setSearchQuery('');
+    this.inputSearch = undefined;
+    this.searchList = [];
+    this.searchActive = false;
   }
 
   checkSearchLocationInput(query: string) {
