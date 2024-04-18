@@ -134,7 +134,7 @@
 
 <ion-header [translucent]="true" id="searchbar">
   <ion-toolbar>
-    <ion-toolbar style="--border-style: none;">
+    <div style="display: flex; align-items: center; margin-top: -2px; padding-bottom: 4px">
       <ion-buttons slot="start">
         <ion-button>
           <img src="./assets/icon/icon-cs.png">
@@ -152,7 +152,7 @@
           <ion-icon slot="icon-only" name="options-outline"></ion-icon>
         </ion-button>
       </ion-buttons>
-    </ion-toolbar>
+    </div>
     <ion-list *ngIf="searchList.length > 0">
       <ion-item *ngFor="let search of searchList" (click)="onSearchEntrySelected(search)">
         <ion-label *ngIf="search.city !== undefined">
