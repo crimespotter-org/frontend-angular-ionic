@@ -98,7 +98,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(initialPosition: Location) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('map').setView([initialPosition.latitude, initialPosition.longitude], 13);
+    this.map = L.map('map', ).setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
@@ -106,6 +106,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     this.map.on('zoom', () => {
       this.adjustMarkers();
+      this.heatLayer.redraw();
     });
 
 
@@ -134,8 +135,8 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       this.map.on('zoom', () => {
         this.adjustMarkers();
+        this.heatLayer.redraw();
       });
-
 
       setTimeout(() => {
         this.map.invalidateSize();
