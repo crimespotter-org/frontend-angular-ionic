@@ -98,17 +98,13 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(initialPosition: Location) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('map', ).setView([initialPosition.latitude, initialPosition.longitude], 13);
+    this.map = L.map('map',).setView([initialPosition.latitude, initialPosition.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    this.map.on('zoom', () => {
-      this.adjustMarkers();
-      this.heatLayer.redraw();
-    });
-
+    this.map.on('zoom', this.onZoomMarkers);
 
     setTimeout(() => {
       this.map.invalidateSize();
@@ -133,10 +129,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         attribution: '© OpenStreetMap'
       }).addTo(this.map);
 
-      this.map.on('zoom', () => {
-        this.adjustMarkers();
-        this.heatLayer.redraw();
-      });
+      this.map.on('zoom', this.onZoomMarkers);
 
       setTimeout(() => {
         this.map.invalidateSize();
@@ -203,7 +196,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   async navigateToCaseDetails(caseId: string, lat: number, long: number) {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
-      this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+      this.caseDetailsService.loadCaseDetails(caseId).then(() => {
         this.ngZone.run(() => {
           this.router.navigate(['tabs/tab1/case-details', caseId]);
           this.map.setView([lat, long], 13);
@@ -244,9 +237,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     if (this.map.hasLayer(this.heatLayer)) {
       this.map.removeLayer(this.heatLayer);
       this.map.addLayer(this.markerLayer);
+      this.map.off('zoom', this.onZoomHeat);
+      this.map.on('zoom', this.onZoomMarkers)
     } else {
       this.map.addLayer(this.heatLayer);
       this.map.removeLayer(this.markerLayer);
+      this.map.off('zoom', this.onZoomMarkers);
+      this.map.on('zoom', this.onZoomHeat)
     }
   }
 
@@ -261,4 +258,13 @@ export class MapComponent implements OnInit, AfterViewInit {
     await this.loadingController.dismiss();
   }
 
+  onZoomHeat = () => {
+    this.heatLayer.redraw();
+  }
+
+  onZoomMarkers = () => {
+    this.adjustMarkers();
+  }
 }
+
+
