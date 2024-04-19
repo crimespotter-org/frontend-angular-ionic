@@ -21,6 +21,7 @@ import {addIcons} from "ionicons";
 import {bookOutline, linkOutline, micCircleOutline, micOutline, newspaperOutline, openOutline} from "ionicons/icons";
 import {HelperUtils} from "../../../shared/helperutils";
 import {Browser} from "@capacitor/browser"
+import {CaseDetailsService} from "../../../services/case-details.service";
 
 @Component({
   selector: 'app-case-links',
@@ -51,7 +52,7 @@ export class CaseLinksComponent implements OnInit {
   @Input() caseId: any;
   linkGroups: any[] = [];
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(private caseDetailsService: CaseDetailsService) {
     addIcons({
       bookOutline,
       micCircleOutline,
@@ -63,11 +64,7 @@ export class CaseLinksComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.loadLinks()
-  }
-
-  async loadLinks() {
-    this.supabaseService.getLinksByCaseId(this.caseId).then(links => {
+    this.caseDetailsService.caseLinks$.subscribe(links=>{
       this.groupLinksByType(links);
     })
   }

@@ -55,7 +55,6 @@ export class CaseDetailsComponent implements OnInit {
   segment: string  = 'facts';
   constructor(
     private route: ActivatedRoute,
-    private router: Router,
     private caseDetailsService: CaseDetailsService
   ) {
     addIcons({ chevronBackOutline });
@@ -67,6 +66,10 @@ export class CaseDetailsComponent implements OnInit {
       this.caseId = this.route.snapshot.paramMap.get('id');
       if (this.caseId) {
         this.caseDetailsService.loadCaseDetails(this.caseId);
+        this.caseDetailsService.loadCaseLinks(this.caseId);
+        this.caseDetailsService.loadCaseComments(this.caseId);
+        this.caseDetailsService.subscribeToCaseComments(this.caseId);
+        this.caseDetailsService.loadCaseImageUrls(this.caseId);
       }
     }
   }

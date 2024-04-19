@@ -40,7 +40,6 @@ import {QueryLocationResponse} from "../../shared/interfaces/query-location-resp
 import {HelperUtils} from 'src/app/shared/helperutils';
 import {SupabaseService} from "../../services/supabase.service";
 
-
 @Component({
   selector: 'app-filter-search',
   templateUrl: './filter.search.component.html',
@@ -343,7 +342,7 @@ export class FilterSearchComponent implements OnInit {
         this.inputSearch = undefined;
         this.searchList = [];
       }
-    }, 200);
+    }, 240);
   }
 
   onSearchClear() {
@@ -356,8 +355,9 @@ export class FilterSearchComponent implements OnInit {
     this.filterStateService.setSearchQuery('');
     this.inputSearch = undefined;
     this.searchList = [];
-    this.searchActive = false;
-  }
+    setTimeout(() => {
+      this.searchActive = false;
+    }, 230);  }
 
   checkSearchLocationInput(query: string) {
     if (query.length >= 3) {

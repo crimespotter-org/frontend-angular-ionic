@@ -15,6 +15,7 @@ import {SupabaseService} from "../../../services/supabase.service";
 import {StorageService} from "../../../services/storage.service";
 import {addIcons} from "ionicons";
 import {send} from "ionicons/icons";
+import {CaseDetailsService} from "../../../services/case-details.service";
 
 @Component({
   selector: 'app-case-chat',
@@ -54,20 +55,18 @@ export class CaseChatComponent implements OnInit {
   newCommentText?: string | null = '';
   userId: string | null = '';
 
-  constructor(private supabaseService: SupabaseService, private storageService: StorageService) {
+  constructor(private supabaseService: SupabaseService,
+              private storageService: StorageService,
+              private caseDetailsService: CaseDetailsService) {
     addIcons({send});
   }
 
   ngOnInit() {
-    this.loadComments();
-    this.userId = this.storageService.getUserId();
-    this.subscribeToComments();
-  }
-
-  async loadComments() {
-    this.supabaseService.getCommentsByCaseId(this.caseId).then(comments => {
+    this.caseDetailsService.caseComments$.subscribe(comments=>{
       this.comments = comments;
+      console.log(comments)
     })
+    this.userId = this.storageService.getUserId();
   }
 
   addComment() {
@@ -77,15 +76,6 @@ export class CaseChatComponent implements OnInit {
         this.newCommentText = '';
       });
     }
-
-  }
-
-  subscribeToComments() {
-    this.supabaseService.subscribeToComments(this.caseId, (newComment: any) => {
-      console.log(this.comments)
-
-      this.comments.push(newComment);
-    });
   }
 
   isMyMessage(comment: any) {

@@ -5,6 +5,7 @@ import {IonCard, IonCol, IonGrid, IonImg, IonRow, IonText, ModalController} from
 import {NgForOf, NgIf} from "@angular/common";
 import {ImageViewerComponent} from "./components/image-viewer/image-viewer.component";
 import {HelperUtils} from "../../../shared/helperutils";
+import {CaseDetailsService} from "../../../services/case-details.service";
 
 @Component({
   selector: 'app-case-media',
@@ -32,18 +33,15 @@ export class CaseMediaComponent implements OnInit {
     slidesPerView: 1.2
   };
 
-  constructor(private supabaseService: SupabaseService, private modalController: ModalController) {
+  constructor(private caseDetailsService: CaseDetailsService,
+              private modalController: ModalController) {
   }
 
   async ngOnInit() {
-    await this.loadImages();
+    this.caseDetailsService.caseImageUrls$.subscribe(imageUrls => {
+      this.imageUrls = imageUrls;
+    })
   }
-
-  private async loadImages() {
-    this.imageUrls = await this.supabaseService.getImageUrlsForCase(this.caseId)
-  }
-
-  protected readonly images = images;
 
   async openFullscreen(imageUrl: string) {
     const activeIndex = this.imageUrls.indexOf(imageUrl);
