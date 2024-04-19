@@ -45,14 +45,26 @@ export class CaseMediaComponent implements OnInit {
 
   async openFullscreen(imageUrl: string) {
     const activeIndex = this.imageUrls.indexOf(imageUrl);
+    const reorderedImageUrls = this.reorderImageUrls(activeIndex);
     const modal = await this.modalController.create({
       component: ImageViewerComponent,
       componentProps: {
-        imageUrls: this.imageUrls,
-        activeIndex: activeIndex
-      }
+        imageUrls: reorderedImageUrls
+      },
+      breakpoints: [0, 1]
     });
     return await modal.present();
+  }
+
+  reorderImageUrls(selectedIndex: number): string[] {
+    let reordered = [this.imageUrls[selectedIndex]];
+    for (let i = selectedIndex + 1; i < this.imageUrls.length; i++) {
+      reordered.push(this.imageUrls[i]);
+    }
+    for (let i = 0; i < selectedIndex; i++) {
+      reordered.push(this.imageUrls[i]);
+    }
+    return reordered;
   }
 
   protected readonly HelperUtils = HelperUtils;
