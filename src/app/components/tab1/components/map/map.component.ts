@@ -109,7 +109,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
     setTimeout(() => {
       this.map.invalidateSize();
-    }, 100);
+    }, 50);
 
     this.markerLayer.addTo(this.map);
 
@@ -122,7 +122,8 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (!this.firstReload) {
         let zoom = this.map.getZoom();
         this.map.remove()
-        this.map = L.map('map',).setView([this.location.latitude, this.location.longitude], 13);
+        this.map = L.map('map',).setView([this.location.latitude, this.location.longitude], zoom);
+        this.firstReload = true;
       } else {
         this.map = this.map.flyTo([this.location.latitude, this.location.longitude], this.map.getZoom());
       }
@@ -141,6 +142,17 @@ export class MapComponent implements OnInit, AfterViewInit {
       this.markerLayer.addTo(this.map);
 
       this.updateMapWithCases();
+
+      this.markerLayer.eachLayer((layer: L.Layer) => {
+        const marker = layer as L.Marker;
+        const markerLat = marker.getLatLng().lat;
+        const markerLng = marker.getLatLng().lng;
+
+        if (this.location?.latitude && this.location.longitude &&
+          Math.abs(markerLat - this.location?.latitude) < 0.0001 && Math.abs(markerLng - this.location?.longitude) < 0.0001) {
+          marker.openPopup();
+        }
+      });
     }
   }
 
@@ -200,10 +212,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
       this.caseDetailsService.loadCaseDetails(caseId).then(() => {
-        this.ngZone.run(() => {
-          this.router.navigate(['tabs/tab1/case-details', caseId]);
-          this.map.setView([lat, long], 13);
-        });
+        this.map.setView([lat, long], 13);
+        this.router.navigate(['tabs/tab1/case-details', caseId]);
       })
     } catch (error) {
     } finally {
