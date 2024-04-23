@@ -14,6 +14,7 @@ import {jwtDecode} from 'jwt-decode';
 })
 export class SupabaseService {
   private supabase: SupabaseClient;
+  private avatarCache = new Map<string, string>();
 
   constructor(private storageService: StorageService) {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseKey);
@@ -84,7 +85,10 @@ export class SupabaseService {
   }
 
   async getAvatarUrlForUser(userId: string) {
-    console.log(userId)
+
+    if (this.avatarCache.has(userId)) {
+      return this.avatarCache.get(userId)!;
+    }
 
     let signedUrl: string | undefined = '';
     await this.supabase
@@ -93,12 +97,21 @@ export class SupabaseService {
       .createSignedUrl(`${userId}.png`, 3600).then(url => {
         if (url) {
           if (url.data) {
+            this.avatarCache.set(userId, url.data.signedUrl);
             signedUrl = url.data.signedUrl;
+          }
+          else {
+            signedUrl = 'assets/icon/avatar.svg';
+            this.avatarCache.set(userId, 'assets/icon/avatar.svg');
           }
         }
       });
 
     return signedUrl;
+  }
+
+  clearAvatarCache() {
+    this.avatarCache.clear();
   }
 
   async uploadUserAvatar(image: Image, userId: string) {
@@ -325,6 +338,7 @@ export class SupabaseService {
         table: 'comments'
       }, async (payload) => {
         const username = await this.getUserName(payload.new['user_id']);
+        const avatarUrl = await this.getAvatarUrlForUser(payload.new['user_id'])
         callback({
           case_id: payload.new['case_id'],
           created_at: payload.new['created_at'],
@@ -333,7 +347,8 @@ export class SupabaseService {
           user_id: payload.new['user_id'],
           user: {
             username: username
-          }
+          },
+          avatarUrl: avatarUrl.toString()
         });
       }).subscribe();
   }
@@ -345,7 +360,7 @@ export class SupabaseService {
   }
 
   async getCommentsByCaseId(caseId: string) {
-    const data: any = await this.supabase
+    const comments = await this.supabase
       .from('comments')
       .select(`
       id,
@@ -359,11 +374,18 @@ export class SupabaseService {
       .eq('case_id', caseId)
       .order('created_at', {ascending: true});
 
-    if (data.error) {
-      console.log(data.error)
+    if (comments.error) {
+      console.error('Error fetching comments:', comments.error);
+      return [];
     }
 
-    return data.data ? data.data : [];
+    return await Promise.all(comments.data.map(async comment => {
+      const avatarUrl = await this.getAvatarUrlForUser(comment.user_id);
+      return {
+        ...comment,
+        avatarUrl: avatarUrl
+      };
+    }));
   }
 
   async getLinksByCaseId(caseId: string) {

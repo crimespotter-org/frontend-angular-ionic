@@ -63,7 +63,6 @@ export class CaseFactsComponent implements OnInit {
   ngOnInit() {
     this.caseDetailsService.caseDetails$.subscribe(caseDetails => {
       this.caseDetails = caseDetails;
-      console.log(caseDetails)
     });
   }
 

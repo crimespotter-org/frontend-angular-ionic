@@ -1,13 +1,25 @@
-import {Component, ElementRef, Input, OnInit, ViewChild} from '@angular/core';
+import {AfterViewChecked, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {
-  IonButton, IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonCol,
+  IonAvatar,
+  IonButton,
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonCol,
   IonContent,
-  IonFooter, IonIcon,
+  IonFooter,
+  IonIcon,
   IonInput,
   IonItem,
   IonLabel,
   IonList,
-  IonNote, IonRow, IonText, IonTextarea, IonToolbar
+  IonNote,
+  IonRow,
+  IonText,
+  IonTextarea,
+  IonToolbar
 } from "@ionic/angular/standalone";
 import {DatePipe, NgForOf, NgIf} from "@angular/common";
 import {FormsModule} from "@angular/forms";
@@ -16,6 +28,7 @@ import {StorageService} from "../../../services/storage.service";
 import {addIcons} from "ionicons";
 import {send} from "ionicons/icons";
 import {CaseDetailsService} from "../../../services/case-details.service";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-case-chat',
@@ -44,16 +57,18 @@ import {CaseDetailsService} from "../../../services/case-details.service";
     IonCardTitle,
     IonCardSubtitle,
     IonText,
-    IonTextarea
+    IonTextarea,
+    IonAvatar
   ],
   standalone: true
 })
-export class CaseChatComponent implements OnInit {
+export class CaseChatComponent implements OnInit,OnDestroy,AfterViewChecked {
   @Input() caseId: any;
   @ViewChild('chatContainer') private chatContainerRef: ElementRef | undefined;
   comments: any[] = [];
   newCommentText?: string | null = '';
   userId: string | null = '';
+  private subs = new Subscription();
 
   constructor(private supabaseService: SupabaseService,
               private storageService: StorageService,
@@ -62,11 +77,31 @@ export class CaseChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.caseDetailsService.caseComments$.subscribe(comments=>{
-      this.comments = comments;
-      console.log(comments)
-    })
+    this.subs.add(this.caseDetailsService.caseComments$.subscribe(comments => {
+      if (Array.isArray(comments)) {
+        comments.forEach(x => {
+          this.comments.push(x)
+        })
+      } else {
+        this.comments.push(comments);
+      }
+    }));
+
     this.userId = this.storageService.getUserId();
+  }
+
+  ngOnDestroy() {
+    this.subs.unsubscribe();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  scrollToBottom(): void {
+    try {
+      if(this.chatContainerRef) this.chatContainerRef.nativeElement.scrollTop = this.chatContainerRef.nativeElement.scrollHeight;
+    } catch(err) { }
   }
 
   addComment() {

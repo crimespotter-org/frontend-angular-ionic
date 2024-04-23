@@ -1,17 +1,27 @@
 <div *ngIf="comments.length !== 0" class="chat-container" #chatContainer>
   <div *ngFor="let message of comments">
     <ion-card [class.my-message]="isMyMessage(message)">
-      <ion-card-header>
-        <ion-card-subtitle>
-          <span class="card-subtitle">{{ message.user.username }}
-            am {{ message.created_at | date:'dd.MM.yyyy, HH:mm' }}</span>
-        </ion-card-subtitle>
-      </ion-card-header>
-      <ion-card-content>
-        <ion-text>
-          <p>{{ message.text }}</p>
-        </ion-text>
-      </ion-card-content>
+      <div class="message-row">
+        <ion-avatar *ngIf="!isMyMessage(message)">
+          <img [src]="message.avatarUrl" alt="User Avatar">
+        </ion-avatar>
+        <div class="message-text">
+          <ion-card-header>
+            <ion-card-subtitle>
+              <span class="card-subtitle">{{ message.user?.username }}
+                am {{ message.created_at | date:'dd.MM.yyyy, HH:mm' }}</span>
+            </ion-card-subtitle>
+          </ion-card-header>
+          <ion-card-content>
+            <ion-text>
+              <p>{{ message.text }}</p>
+            </ion-text>
+          </ion-card-content>
+        </div>
+        <ion-avatar *ngIf="isMyMessage(message)">
+          <img [src]="message.avatarUrl" alt="User Avatar">
+        </ion-avatar>
+      </div>
     </ion-card>
   </div>
 </div>
@@ -25,7 +35,7 @@
     <ion-textarea [(ngModel)]="newCommentText"
                   placeholder="Schreibe einen Kommentar"
                   [autoGrow]="true"
-                  [rows]="3"></ion-textarea>
+                  [rows]="1"></ion-textarea>
     <ion-button slot="end" (click)="addComment()" fill="clear">
       <ion-icon slot="icon-only" name="send"></ion-icon>
     </ion-button>
