@@ -26,12 +26,6 @@ import {CaseDetailsService} from "../../../services/case-details.service";
 export class CaseMediaComponent implements OnInit {
   @Input() caseId: any;
   imageUrls: string[] = [];
-  slideOpts = {
-    initialSlide: 0,
-    speed: 400,
-    spaceBetween: 10,
-    slidesPerView: 1.2
-  };
 
   constructor(private caseDetailsService: CaseDetailsService,
               private modalController: ModalController) {

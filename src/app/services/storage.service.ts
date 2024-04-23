@@ -6,6 +6,7 @@ const USER_ID_KEY = "user_id";
 const CASE_TYPE_KEY = "case_type";
 const LINK_TYPE_KEY = "link_type";
 const USER_NAME_KEY = "user_name";
+const USER_AVATAR_KEY = "user_avatar";
 
 @Injectable({
   providedIn: 'root'
@@ -69,5 +70,13 @@ export class StorageService {
 
   public getUsername(){
     return sessionStorage.getItem(USER_NAME_KEY);
+  }
+
+  public saveUserAvatarUrl(avatarUrl: string){
+    sessionStorage.setItem(USER_AVATAR_KEY, avatarUrl);
+  }
+
+  public getUserAvatarUrl(){
+    return sessionStorage.getItem(USER_AVATAR_KEY);
   }
 }

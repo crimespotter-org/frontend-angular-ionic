@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AuthSession, AuthTokenResponsePassword, createClient, SupabaseClient} from "@supabase/supabase-js";
+import {createClient, SupabaseClient} from "@supabase/supabase-js";
 import {environment} from "../../environments/environment";
 import {StorageService} from "./storage.service";
 import {Case, CaseDetails, CaseFiltered} from '../shared/types/supabase';
@@ -8,8 +8,6 @@ import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
 import {jwtDecode} from 'jwt-decode';
-import {LocationService} from "./location.service";
-import {Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -82,6 +80,41 @@ export class SupabaseService {
     this.storageService.saveUserId(user_id);
     this.storageService.saveUserRole(user_role);
     this.storageService.saveUsername(username);
+    this.getAvatarUrlForUser(user_id).then(url => this.storageService.saveUserAvatarUrl(url))
+  }
+
+  async getAvatarUrlForUser(userId: string) {
+    console.log(userId)
+
+    let signedUrl: string | undefined = '';
+    await this.supabase
+      .storage
+      .from('avatars')
+      .createSignedUrl(`${userId}.png`, 3600).then(url => {
+        if (url) {
+          if (url.data) {
+            signedUrl = url.data.signedUrl;
+          }
+        }
+      });
+
+    return signedUrl;
+  }
+
+  async uploadUserAvatar(image: Image, userId: string) {
+    const {} = await this.supabase
+      .storage
+      .from('avatars')
+      .upload(`${userId}.png`, decode(image.base64), {
+        contentType: `image/${image.type}`
+      });
+  }
+
+  async deleteUserAvatar(userId: string) {
+    const {} = await this.supabase
+      .storage
+      .from('avatars')
+      .remove([`${userId}.png`]);
   }
 
   async getUserName(userId: string) {
@@ -109,7 +142,7 @@ export class SupabaseService {
       .from('user_profiles')
       .select('id, username, role')
       .or(`role.eq.crimefluencer,role.eq.admin`)
-      .then(({ data, error }) => {
+      .then(({data, error}) => {
         if (error) {
           console.error(error);
         }

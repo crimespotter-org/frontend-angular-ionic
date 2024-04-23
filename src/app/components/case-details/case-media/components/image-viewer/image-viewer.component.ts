@@ -52,7 +52,6 @@ export class ImageViewerComponent implements OnInit{
     console.log(swiperEl)
     const swiperParams = {
       loop: true,
-      pagination: true,
       navigation: true,
       slidesPerView: 1,
       on: {
