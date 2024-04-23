@@ -5,41 +5,46 @@ import {
   IonTitle,
   IonContent,
   ModalController,
-  IonButton,
+  IonButton, IonList, IonListHeader, IonLabel, IonItem, IonIcon, IonToggle,
 } from '@ionic/angular/standalone';
-import {ProfileEditPage} from "./components/profile-edit/profile-edit.page";
-import {PasswordChangePage} from "./components/password-change/password-change.page";
+import {ProfileEditPage} from "./components/account-management/components/profile-edit/profile-edit.page";
+import {PasswordChangePage} from "./components/account-management/components/password-change/password-change.page";
 import {SupabaseService} from "../../services/supabase.service";
 import {Router, RouterLink} from "@angular/router";
+import {FormsModule} from "@angular/forms";
+import {addIcons} from "ionicons";
+import {closeOutline, exit, lockClosed, moon, notifications, personCircle} from "ionicons/icons";
 
 @Component({
   selector: 'app-tab3',
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, ProfileEditPage, PasswordChangePage, RouterLink],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, ProfileEditPage, PasswordChangePage, RouterLink, IonList, IonListHeader, IonLabel, IonItem, IonIcon, IonToggle, FormsModule],
 })
 export class Tab3Page {
+  settings = {
+    notifications: true,
+    darkMode: false
+  };
 
-  constructor(private modalController: ModalController, private supabaseService: SupabaseService, private router: Router) {
+  constructor(
+    private router: Router,
+    private supabaseService: SupabaseService,
+    private modalController: ModalController
+  ) {
+    addIcons({moon, notifications, lockClosed, personCircle, exit});
   }
 
-  async openProfileEditModal() {
-    const modal = await this.modalController.create({
-      component: ProfileEditPage
-    });
-    return await modal.present();
+  toggleNotifications() {
   }
 
-  async openPasswordChangeModal() {
-    const modal = await this.modalController.create({
-      component: PasswordChangePage,
-    });
-    return await modal.present();
+  toggleDarkMode() {
+    document.body.classList.toggle('dark', this.settings.darkMode);
   }
 
-  async close() {
-    await this.modalController.dismiss();
+  navigateTo(page: string) {
+    this.router.navigate([`/${page}`]);
   }
 
   logout() {

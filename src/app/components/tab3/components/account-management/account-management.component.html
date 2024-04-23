@@ -1,0 +1,23 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Account-Management</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  Avatar und Name
+  <ion-list>
+    <ion-item button [routerLink]="['profile-edit']">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label >Profil bearbeiten</ion-label>
+    </ion-item>
+    <ion-item button [routerLink]="['password-change']">
+      <ion-icon name="key-outline" slot="start"></ion-icon>
+      <ion-label >Passwort ändern</ion-label>
+    </ion-item>
+    <ion-item>
+      <ion-icon color="danger" name="trash-outline" slot="start"></ion-icon>
+      <ion-label color="danger">Account löschen</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

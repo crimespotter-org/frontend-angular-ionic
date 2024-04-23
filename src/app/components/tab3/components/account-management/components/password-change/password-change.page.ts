@@ -12,7 +12,7 @@ import {
   IonToolbar
 } from '@ionic/angular/standalone';
 import {ModalController} from "@ionic/angular/standalone";
-import {SupabaseService} from "../../../../services/supabase.service";
+import {SupabaseService} from "../../../../../../services/supabase.service";
 
 @Component({
   selector: 'app-password-change',

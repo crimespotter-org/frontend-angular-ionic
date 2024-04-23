@@ -33,6 +33,7 @@ import {CaseDetailsService} from "../../../../services/case-details.service";
   ]
 })
 export class MapComponent implements OnInit, AfterViewInit {
+  private firstReload: boolean = false;
   private heatLayer: any;
   private markerLayer: any;
   heatmapVisible: boolean = false;
@@ -117,13 +118,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   private reloadMap(): void {
     if (this.location) {
-      let mapZoom = 13;
 
-      if (this.map != undefined) {
-        mapZoom = this.map.getZoom()
-        this.map.remove();
+      if (!this.firstReload) {
+        let zoom = this.map.getZoom();
+        this.map.remove()
+        this.map = L.map('map',).setView([this.location.latitude, this.location.longitude], 13);
+      } else {
+        this.map = this.map.flyTo([this.location.latitude, this.location.longitude], this.map.getZoom());
       }
-      this.map = L.map('map').setView([this.location.latitude, this.location.longitude], mapZoom);
+
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap'
@@ -133,7 +136,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
       setTimeout(() => {
         this.map.invalidateSize();
-      }, 100);
+      }, 50);
 
       this.markerLayer.addTo(this.map);
 
