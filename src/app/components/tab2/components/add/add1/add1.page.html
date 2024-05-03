@@ -16,10 +16,11 @@
             <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
           </ion-item>
         </ion-col>
-
-        <ion-col class="ion-justify-content-center" size="auto">
+      </ion-row>
+      <ion-row>
+        <ion-col class="ion-justify-content-center">
           <ion-item style="height: 100%">
-            <ion-chip [color]="this.form.get('closed')?.value ? 'danger' : 'success'" button (click)="switchState()">
+            <!-- <ion-chip [color]="this.form.get('closed')?.value ? 'danger' : 'success'" button (click)="switchState()">
               @if(this.form.get('closed')?.value){
               <ion-icon name="lock-closed-outline"></ion-icon>
               <ion-label>Geschlossen</ion-label>
@@ -28,7 +29,12 @@
               <ion-icon name="lock-open-outline"></ion-icon>
               <ion-label>Offen</ion-label>
               }
-            </ion-chip>
+            </ion-chip> -->
+            <ion-label position="stacked">Status</ion-label>
+            <ion-select placeholder="Wählen Sie einen Status" formControlName="closed">
+              <ion-select-option value="false">Offen</ion-select-option>
+              <ion-select-option value="true">Geschlossen</ion-select-option>
+            </ion-select>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -66,13 +72,11 @@
       </ion-row>
     </ion-grid>
     <ion-modal trigger="open-date-modal">
-      <ng-template>
+      <ng-template width="100%">
         <ion-datetime formControlName="date_of_crime"></ion-datetime>
       </ng-template>
-      <!-- <ion-datetime ></ion-datetime> -->
     </ion-modal>
   </form>
-
 </ion-content>
 
 
