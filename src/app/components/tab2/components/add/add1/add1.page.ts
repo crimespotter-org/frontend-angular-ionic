@@ -9,6 +9,8 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AddService } from 'src/app/services/add.service';
 import { HelperUtils } from 'src/app/shared/helperutils';
+import { Keyboard } from '@capacitor/keyboard';
+import { Renderer2, ElementRef } from '@angular/core';
 
 @Component({
     selector: 'app-add',
@@ -52,7 +54,7 @@ import { HelperUtils } from 'src/app/shared/helperutils';
     ]
 })
 export class Add1Page implements AfterViewInit {
-
+  
   HelperUtils = HelperUtils;
 
   @ViewChild(IonToast) toast!: IonToast;
@@ -64,6 +66,7 @@ export class Add1Page implements AfterViewInit {
 
   form: FormGroup;
 
+  hideFab = false;
   crimeDate?: Date;
   title: string | undefined;
   summary: string | undefined;
@@ -75,10 +78,21 @@ export class Add1Page implements AfterViewInit {
     addIcons({lockClosedOutline, lockOpenOutline, locationOutline, addOutline, trashOutline, chevronForwardOutline, warningOutline});
 
     this.form = this.addService.form.get('page1') as FormGroup;
+
   }
 
   ngAfterViewInit() {
     this.caseTypes = this.storageService.getCaseTypes();
+
+    Keyboard.addListener('keyboardWillShow', () => {
+      console.log('keyboardWillShow');
+      this.hideFab = true;
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+      console.log('keyboardWillHide');
+      this.hideFab = false;
+    });
   }
 
   routeToNextPage(){
@@ -96,5 +110,7 @@ console.log(this.form.value);
   switchState(){
     this.form.get('closed')?.setValue(!this.form.get('closed')?.value);
   }
+
+
 
 }

@@ -82,7 +82,7 @@
 
 
 <ion-toast message="Bitte füllen Sie alle Felder aus" duration="700" icon="warning-outline"></ion-toast>
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+<ion-fab #fabNextPage vertical="bottom" horizontal="end" slot="fixed" [hidden]="hideFab">
   <ion-fab-button (click)="routeToNextPage()">
     <ion-icon name="chevron-forward-outline"></ion-icon>
   </ion-fab-button>
