@@ -40,7 +40,7 @@
     <div class="validation-error" *ngIf="registerForm.hasError('notmatched') && registerForm.get('confirmpassword')?.touched">
       <ion-label>Die Passwörter stimmen nicht überein</ion-label>
     </div>
-    <ion-button type="submit" expand="block">Registrieren</ion-button>
-    <ion-button (click)="toLogin()" expand="block" fill="clear">Zum Login</ion-button>
+    <ion-button type="submit" expand="block" [disabled]="loading">Registrieren <ion-spinner *ngIf="loading"></ion-spinner></ion-button>
+    <ion-button (click)="toLogin()" expand="block" fill="clear" [disabled]="loading">Zum Login</ion-button>
   </form>
 </ion-content>
