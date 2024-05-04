@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline } from 'ionicons/icons';
@@ -21,6 +21,7 @@ import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
 import { DataService } from 'src/app/services/data.service';
 import { firstValueFrom } from 'rxjs';
 import { Image } from 'src/app/shared/interfaces/image.interface';
+import { Keyboard } from '@capacitor/keyboard';
 
 
 @Component({
@@ -60,7 +61,7 @@ import { Image } from 'src/app/shared/interfaces/image.interface';
     ReactiveFormsModule,
   ]
 })
-export class Add2Page implements OnInit {
+export class Add2Page implements OnInit, AfterViewInit {
 
   HelperUtils = HelperUtils;
 
@@ -79,6 +80,8 @@ export class Add2Page implements OnInit {
 
   form: FormGroup;
   links: FormArray;
+  hideForwardFab: boolean = false;
+  hideBackFab: boolean = false;
 
   linkTypes: string[] = [];
 
@@ -98,6 +101,19 @@ export class Add2Page implements OnInit {
     this.linkTypes = this.storageService.getLinkTypes();
 
     console.log(this.linkTypes);
+  }
+  ngAfterViewInit(): void {
+    Keyboard.addListener('keyboardWillShow', () => {
+      console.log('keyboardWillShow');
+      this.hideBackFab = true;
+      this.hideForwardFab = true
+    });
+
+    Keyboard.addListener('keyboardWillHide', () => {
+      console.log('keyboardWillHide');
+      this.hideBackFab = false;
+      this.hideForwardFab = false;
+    });
   }
 
   async ngOnInit(): Promise<void> {

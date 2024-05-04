@@ -65,14 +65,14 @@
   </form>
 </ion-content>
 
-<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" [hidden]="hideForwardFab">
   <ion-fab-button (click)="submitForm()">
     <ion-icon name="checkmark-outline"></ion-icon>
   </ion-fab-button>
 </ion-fab>
 
 
-<ion-fab vertical="bottom" horizontal="start" slot="fixed">
+<ion-fab vertical="bottom" horizontal="start" slot="fixed" [hidden]="hideBackFab">
   <ion-fab-button (click)="routeToPreviousPage()">
     <ion-icon name="chevron-back-outline"></ion-icon>
   </ion-fab-button>

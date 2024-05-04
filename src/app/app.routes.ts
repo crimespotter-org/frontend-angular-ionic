@@ -16,8 +16,12 @@ export const routes: Routes = [
     loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent),
   },
   {
+    path: 'add-case',
+    loadComponent: () => import('./components/add-case/add-case.page').then( m => m.AddCasePage)
+  },
+  {
     path: '**',
     redirectTo: '/tabs',
     pathMatch: 'full',
-  }
+  },
 ];
