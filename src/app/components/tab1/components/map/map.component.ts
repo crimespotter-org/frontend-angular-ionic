@@ -67,6 +67,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     this.filterStateService.updateMapLocationTrigger$.subscribe(() => {
       this.location = {latitude: this.map.getCenter().lat, longitude: this.map.getCenter().lng}
+      if (this.heatmapVisible){
+        this.toggleHeatmap();
+      }
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
