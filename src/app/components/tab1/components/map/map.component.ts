@@ -67,6 +67,9 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     this.filterStateService.updateMapLocationTrigger$.subscribe(() => {
       this.location = {latitude: this.map.getCenter().lat, longitude: this.map.getCenter().lng}
+      if (this.heatmapVisible){
+        this.toggleHeatmap();
+      }
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
@@ -211,9 +214,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   async navigateToCaseDetails(caseId: string, lat: number, long: number) {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
-      this.caseDetailsService.loadCaseDetails(caseId).then(() => {
-        this.map.setView([lat, long], 13);
-        this.router.navigate(['tabs/tab1/case-details', caseId]);
+      this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+        this.ngZone.run(() => {
+          this.map.setView([lat, long], 13);
+          this.router.navigate(['tabs/tab1/case-details', caseId]);
+        });
       })
     } catch (error) {
     } finally {
