@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline } from 'ionicons/icons';
+import { arrowForwardOutline, createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline, checkmarkSharp } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
-import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import { IonProgressBar, IonBackButton, IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Location, UserLocation } from 'src/app/shared/interfaces/location.interface';
 import { SelectionMapComponent } from "../../../../selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
@@ -59,6 +59,9 @@ import { Keyboard } from '@capacitor/keyboard';
     LocationPickerComponent,
     IonInput,
     ReactiveFormsModule,
+    IonBackButton,
+    CommonModule,
+    IonProgressBar
   ]
 })
 export class Add2Page implements OnInit, AfterViewInit {
@@ -85,6 +88,8 @@ export class Add2Page implements OnInit, AfterViewInit {
 
   linkTypes: string[] = [];
 
+  loading: boolean = false;
+
   //TODO: Make this globally accessible to also show icons in case details page
   LinkTypeToIcon: Map<string, string> = new Map([
     ['website', 'link-outline'],
@@ -93,7 +98,7 @@ export class Add2Page implements OnInit, AfterViewInit {
   ]);
 
   constructor() {
-    addIcons({ createOutline, caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
+    addIcons({ checkmarkSharp, arrowForwardOutline, createOutline, caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
 
     this.form = this.addService.form.get('page2') as FormGroup;
     this.links = this.form.get('further_links') as FormArray;
@@ -172,6 +177,9 @@ export class Add2Page implements OnInit, AfterViewInit {
       return;
     }
 
+    this.loading = true;
+
+
     //manage database entries
     const fullform = this.addService.form;
 
@@ -207,8 +215,9 @@ export class Add2Page implements OnInit, AfterViewInit {
     const images: Image[] = this.images.map(image => ({ base64: HelperUtils.dataURItoBase64(image?.dataUrl ?? ''), type: image.format }));
     await this.supaBaseService.uploadImagesForCase(caseId, images);
 
-
+    this.loading = false;
     this.router.navigate(["tabs/tab2"]);
+
   }
 
   async chooseIcon(idx: number) {

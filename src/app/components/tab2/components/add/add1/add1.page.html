@@ -1,6 +1,14 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button default-href="/tabs/tab2" name="close-sharp"></ion-back-button>
+    </ion-buttons>
     <ion-title>Neuen Fall anlegen</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="routeToNextPage()">
+        <ion-icon slot="icon-only" name="arrow-forward-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
@@ -65,7 +73,9 @@
         <ion-col>
           <ion-item>
             <ion-label position="stacked">Tatzeit</ion-label>
-            <ion-input formControlName="date_of_crime" [value]="form.get('date_of_crime')?.value | date: 'dd.MM.yyyy HH:mm'" id="open-date-modal" placeholder="Startdatum auswählen" enabled="false" readonly>
+            <ion-input formControlName="date_of_crime"
+              [value]="form.get('date_of_crime')?.value | date: 'dd.MM.yyyy HH:mm'" id="open-date-modal"
+              placeholder="Startdatum auswählen" enabled="false" readonly>
             </ion-input>
           </ion-item>
         </ion-col>
@@ -79,12 +89,4 @@
   </form>
 </ion-content>
 
-
-
 <ion-toast message="Bitte füllen Sie alle Felder aus" duration="700" icon="warning-outline"></ion-toast>
-<ion-fab #fabNextPage vertical="bottom" horizontal="end" slot="fixed" [hidden]="hideFab">
-  <ion-fab-button (click)="routeToNextPage()">
-    <ion-icon name="chevron-forward-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
