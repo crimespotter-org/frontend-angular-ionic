@@ -4,10 +4,11 @@
       <ion-back-button defaultHref="/" text=""></ion-back-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button disabled="true">
-        <ion-icon></ion-icon>
+      <ion-button (click)="shareCase()">
+        <ion-icon name="share-outline"></ion-icon>
       </ion-button>
     </ion-buttons>
+
     <ion-segment [(ngModel)]="segment">
       <ion-segment-button value="facts">
         <ion-label>Fakten</ion-label>

@@ -15,11 +15,13 @@ import {
 } from "@ionic/angular/standalone";
 import {ActivatedRoute, Router} from "@angular/router";
 import {addIcons} from "ionicons";
-import {chevronBackOutline} from "ionicons/icons";
+import {chevronBackOutline, shareOutline} from "ionicons/icons";
 import {CaseDetailsService} from "../../services/case-details.service";
 import {CaseLinksComponent} from "./case-links/case-links.component";
 import {CaseMediaComponent} from "./case-media/case-media.component";
 import {CaseChatComponent} from "./case-chat/case-chat.component";
+import {Share} from "@capacitor/share";
+import {DataService} from "../../services/data.service";
 
 
 @Component({
@@ -55,9 +57,10 @@ export class CaseDetailsComponent implements OnInit {
   segment: string  = 'facts';
   constructor(
     private route: ActivatedRoute,
-    private caseDetailsService: CaseDetailsService
+    private caseDetailsService: CaseDetailsService,
+    private dataService: DataService
   ) {
-    addIcons({ chevronBackOutline });
+    addIcons({ chevronBackOutline, shareOutline });
   }
 
   ngOnInit(): void {
@@ -72,6 +75,28 @@ export class CaseDetailsComponent implements OnInit {
         this.caseDetailsService.loadCaseImageUrls(this.caseId);
       }
     }
+  }
+
+  async shareCase() {
+    if (this.caseId) {
+      const longUrl = `crimespotter://casedetails/${this.caseId}`;
+      try {
+        //const tinyUrl = await this.dataService.shortenUrl(longUrl, this.caseId);
+        await this.share(longUrl);
+      } catch (error) {
+        console.error('Error beim Teilen der Case Details:', error);
+        await this.share(longUrl);
+      }
+    }
+  }
+
+  private async share(url: string) {
+    await Share.share({
+      title: 'Teile diesen Fall',
+      text: 'Schau dir diesen interessanten Fall bei Crimespotter an:',
+      url: url,
+      dialogTitle: 'Teile den Link zu diesem Fall'
+    });
   }
 
 }

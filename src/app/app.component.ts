@@ -1,6 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import {SupabaseService} from "./services/supabase.service";
+import {App} from "@capacitor/app";
+import {Router} from "@angular/router";
+import {CaseDetailsService} from "./services/case-details.service";
 
 @Component({
   selector: 'app-root',
@@ -9,9 +12,20 @@ import {SupabaseService} from "./services/supabase.service";
   imports: [IonApp, IonRouterOutlet],
 })
 export class AppComponent implements OnInit{
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private supabaseService: SupabaseService, private router: Router, private caseDetailsService: CaseDetailsService) {}
 
   ngOnInit() {
+    App.addListener('appUrlOpen', (event) => {
+      const url = new URL(event.url);
+      const path = url.pathname;
+      const segments = path.split('/');
+      if (segments.length >= 2) {
+        const caseId = segments[1];
+        this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+          this.router.navigateByUrl(`/tabs/case-details/${caseId}`);
+        })
+      }
+    });
     this.supabaseService.updateLocalUser();
     this.supabaseService.updateCaseTypes();
     this.supabaseService.updateLinkTypes();
