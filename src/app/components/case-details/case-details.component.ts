@@ -79,7 +79,7 @@ export class CaseDetailsComponent implements OnInit {
 
   async shareCase() {
     if (this.caseId) {
-      const longUrl = `crimespotter://casedetails/${this.caseId}`;
+      const longUrl = `crmspttr://casedetails/${this.caseId}`;
       try {
         //const tinyUrl = await this.dataService.shortenUrl(longUrl, this.caseId);
         await this.share(longUrl);

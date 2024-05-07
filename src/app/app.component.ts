@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
+import {Component, NgZone, OnInit} from '@angular/core';
+import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
 import {SupabaseService} from "./services/supabase.service";
 import {App} from "@capacitor/app";
 import {Router} from "@angular/router";
@@ -11,8 +11,12 @@ import {CaseDetailsService} from "./services/case-details.service";
   standalone: true,
   imports: [IonApp, IonRouterOutlet],
 })
-export class AppComponent implements OnInit{
-  constructor(private supabaseService: SupabaseService, private router: Router, private caseDetailsService: CaseDetailsService) {}
+export class AppComponent implements OnInit {
+  constructor(private supabaseService: SupabaseService,
+              private router: Router,
+              private caseDetailsService: CaseDetailsService,
+              private ngZone: NgZone) {
+  }
 
   ngOnInit() {
     App.addListener('appUrlOpen', (event) => {
@@ -21,8 +25,10 @@ export class AppComponent implements OnInit{
       const segments = path.split('/');
       if (segments.length >= 2) {
         const caseId = segments[1];
-        this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
-          this.router.navigateByUrl(`/tabs/case-details/${caseId}`);
+        this.caseDetailsService.loadCaseDetails(caseId).then(() => {
+          this.ngZone.run(() => {
+            this.router.navigate(['tabs/case-details', caseId]);
+          });
         })
       }
     });
