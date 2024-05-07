@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnInit, ViewChild, forwardRef, inject } from '@angular/core';
 import { FormArray, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline } from 'ionicons/icons';
+import { arrowForwardOutline, createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline, checkmarkSharp } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
-import { IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import { IonBackButton, IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Location, UserLocation } from 'src/app/shared/interfaces/location.interface';
 import { SelectionMapComponent } from "../../../../selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
@@ -59,6 +59,7 @@ import { Keyboard } from '@capacitor/keyboard';
     LocationPickerComponent,
     IonInput,
     ReactiveFormsModule,
+    IonBackButton,
   ]
 })
 export class Add2Page implements OnInit, AfterViewInit {
@@ -93,7 +94,7 @@ export class Add2Page implements OnInit, AfterViewInit {
   ]);
 
   constructor() {
-    addIcons({ createOutline, caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, checkmarkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
+    addIcons({ checkmarkSharp, arrowForwardOutline, createOutline, caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
 
     this.form = this.addService.form.get('page2') as FormGroup;
     this.links = this.form.get('further_links') as FormArray;

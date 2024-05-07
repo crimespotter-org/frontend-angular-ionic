@@ -2,9 +2,9 @@ import { AfterViewInit, Component, OnInit, ViewChild, inject } from '@angular/co
 import { CommonModule, DatePipe } from '@angular/common';
 import { FormGroup, FormsModule, NgModel } from '@angular/forms';
 import { StorageService } from 'src/app/services/storage.service';
-import { addOutline, chevronForwardOutline, locationOutline, lockClosedOutline, lockOpenOutline, trashOutline, warningOutline } from 'ionicons/icons';
+import { closeOutline, arrowBackOutline, arrowForwardOutline, addOutline, chevronBackCircle, chevronBackOutline, chevronForwardOutline, locationOutline, lockClosedOutline, lockOpenOutline, trashOutline, warningOutline, closeSharp } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
-import { IonModal, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonChip, IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import { IonBackButton ,IonModal, IonCard, IonCardContent, IonText, IonRow, IonCol, IonGrid, IonChip, IonInput, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime ,IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AddService } from 'src/app/services/add.service';
@@ -50,7 +50,8 @@ import { Renderer2, ElementRef } from '@angular/core';
       IonCard,
       IonModal,
       DatePipe,
-      CommonModule
+      CommonModule,
+      IonBackButton
     ]
 })
 export class Add1Page implements AfterViewInit {
@@ -75,7 +76,7 @@ export class Add1Page implements AfterViewInit {
   caseTypes: string[] = [];
 
   constructor() {
-    addIcons({lockClosedOutline, lockOpenOutline, locationOutline, addOutline, trashOutline, chevronForwardOutline, warningOutline});
+    addIcons({ closeSharp, arrowForwardOutline, arrowBackOutline, chevronBackOutline, lockClosedOutline, lockOpenOutline, locationOutline, addOutline, trashOutline, chevronForwardOutline, warningOutline});
 
     this.form = this.addService.form.get('page1') as FormGroup;
 

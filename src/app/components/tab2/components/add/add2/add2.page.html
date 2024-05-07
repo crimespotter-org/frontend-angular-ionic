@@ -1,9 +1,16 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="routeToPreviousPage()"></ion-back-button>
+    </ion-buttons>
     <ion-title>Neuen Fall anlegen</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submitForm()">
+        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
-
 
 <ion-content>
   <form class="form" [formGroup]="form">
@@ -64,16 +71,3 @@
     </ion-item>
   </form>
 </ion-content>
-
-<ion-fab vertical="bottom" horizontal="end" slot="fixed" [hidden]="hideForwardFab">
-  <ion-fab-button (click)="submitForm()">
-    <ion-icon name="checkmark-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
-
-
-<ion-fab vertical="bottom" horizontal="start" slot="fixed" [hidden]="hideBackFab">
-  <ion-fab-button (click)="routeToPreviousPage()">
-    <ion-icon name="chevron-back-outline"></ion-icon>
-  </ion-fab-button>
-</ion-fab>
