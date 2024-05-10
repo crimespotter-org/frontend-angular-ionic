@@ -24,13 +24,13 @@ addEventListener('notificationTest', async (resolve, reject, args) => {
 
 addEventListener('checkForNearyCases', async (resolve, reject, args) => {
   try {
-    const location = await Geolocation.getCurrentPosition();
+    // const location = await Geolocation.getCurrentPosition();
 
     CapacitorNotifications.schedule([
       {
         id: 1,
         title: 'Nearby Cases 💀',
-        body: `Searched for Neary Cases at Location ${location.coords} at ${location.timestamp} 🚨`,
+        body: `Searched for Neary Cases at Location 5 at 5 🚨`,
         scheduleAt: new Date(),
       },
     ]);

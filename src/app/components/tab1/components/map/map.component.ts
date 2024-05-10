@@ -66,7 +66,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   async test() {
     await BackgroundRunner.dispatchEvent({
       label: 'com.crimespotter.crimespotter.check',
-      event: 'checkForNearyCases',
+      event: 'notificationTest',
       details: {}
     });
   }

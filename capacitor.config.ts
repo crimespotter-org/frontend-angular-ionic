@@ -13,7 +13,7 @@ const config: CapacitorConfig = {
       src: 'runners/runner.js',
       event: 'checkForNearyCases',
       repeat: true,
-      interval: 30,
+      interval: 15,
       autoStart: true
     }
   }
