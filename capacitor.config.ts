@@ -11,9 +11,9 @@ const config: CapacitorConfig = {
     BackgroundRunner: {
       label: 'com.crimespotter.crimespotter.check',
       src: 'runners/runner.js',
-      event: 'myCustomEvent',
+      event: 'checkForNearyCases',
       repeat: true,
-      interval: 5,
+      interval: 30,
       autoStart: true
     }
   }
