@@ -1,20 +1,21 @@
-import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
-import {Location} from "../../../../shared/interfaces/location.interface"
+import { AfterViewInit, Component, NgZone, OnInit } from '@angular/core';
+import { Location } from "../../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import 'leaflet.heat';
-import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
-import {murderMarker} from './markers';
-import {FilterStateService} from 'src/app/services/filter-state.service';
-import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon, LoadingController} from "@ionic/angular/standalone";
-import {addIcons} from "ionicons";
-import {flame, locateOutline, searchOutline} from "ionicons/icons";
-import {Geolocation} from "@capacitor/geolocation";
-import {FilterSearchComponent} from "../../../filter-search/filter.search.component";
-import {Router} from "@angular/router";
-import {HelperUtils} from "../../../../shared/helperutils";
+import { Case, CaseFiltered } from 'src/app/shared/types/supabase';
+import { murderMarker } from './markers';
+import { FilterStateService } from 'src/app/services/filter-state.service';
+import { IonContent, IonFab, IonFabButton, IonHeader, IonIcon, LoadingController } from "@ionic/angular/standalone";
+import { addIcons } from "ionicons";
+import { flame, locateOutline, searchOutline } from "ionicons/icons";
+import { Geolocation } from "@capacitor/geolocation";
+import { FilterSearchComponent } from "../../../filter-search/filter.search.component";
+import { Router } from "@angular/router";
+import { HelperUtils } from "../../../../shared/helperutils";
 import * as moment from "moment";
-import {NgClass} from "@angular/common";
-import {CaseDetailsService} from "../../../../services/case-details.service";
+import { NgClass } from "@angular/common";
+import { CaseDetailsService } from "../../../../services/case-details.service";
+import { BackgroundRunner } from '@capacitor/background-runner';
 
 
 @Component({
@@ -43,11 +44,31 @@ export class MapComponent implements OnInit, AfterViewInit {
   location?: Location;
 
   constructor(private filterStateService: FilterStateService,
-              private caseDetailsService: CaseDetailsService,
-              private router: Router,
-              private ngZone: NgZone,
-              private loadingController: LoadingController) {
-    addIcons({locateOutline, searchOutline, flame});
+    private caseDetailsService: CaseDetailsService,
+    private router: Router,
+    private ngZone: NgZone,
+    private loadingController: LoadingController) {
+    this.init();
+    addIcons({ locateOutline, searchOutline, flame });
+  }
+
+  async init() {
+    try {
+      const permissions = await BackgroundRunner.requestPermissions({
+        apis: ['geolocation', 'notifications']
+      });
+      console.log('Permissions:', permissions);
+    } catch (err) {
+      console.error('Failed to request permissions:', err);
+    }
+  }
+
+  async test() {
+    await BackgroundRunner.dispatchEvent({
+      label: 'com.crimespotter.crimespotter.check',
+      event: 'notificationTest',
+      details: {}
+    });
   }
 
   ngOnInit() {
@@ -73,7 +94,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
-    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15}); // Initiale leere Heatmap
+    this.heatLayer = L.heatLayer([], { radius: 25, blur: 15 }); // Initiale leere Heatmap
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -88,7 +109,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         };
       } catch (error) {
         console.log("Error getting user location, defaulting to Berlin", error);
-        initialPosition = {latitude: 52.5200, longitude: 13.4050}; // Berlin
+        initialPosition = { latitude: 52.5200, longitude: 13.4050 }; // Berlin
       }
     } else {
       initialPosition = this.location;
@@ -97,7 +118,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     setTimeout(() =>
       this.initMap(initialPosition), 0
     )
-    ;
+      ;
   }
 
   initMap(initialPosition: Location) {
@@ -175,7 +196,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     const heatPoints: number[][] = [];
 
     this.cases.forEach((caze) => {
-      const marker = L.marker([caze.lat, caze.long], {icon: murderMarker})
+      const marker = L.marker([caze.lat, caze.long], { icon: murderMarker })
         .bindPopup(this.createPopupContent(caze));
       this.markerLayer.addLayer(marker);
 
@@ -233,7 +254,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   addCaseMarker(caze: Case) {
     //TODO: Distinguish between different case types. Seems do be not in db currently
-    L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
+    L.marker([caze.lat, caze.long], { icon: murderMarker }).bindPopup(`${caze.title} <br /> `).addTo(this.map);
   }
 
   async goToCurrentLocation() {

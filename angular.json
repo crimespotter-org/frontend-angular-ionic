@@ -29,6 +29,11 @@
                 "glob": "**/*",
                 "input": "src/assets",
                 "output": "assets"
+              },
+              {
+                "glob": "runner.js",
+                "input": "src/app/runners",
+                "output": "./runners"
               }
             ],
             "styles": [
