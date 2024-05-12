@@ -11,32 +11,50 @@ export class LocationService {
 
   private defaultLocation: UserLocation = { location: {latitude: 52.520008, longitude: 13.404954}, access_denied: true }; // Berlin/Germany
 
-  private currentLocation!: UserLocation;
-
-  private _currentLocation: BehaviorSubject<UserLocation> = new BehaviorSubject<UserLocation>(this.currentLocation);
+  private _currentLocation: BehaviorSubject<UserLocation> = new BehaviorSubject<UserLocation>(this.defaultLocation);
 
   public readonly currentLocation$: Observable<UserLocation> = this._currentLocation.asObservable();
 
+  public currentLocation: UserLocation = this.defaultLocation;
 
   constructor() { 
-
-    this.updateLocation().then(location => {
-      this.currentLocation = location;
-    });
-    
-    // Update location every minute
-    const timer = setInterval(() => {
-      this.updateLocation();
-    }, 60 * 1000);
+    this.checkAndRequestLocationAccess();
   }
 
-  /**
-   * Updates the current location of the user.
-   * @returns the current location of the user or defaultLocation if user denied access.
-   */
-  async updateLocation(): Promise<UserLocation>{
-    try{
-      const position = await Geolocation.getCurrentPosition();
+  private checkAndRequestLocationAccess() {
+    Geolocation.checkPermissions().then(permission => {
+      if (permission.location === 'granted') {
+        this.watchPosition();
+      } else {
+        Geolocation.requestPermissions().then(permission => {
+          if (permission.location === 'granted') {
+            this.watchPosition();
+          } else {
+            this._currentLocation.next(this.defaultLocation);
+          }
+        });
+      }
+    });
+  }
+
+  public locationAccessGranted(): boolean {
+    return this.currentLocation.access_denied === false;
+  }
+
+  private watchPosition() {
+    Geolocation.watchPosition({
+      enableHighAccuracy: true,
+      timeout: 10000,
+      maximumAge: 1000
+    }, (position, err) => {
+      if(err){
+        console.error(err);
+        return;
+      }
+      else if(!position){
+        console.error("Did not receive a position.");
+        return;
+      }
       this.currentLocation = {
         location: {
           latitude: position.coords.latitude,
@@ -45,24 +63,10 @@ export class LocationService {
         access_denied: false
       };
       this._currentLocation.next(this.currentLocation);
-      return this.currentLocation;
-    }
-    catch (error) {
-      if(this.currentLocation === undefined){
-        this.currentLocation = this.defaultLocation;
-      }
-      //Access denied just keep current stored location
-      return this.currentLocation;
-    }
+    });
   }
 
-  /**
-   * Gets the latest stored location of the user.
-   * If no location is stored, it will try to update the location.
-   * @returns the current location of the user or undefined if user denied access.
-   */
-  async getLatestLocation(): Promise<UserLocation>{
-    return this.currentLocation || this.updateLocation();
+  public getCurrentLocation(): UserLocation {
+    return this.currentLocation;
   }
-
 }

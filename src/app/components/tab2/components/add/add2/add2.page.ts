@@ -122,7 +122,7 @@ export class Add2Page implements OnInit, AfterViewInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.currentLocation = (await this.locationService.getLatestLocation()).location;
+    this.currentLocation = this.locationService.getCurrentLocation().location;
 
     this.locationService.currentLocation$.subscribe(userlocation => {
       console.log(`Location changed: ${userlocation.location.latitude}, ${userlocation.location.longitude}`)

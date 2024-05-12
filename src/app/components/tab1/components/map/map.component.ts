@@ -1,9 +1,9 @@
 import {AfterViewInit, Component, NgZone, OnInit} from '@angular/core';
-import {Location} from "../../../../shared/interfaces/location.interface"
+import {Location, UserLocation} from "../../../../shared/interfaces/location.interface"
 import * as L from 'leaflet';
 import 'leaflet.heat';
 import {Case, CaseFiltered} from 'src/app/shared/types/supabase';
-import {murderMarker} from './markers';
+import {defaultMarker, murderMarker} from './markers';
 import {FilterStateService} from 'src/app/services/filter-state.service';
 import {IonContent, IonFab, IonFabButton, IonHeader, IonIcon, LoadingController} from "@ionic/angular/standalone";
 import {addIcons} from "ionicons";
@@ -15,6 +15,7 @@ import {HelperUtils} from "../../../../shared/helperutils";
 import * as moment from "moment";
 import {NgClass} from "@angular/common";
 import {CaseDetailsService} from "../../../../services/case-details.service";
+import { LocationService } from 'src/app/services/location.service';
 
 
 @Component({
@@ -38,19 +39,30 @@ export class MapComponent implements OnInit, AfterViewInit {
   private markerLayer: any;
   heatmapVisible: boolean = false;
   private map!: L.Map;
-  private markers: L.Marker[] = [];
+  private caseMarkers: L.Marker[] = [];
+  private locationMarker!: L.Marker;
   cases: CaseFiltered[] = [];
-  location?: Location;
+  viewLocation?: Location;
+  userLocation?: UserLocation;
 
   constructor(private filterStateService: FilterStateService,
               private caseDetailsService: CaseDetailsService,
               private router: Router,
               private ngZone: NgZone,
-              private loadingController: LoadingController) {
+              private loadingController: LoadingController,
+            private locationService: LocationService) {
     addIcons({locateOutline, searchOutline, flame});
   }
 
   ngOnInit() {
+
+    this.locationService.currentLocation$.subscribe(location => {
+      if(!location.access_denied)this.setUserLocationMarker(location.location);
+      this.userLocation = location;
+      //this.viewLocation = location.location;
+      //this.updateUserLocation(location.location);
+    });
+
     this.filterStateService.filteredCases$.subscribe(cases => {
       if (cases) {
         this.cases = cases;
@@ -59,14 +71,14 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     this.filterStateService.searchLocation$.subscribe(location => {
       if (location) {
-        this.updateLocation(location);
+        this.updateMapView(location);
       }
     });
     this.filterStateService.updateMapTrigger$.subscribe(() => {
       this.reloadMap();
     });
     this.filterStateService.updateMapLocationTrigger$.subscribe(() => {
-      this.location = {latitude: this.map.getCenter().lat, longitude: this.map.getCenter().lng}
+      this.viewLocation = {latitude: this.map.getCenter().lat, longitude: this.map.getCenter().lng}
       if (this.heatmapVisible){
         this.toggleHeatmap();
       }
@@ -77,32 +89,21 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   async ngAfterViewInit(): Promise<void> {
-    let initialPosition: Location;
 
-    if (this.location == undefined) {
-      try {
-        const userPosition = await Geolocation.getCurrentPosition();
-        this.location = {
-          latitude: userPosition.coords.latitude,
-          longitude: userPosition.coords.longitude
-        };
-      } catch (error) {
-        console.log("Error getting user location, defaulting to Berlin", error);
-        initialPosition = {latitude: 52.5200, longitude: 13.4050}; // Berlin
-      }
-    } else {
-      initialPosition = this.location;
-      this.location = initialPosition;
+    if(this.locationService.locationAccessGranted()){
+      setTimeout(() =>
+        this.initMap(this.locationService.getCurrentLocation()), 100
+      )
+      this.setUserLocationMarker(this.locationService.getCurrentLocation().location);
     }
-    setTimeout(() =>
-      this.initMap(initialPosition), 0
-    )
-    ;
+    else{
+      this.initMap(this.locationService.getCurrentLocation());
+    }
   }
 
-  initMap(initialPosition: Location) {
+  initMap(initialPosition: UserLocation) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('map',).setView([initialPosition.latitude, initialPosition.longitude], 13);
+    this.map = L.map('map',).setView([initialPosition.location.latitude, initialPosition.location.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
@@ -119,16 +120,27 @@ export class MapComponent implements OnInit, AfterViewInit {
     this.updateMapWithCases();
   }
 
+  private setUserLocationMarker(location: Location) {
+    console.log(location);
+    if(!this.locationMarker){
+      this.locationMarker = L.marker([location.latitude, location.longitude], {icon: defaultMarker});
+      this.locationMarker.addTo(this.map);
+    }
+    else{
+      this.locationMarker.setLatLng([location.latitude, location.longitude]);
+    }
+  }
+
   private reloadMap(): void {
-    if (this.location) {
+    if (this.viewLocation) {
 
       if (!this.firstReload) {
         let zoom = this.map.getZoom();
         this.map.remove()
-        this.map = L.map('map',).setView([this.location.latitude, this.location.longitude], zoom);
+        this.map = L.map('map',).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
         this.firstReload = true;
       } else {
-        this.map = this.map.flyTo([this.location.latitude, this.location.longitude], this.map.getZoom());
+        this.map = this.map.flyTo([this.viewLocation.latitude, this.viewLocation.longitude], this.map.getZoom());
       }
 
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -151,8 +163,8 @@ export class MapComponent implements OnInit, AfterViewInit {
         const markerLat = marker.getLatLng().lat;
         const markerLng = marker.getLatLng().lng;
 
-        if (this.location?.latitude && this.location.longitude &&
-          Math.abs(markerLat - this.location?.latitude) < 0.0001 && Math.abs(markerLng - this.location?.longitude) < 0.0001) {
+        if (this.viewLocation?.latitude && this.viewLocation.longitude &&
+          Math.abs(markerLat - this.viewLocation?.latitude) < 0.0001 && Math.abs(markerLng - this.viewLocation?.longitude) < 0.0001) {
           marker.openPopup();
         }
       });
@@ -160,8 +172,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
 
-  updateLocation(location: { latitude: number, longitude: number, radius?: number }) {
-    this.location = location;
+  updateMapView(location: { latitude: number, longitude: number, radius?: number }) {
+    this.viewLocation = location;
     if (this.map) {
       this.map.flyTo([location.latitude, location.longitude], 13, {
         animate: true,
@@ -227,8 +239,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   clearMarkers() {
-    this.markers.forEach(marker => marker.remove());
-    this.markers = [];
+    this.caseMarkers.forEach(marker => marker.remove());
+    this.caseMarkers = [];
   }
 
   addCaseMarker(caze: Case) {
@@ -241,7 +253,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   adjustMarkers() {
-    this.markers.forEach(marker => {
+    this.caseMarkers.forEach(marker => {
       if (this.map.getZoom() < 5) {
         marker.setOpacity(0);
       } else {
@@ -282,6 +294,15 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   onZoomMarkers = () => {
     this.adjustMarkers();
+  }
+
+  async updateUserLocation(location: Location) {
+    if (this.map) {
+      this.map.flyTo([location.latitude, location.longitude], 13, {
+        animate: true,
+        duration: 0.8
+      });
+    }
   }
 }
 
