@@ -39,6 +39,8 @@ import {Filter} from "../../shared/interfaces/filter";
 import {QueryLocationResponse} from "../../shared/interfaces/query-location-response";
 import {HelperUtils} from 'src/app/shared/helperutils';
 import {SupabaseService} from "../../services/supabase.service";
+import { LocationService } from 'src/app/services/location.service';
+import { UserLocation } from 'src/app/shared/interfaces/location.interface';
 
 @Component({
   selector: 'app-filter-search',
@@ -121,6 +123,7 @@ export class FilterSearchComponent implements OnInit {
               private storageService: StorageService,
               private supabaseService: SupabaseService,
               private loadingController: LoadingController,
+              private locationService: LocationService,
               @Inject(LOCALE_ID) private locale: string) {
     addIcons({closeCircle, optionsOutline, arrowUpOutline, arrowDownOutline});
   }
@@ -302,20 +305,19 @@ export class FilterSearchComponent implements OnInit {
   }
 
   toggleUseCurrentLocation($event: any) {
-    Geolocation.getCurrentPosition().then(position => {
-      const currentPosition = {
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude
-      };
+    if(this.locationService.locationAccessGranted()) {
+      const currentPosition: UserLocation = this.locationService.getCurrentLocation()
+      
       this.selectedLocation = {
         city: 'Aktueller Ort',
-        latitude: currentPosition.latitude,
-        longitude: currentPosition.longitude
+        latitude: currentPosition.location.latitude,
+        longitude: currentPosition.location.longitude
       };
-    }).catch(err => {
-      console.error(err);
+    }else{
+      //Todo: Notify user that location access is denied
+      console.log("Location access denied");
       this.useCurrentLocation = false;
-    });
+    }
   }
 
   onSearchFocus() {

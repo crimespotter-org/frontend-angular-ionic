@@ -7,6 +7,7 @@ import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
 import {Geolocation} from "@capacitor/geolocation";
 import {HelperUtils} from "../shared/helperutils";
+import { LocationService } from './location.service';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +34,7 @@ export class FilterStateService {
   sortOrder = 'created_at';
   isAscending = false;
 
-  constructor(private supabaseService: SupabaseService) {
+  constructor(private supabaseService: SupabaseService, private locationService: LocationService) {
     this.initializeLocation().then(() => {
       this.initializeCases();
     });
@@ -44,10 +45,10 @@ export class FilterStateService {
   }
 
   private async initializeLocation() {
-    Geolocation.getCurrentPosition().then(x => {
-      this.myLocation = {latitude: x.coords.latitude, longitude: x.coords.longitude}
-      this._searchLocation.next({latitude: x.coords.latitude, longitude: x.coords.longitude})
-    });
+    const currentPosition = this.locationService.getCurrentLocation();
+
+    this.myLocation = {latitude: currentPosition.location.latitude, longitude: currentPosition.location.longitude}
+    this._searchLocation.next({latitude: currentPosition.location.latitude, longitude: currentPosition.location.longitude}) 
   }
 
   async setFilters(newFilters: Filter[]) {
