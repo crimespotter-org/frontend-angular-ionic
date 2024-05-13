@@ -103,7 +103,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(initialPosition: UserLocation) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('map',).setView([initialPosition.location.latitude, initialPosition.location.longitude], 13);
+    this.map = L.map('map', {zoomSnap: 0, zoomDelta: 1}).setView([initialPosition.location.latitude, initialPosition.location.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
@@ -137,7 +137,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (!this.firstReload) {
         let zoom = this.map.getZoom();
         this.map.remove()
-        this.map = L.map('map',).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
+        this.map = L.map('map', {zoomSnap: 0, zoomDelta: 1}).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
         this.firstReload = true;
       } else {
         this.map = this.map.flyTo([this.viewLocation.latitude, this.viewLocation.longitude], this.map.getZoom());
