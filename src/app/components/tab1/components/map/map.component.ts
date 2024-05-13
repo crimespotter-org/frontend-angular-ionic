@@ -90,14 +90,11 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
 
+    setTimeout(() => {
+      this.initMap(this.locationService.getCurrentLocation()), 100;
+    })
     if(this.locationService.locationAccessGranted()){
-      setTimeout(() =>
-        this.initMap(this.locationService.getCurrentLocation()), 100
-      )
       this.setUserLocationMarker(this.locationService.getCurrentLocation().location);
-    }
-    else{
-      this.initMap(this.locationService.getCurrentLocation());
     }
   }
 
