@@ -5,7 +5,6 @@ import {BehaviorSubject, Subject} from "rxjs";
 import {CaseFiltered} from "../shared/types/supabase";
 import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
-import {Geolocation} from "@capacitor/geolocation";
 import {HelperUtils} from "../shared/helperutils";
 import { LocationService } from './location.service';
 
@@ -81,9 +80,8 @@ export class FilterStateService {
     }
 
     if (!this.myLocation) {
-      await Geolocation.getCurrentPosition().then(x => {
-        this.myLocation = {latitude: x.coords.latitude, longitude: x.coords.longitude}
-      });
+      const loc = this.locationService.getCurrentLocation();
+      this.myLocation = {latitude: loc.location.latitude, longitude: loc.location.longitude}
     }
 
     cases = cases.map(caze => {

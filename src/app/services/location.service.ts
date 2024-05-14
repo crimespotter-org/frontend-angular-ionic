@@ -45,7 +45,7 @@ export class LocationService {
     Geolocation.watchPosition({
       enableHighAccuracy: true,
       timeout: 10000,
-      maximumAge: 1000
+      maximumAge: 5000
     }, (position, err) => {
       if(err){
         console.error(err);
