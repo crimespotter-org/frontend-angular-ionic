@@ -9,13 +9,14 @@ import {SupabaseService} from "./supabase.service";
 export class CaseDetailsService {
   private _caseDetails = new BehaviorSubject<CaseDetails | null>(null);
   private _caseLinks = new BehaviorSubject<string[]>([]);
-  private _caseComments = new BehaviorSubject<any[]>([]);
   private _caseImageUrls = new BehaviorSubject<string[]>([]);
+  private _newComment = new BehaviorSubject<any>({});
+  private caseComments: any[] = [];
 
   caseDetails$: Observable<CaseDetails | null> = this._caseDetails.asObservable();
   caseLinks$: Observable<string[]> = this._caseLinks.asObservable();
-  caseComments$: Observable<any[]> = this._caseComments.asObservable();
   caseImageUrls$: Observable<string[]> = this._caseImageUrls.asObservable();
+  newComment$: Observable<any> = this._newComment.asObservable();
 
 
   constructor(private supabaseService: SupabaseService) {
@@ -39,13 +40,13 @@ export class CaseDetailsService {
 
   async loadCaseComments(caseId: string): Promise<void> {
     this.supabaseService.getCommentsByCaseId(caseId).then(comments => {
-      this._caseComments.next(comments);
+      this.caseComments = comments;
     })
   }
 
   async subscribeToCaseComments(caseId: string) {
     this.supabaseService.subscribeToComments(caseId, (newComment: any) => {
-      this._caseComments.next(newComment);
+      this._newComment.next(newComment);
     });
   }
 
@@ -53,5 +54,9 @@ export class CaseDetailsService {
     this.supabaseService.getImageUrlsForCase(caseId).then(imageUrls => {
       this._caseImageUrls.next(imageUrls);
     })
+  }
+
+  getCaseComments (){
+    return this.caseComments;
   }
 }

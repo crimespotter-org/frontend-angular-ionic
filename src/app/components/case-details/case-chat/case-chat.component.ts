@@ -62,7 +62,7 @@ import {Subscription} from "rxjs";
   ],
   standalone: true
 })
-export class CaseChatComponent implements OnInit,OnDestroy,AfterViewChecked {
+export class CaseChatComponent implements OnInit, OnDestroy, AfterViewChecked {
   @Input() caseId: any;
   @ViewChild('chatContainer') private chatContainerRef: ElementRef | undefined;
   comments: any[] = [];
@@ -77,15 +77,16 @@ export class CaseChatComponent implements OnInit,OnDestroy,AfterViewChecked {
   }
 
   ngOnInit() {
-    this.subs.add(this.caseDetailsService.caseComments$.subscribe(comments => {
-      if (Array.isArray(comments)) {
-        comments.forEach(x => {
-          this.comments.push(x)
-        })
-      } else {
-        this.comments.push(comments);
+    this.subs.add(this.caseDetailsService.newComment$.subscribe(comment => {
+        const commentExists = this.comments.some(existingComment => existingComment.id === comment.id);
+
+        if (!commentExists) {
+          this.comments.push(comment);
+        }
       }
-    }));
+    ));
+
+    this.comments = this.caseDetailsService.getCaseComments();
 
     this.userId = this.storageService.getUserId();
   }
@@ -100,8 +101,9 @@ export class CaseChatComponent implements OnInit,OnDestroy,AfterViewChecked {
 
   scrollToBottom(): void {
     try {
-      if(this.chatContainerRef) this.chatContainerRef.nativeElement.scrollTop = this.chatContainerRef.nativeElement.scrollHeight;
-    } catch(err) { }
+      if (this.chatContainerRef) this.chatContainerRef.nativeElement.scrollTop = this.chatContainerRef.nativeElement.scrollHeight;
+    } catch (err) {
+    }
   }
 
   addComment() {
