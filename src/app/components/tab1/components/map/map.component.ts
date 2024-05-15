@@ -85,7 +85,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
-    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15}); // Initiale leere Heatmap
+    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15});
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -118,12 +118,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private setUserLocationMarker(location: Location) {
-    console.log(location);
     if(!this.locationMarker){
       this.locationMarker = L.marker([location.latitude, location.longitude], {icon: defaultMarker});
       this.locationMarker.addTo(this.map);
     }
     else{
+      this.locationMarker.addTo(this.map);
       this.locationMarker.setLatLng([location.latitude, location.longitude]);
     }
   }
@@ -180,7 +180,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   updateMapWithCases() {
-    this.markerLayer.clearLayers(); // MarkerLayer leeren
+    this.markerLayer.clearLayers();
     const heatPoints: number[][] = [];
 
     this.cases.forEach((caze) => {
@@ -245,8 +245,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
   }
 
-  async goToCurrentLocation() {
-    await this.filterStateService.goToCurrentLocation();
+  goToCurrentLocation() {
+    this.updateMapView(this.locationService.getCurrentLocation().location);
   }
 
   adjustMarkers() {
