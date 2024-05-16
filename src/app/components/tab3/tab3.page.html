@@ -10,26 +10,31 @@
       <ion-label>Personalisierung</ion-label>
     </ion-list-header>
     <ion-item>
-      <ion-icon name="moon" slot="start"></ion-icon>
-      <ion-label>Dunkelmodus</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="settings.darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
+      <ion-icon name="invert-mode-outline" slot="start"></ion-icon>
+      <ion-label>Automatischer Farbmodus</ion-label>
+      <ion-toggle slot="end" (ionChange)="toggleMode()" [checked]="colorModeAuto"></ion-toggle>
     </ion-item>
-
+    <ion-item *ngIf="!colorModeAuto">
+      <ion-icon name="moon" slot="start"></ion-icon>
+      <ion-label>Dunkler Modus</ion-label>
+      <ion-toggle slot="end" (ionChange)="toggleDarkMode($event)"
+                  [checked]="isDarkMode()"></ion-toggle>
+    </ion-item>
     <ion-item>
       <ion-icon name="notifications" slot="start"></ion-icon>
       <ion-label>Benachrichtigungen</ion-label>
-      <ion-toggle slot="end" [(ngModel)]="settings.notifications" (ionChange)="toggleNotifications()"></ion-toggle>
+      <ion-toggle slot="end" (ionChange)="toggleNotifications()"></ion-toggle>
     </ion-item>
 
     <ion-list-header>
       <ion-label>Konto</ion-label>
     </ion-list-header>
-    <ion-item button (click)="navigateTo('privacy')">
+    <ion-item button [routerLink]="['/privacy']">
       <ion-icon name="lock-closed" slot="start"></ion-icon>
       <ion-label>Datenschutzeinstellungen</ion-label>
     </ion-item>
 
-    <ion-item button [routerLink]="['account-management']">
+    <ion-item button [routerLink]="['/account-management']">
       <ion-icon name="person-circle" slot="start"></ion-icon>
       <ion-label>Account-Management</ion-label>
     </ion-item>
@@ -38,6 +43,7 @@
       <ion-icon name="exit" slot="start" color="danger"></ion-icon>
       <ion-label color="danger">Abmelden</ion-label>
     </ion-item>
+
     <ion-list-header>
       <ion-label>Über Crimespotter</ion-label>
     </ion-list-header>
@@ -49,8 +55,18 @@
       <ion-icon name="exit" slot="start"></ion-icon>
       <ion-label>Support erhalten</ion-label>
     </ion-item>
-    Informationen zur App-Version
-    Lizenzinformationen
-    Links zu Datenschutzerklärung und Nutzungsbedingungen
+
+    <ion-item lines="none">
+      <ion-label>App-Version: 1.0.0</ion-label>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-label>Lizenzinformationen</ion-label>
+    </ion-item>
+    <ion-item lines="none" [routerLink]="['/privacy-policy']">
+      <ion-label>Datenschutzerklärung</ion-label>
+    </ion-item>
+    <ion-item lines="none" [routerLink]="['/terms-of-service']">
+      <ion-label>Nutzungsbedingungen</ion-label>
+    </ion-item>
   </ion-list>
 </ion-content>
