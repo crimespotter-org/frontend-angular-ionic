@@ -161,7 +161,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         const markerLng = marker.getLatLng().lng;
 
         if (this.viewLocation?.latitude && this.viewLocation.longitude &&
-          Math.abs(markerLat - this.viewLocation?.latitude) < 0.0001 && Math.abs(markerLng - this.viewLocation?.longitude) < 0.0001) {
+          Math.abs(markerLat - this.viewLocation?.latitude) < 0.001 && Math.abs(markerLng - this.viewLocation?.longitude) < 0.001) {
           marker.openPopup();
         }
       });
