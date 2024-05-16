@@ -11,12 +11,13 @@ export class CaseDetailsService {
   private _caseLinks = new BehaviorSubject<string[]>([]);
   private _caseImageUrls = new BehaviorSubject<string[]>([]);
   private _newComment = new BehaviorSubject<any>({});
-  private caseComments: any[] = [];
+  private _caseComments = new BehaviorSubject<any[]>([]);
 
   caseDetails$: Observable<CaseDetails | null> = this._caseDetails.asObservable();
   caseLinks$: Observable<string[]> = this._caseLinks.asObservable();
   caseImageUrls$: Observable<string[]> = this._caseImageUrls.asObservable();
   newComment$: Observable<any> = this._newComment.asObservable();
+  caseComments$: Observable<any[]> = this._caseComments.asObservable();
 
 
   constructor(private supabaseService: SupabaseService) {
@@ -40,7 +41,7 @@ export class CaseDetailsService {
 
   async loadCaseComments(caseId: string): Promise<void> {
     this.supabaseService.getCommentsByCaseId(caseId).then(comments => {
-      this.caseComments = comments;
+      this._caseComments.next(comments);
     })
   }
 
@@ -56,7 +57,8 @@ export class CaseDetailsService {
     })
   }
 
-  getCaseComments (){
-    return this.caseComments;
+  getComments () {
+    return this._caseComments.getValue();
   }
+
 }
