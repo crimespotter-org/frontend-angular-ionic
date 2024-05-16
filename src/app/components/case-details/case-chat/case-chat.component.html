@@ -1,4 +1,4 @@
-<ion-content #content>
+<ion-content #content *ngIf="comments.length !== 0">
   <div class="chat-container">
     <div *ngFor="let message of comments">
       <ion-card [class.my-message]="isMyMessage(message)">

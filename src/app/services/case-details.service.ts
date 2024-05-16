@@ -40,6 +40,8 @@ export class CaseDetailsService {
   }
 
   async loadCaseComments(caseId: string): Promise<void> {
+    this._caseComments.next([])
+    this._newComment.next({})
     this.supabaseService.getCommentsByCaseId(caseId).then(comments => {
       this._caseComments.next(comments);
     })

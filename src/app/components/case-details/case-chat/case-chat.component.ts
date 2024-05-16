@@ -104,19 +104,19 @@ export class CaseChatComponent implements OnInit, OnDestroy {
     this.userId = this.storageService.getUserId();
 
     Keyboard.addListener('keyboardWillShow', () => {
-      this.scrollToBottom();
+      this.scrollToBottomIfAtBottomKeyBoard();
     });
 
     Keyboard.addListener('keyboardDidShow', () => {
-      this.scrollToBottom();
+      this.scrollToBottomIfAtBottomKeyBoard();
     });
 
     Keyboard.addListener('keyboardDidHide', () => {
-      this.scrollToBottom();
+      this.scrollToBottomIfAtBottomKeyBoard();
     });
 
     Keyboard.addListener('keyboardWillHide', () => {
-      this.scrollToBottom();
+      this.scrollToBottomIfAtBottomKeyBoard();
     });
   }
 
@@ -124,6 +124,16 @@ export class CaseChatComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
+  private async scrollToBottomIfAtBottomKeyBoard(): Promise<void> {
+    const scrollElement = await this.content.getScrollElement();
+    const threshold = 350;
+    const position = scrollElement.scrollHeight - scrollElement.scrollTop - scrollElement.clientHeight;
+    console.log(position)
+    let isAtBottom = position < threshold;
+    if (isAtBottom) {
+      this.scrollToBottom();
+    }
+  }
 
   private async scrollToBottomIfAtBottom(): Promise<void> {
     const scrollElement = await this.content.getScrollElement();
@@ -137,9 +147,9 @@ export class CaseChatComponent implements OnInit, OnDestroy {
   }
 
   private scrollToBottom(): void {
-      setTimeout(() => {
-        this.content.scrollToBottom(0);
-      },100);
+    setTimeout(() => {
+      this.content.scrollToBottom(0);
+    }, 0);
   }
 
   addComment() {
