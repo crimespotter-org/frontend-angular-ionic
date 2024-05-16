@@ -35,10 +35,15 @@ export class AppComponent implements OnInit {
     this.supabaseService.updateLocalUser();
     this.supabaseService.updateCaseTypes();
     this.supabaseService.updateLinkTypes();
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const currentSetting = localStorage.getItem('darkMode');
-    if (currentSetting === 'true' || (currentSetting === null && prefersDark)) {
-      document.body.classList.add('dark');
+    const currentMode = localStorage.getItem('colormode');
+    const colorModeAuto = currentMode ? JSON.parse(currentMode) : true;
+    if (!colorModeAuto) {
+      const currentSetting = localStorage.getItem('darkMode');
+      if (currentSetting === 'true') {
+        document.body.classList.add('dark');
+      } else {
+        document.body.classList.remove('dark');
+      }
     }
   }
 }
