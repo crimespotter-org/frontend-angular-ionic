@@ -35,7 +35,6 @@ export class Tab3Page {
   }
 
   initializeMode() {
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
     const currentMode = localStorage.getItem('colormode');
     this.colorModeAuto = currentMode ? JSON.parse(currentMode) : true;
     if (!this.colorModeAuto) {
@@ -73,10 +72,6 @@ export class Tab3Page {
   toggleDarkMode(event: any) {
     document.body.classList.toggle('dark', event.detail.checked);
     localStorage.setItem('darkMode', event.detail.checked);
-  }
-
-  navigateTo(page: string) {
-    this.router.navigate([`tabs/tab3/${page}`]);
   }
 
   logout() {
