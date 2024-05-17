@@ -25,7 +25,7 @@ import {
 } from "@ionic/angular/standalone";
 import {NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
-import {alertCircle} from "ionicons/icons";
+import {eye, eyeOff} from "ionicons/icons";
 
 @Component({
   selector: 'app-login',
@@ -36,6 +36,7 @@ import {alertCircle} from "ionicons/icons";
 })
 export class LoginComponent {
   loading: boolean = false;
+  showPassword: boolean = false;
 
   loginForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
@@ -43,6 +44,7 @@ export class LoginComponent {
   });
 
   constructor(private supabaseService: SupabaseService, private router: Router, private toastController: ToastController) {
+    addIcons({eye,eyeOff})
   }
 
   async login() {
@@ -78,5 +80,9 @@ export class LoginComponent {
       duration: 2000,
       color: 'danger'
     }).then(toast => toast.present());
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 }

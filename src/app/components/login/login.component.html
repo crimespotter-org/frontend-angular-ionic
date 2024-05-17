@@ -22,9 +22,12 @@
           </ion-text>
         </ion-item>
 
-        <ion-item>
+        <ion-item style="align-items: center;">
           <ion-label position="floating">Passwort</ion-label>
-          <ion-input type="password" formControlName="password"></ion-input>
+          <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password" ></ion-input>
+          <ion-button fill="clear" size= "medium" slot="end" (click)="togglePasswordVisibility()" style="margin-right: -25px">
+            <ion-icon [name]="showPassword ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
         </ion-item>
         <ion-item lines="none"
                   *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">

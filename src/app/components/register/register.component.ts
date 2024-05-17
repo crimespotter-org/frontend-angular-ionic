@@ -12,7 +12,7 @@ import {
   IonToolbar,
   IonLabel,
   IonInput,
-  IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle
+  IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle, IonIcon
 } from "@ionic/angular/standalone";
 import {
   AbstractControl,
@@ -25,17 +25,22 @@ import {
   Validators
 } from "@angular/forms";
 import {NgIf} from '@angular/common';
+import {addIcons} from "ionicons";
+import {eye, eyeOff} from "ionicons/icons";
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [IonSpinner, IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, ReactiveFormsModule, NgIf, IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle],
+  imports: [IonSpinner, IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, ReactiveFormsModule, NgIf, IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle, IonIcon],
 })
 export class RegisterComponent {
 
   loading: boolean = false;
+  showPassword1: boolean = false;
+  showPassword2: boolean = false;
+
 
   passwordMatchingValidatior: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
     const password = control.get('password');
@@ -52,6 +57,10 @@ export class RegisterComponent {
   }, {validators: this.passwordMatchingValidatior});
 
   constructor(private supabaseService: SupabaseService, private router: Router, private toastController: ToastController) {
+    addIcons({
+      eye,
+      eyeOff
+    })
   }
 
   async register() {
@@ -114,5 +123,13 @@ export class RegisterComponent {
       duration: 2000,
       color: 'danger'
     }).then(toast => toast.present());
+  }
+
+  togglePassword1Visibility() {
+    this.showPassword1 = !this.showPassword1;
+  }
+
+  togglePassword2Visibility() {
+    this.showPassword2 = !this.showPassword2;
   }
 }
