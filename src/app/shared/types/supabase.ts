@@ -286,6 +286,14 @@ export type Database = {
         }
         Returns: Json
       }
+      add_user_profile_angular: {
+        Args: {
+          user_id: string
+          username: string
+          role: Database["public"]["Enums"]["role"]
+        }
+        Returns: undefined
+      }
       create_crime_case_angular: {
         Args: {
           p_title: string
@@ -301,6 +309,12 @@ export type Database = {
           p_links: Json
         }
         Returns: string
+      }
+      delete_case_by_id: {
+        Args: {
+          case_id: string
+        }
+        Returns: undefined
       }
       find_nearby_cases: {
         Args: {
@@ -353,6 +367,46 @@ export type Database = {
           long: number
         }
       }
+      get_all_cases_flutter: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          title: string
+          summary: string
+          lat: number
+          long: number
+          created_by: string
+          created_at: string
+          place_name: string
+          zip_code: number
+          case_type: Database["public"]["Enums"]["casetype"]
+          crime_date_time: string
+          status: string
+        }[]
+      }
+      get_case_detailed_flutter: {
+        Args: {
+          case_id: string
+        }
+        Returns: {
+          id: string
+          title: string
+          summary: string
+          lat: number
+          long: number
+          created_by: string
+          created_at: string
+          place_name: string
+          zip_code: number
+          case_type: Database["public"]["Enums"]["casetype"]
+          crime_date_time: string
+          status: string
+          link_id: string
+          url: string
+          link_type: Database["public"]["Enums"]["link_type"]
+          link_created_at: string
+        }[]
+      }
       get_case_details_angular: {
         Args: {
           case_id_param: string
@@ -375,6 +429,28 @@ export type Database = {
           link_type: Database["public"]["Enums"]["link_type"]
           link_created_at: string
           user_id: string
+          username: string
+        }
+      }
+      get_case_votes_by_id: {
+        Args: {
+          p_case_id: string
+        }
+        Returns: {
+          upvotes: number
+          downvotes: number
+        }
+      }
+      get_comments: {
+        Args: {
+          p_case_id: string
+        }
+        Returns: {
+          id: string
+          case_id: string
+          user_id: string
+          text: string
+          created_at: string
           username: string
         }
       }
@@ -404,7 +480,7 @@ export type Database = {
           lat: number
           long: number
           created_by: string
-          creator_username: string,
+          creator_username: string
           place_name: string
           zip_code: number
           case_type: Database["public"]["Enums"]["casetype"]
@@ -419,6 +495,22 @@ export type Database = {
           distance_to_location: number
         }
       }
+      get_username_with_id: {
+        Args: {
+          p_user_id: string
+        }
+        Returns: {
+          username: string
+        }
+      }
+      insert_comment: {
+        Args: {
+          p_case_id: string
+          p_user_id: string
+          p_text: string
+        }
+        Returns: undefined
+      }
       update_case: {
         Args: {
           title: string
@@ -432,6 +524,7 @@ export type Database = {
           crime_date_time: string
           case_id: string
           created_by: string
+          p_links: Json
         }
         Returns: undefined
       }

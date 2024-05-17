@@ -24,6 +24,11 @@ export class SupabaseService {
     return this.supabase.auth.signUp({email, password});
   }
 
+  async isUsernameTaken(username: string): Promise<boolean> {
+    const {data, error} = await this.supabase.from('user_profiles').select('username').eq('username', username).single();
+    return data !== null;
+  }
+
   async createUserProfile(user_id: string, username: string, role: string): Promise<boolean> {
     const {error, data} = await this.supabase.rpc('add_user_profile_angular', {
       "user_id": user_id,
@@ -99,8 +104,7 @@ export class SupabaseService {
           if (url.data) {
             this.avatarCache.set(userId, url.data.signedUrl);
             signedUrl = url.data.signedUrl;
-          }
-          else {
+          } else {
             signedUrl = 'assets/icon/avatar.svg';
             this.avatarCache.set(userId, 'assets/icon/avatar.svg');
           }

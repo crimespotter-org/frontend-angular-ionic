@@ -76,7 +76,7 @@ export class Tab3Page {
   }
 
   navigateTo(page: string) {
-    this.router.navigate([`/${page}`]);
+    this.router.navigate([`tabs/tab3/${page}`]);
   }
 
   logout() {
