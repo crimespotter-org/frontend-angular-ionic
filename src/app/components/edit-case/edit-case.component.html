@@ -30,7 +30,7 @@
   <app-case-media-edit *ngIf="segment === 'media'" [caseId]="caseId"></app-case-media-edit>
 </ion-content>
 
-<ion-fab>
+<ion-fab slot="fixed" vertical="bottom" horizontal="end">
   <ion-fab-button (click)="updateCase()">
     <ion-icon name="add-outline"></ion-icon>
   </ion-fab-button>

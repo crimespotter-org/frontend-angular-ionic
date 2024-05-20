@@ -476,7 +476,7 @@ export class SupabaseService {
 
   }
 
-  async updateCrimeCase(caseData: AddCase, caseId: number): Promise<boolean> {
+  async updateCrimeCase(caseData: AddCase, caseId: string): Promise<boolean> {
 
     const userId = this.storageService.getUserId();
     if (userId === null) {
@@ -490,7 +490,7 @@ export class SupabaseService {
       p_latitude: caseData.latitude,
       p_longitude: caseData.longitude,
       p_place_name: caseData.placeName,
-      p_zip_code: caseData.zipCode,
+      p_zip_code: caseData.zipCode.toString(),
       p_case_type: caseData.caseType,
       p_crime_date_time: caseData.crimeDateTime,
       p_status: caseData.status,
@@ -502,6 +502,8 @@ export class SupabaseService {
         }
       )
     };
+
+    console.log(dataObject);
 
     const {data, error} = await this.supabase.rpc('update_case_angular', dataObject);
 

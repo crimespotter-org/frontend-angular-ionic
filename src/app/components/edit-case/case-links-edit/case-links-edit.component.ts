@@ -83,8 +83,7 @@ export class CaseLinksEditComponent implements OnInit {
 
   ngOnInit() {
     this.types = this.storageService.getLinkTypes()
-    this.allLinks.push(...this.editCaseService.caseLinks);
-    this.groupLinksByType(this.allLinks);
+    this.groupLinksByType(this.editCaseService.caseLinks);
   }
 
   groupLinksByType(links: any []) {
@@ -114,9 +113,9 @@ export class CaseLinksEditComponent implements OnInit {
 
     const {data, role} = await modal.onDidDismiss();
     if (role === 'confirm') {
-      this.allLinks.push({link_type: data.type, url: data.url, new: true});
-      console.log(this.allLinks);
-      this.groupLinksByType(this.allLinks);
+      this.editCaseService.caseLinks.push({link_type: data.type, url: data.url});
+      console.log(this.editCaseService.caseLinks);
+      this.groupLinksByType(this.editCaseService.caseLinks);
     }
   }
 
@@ -124,8 +123,7 @@ export class CaseLinksEditComponent implements OnInit {
   protected readonly HelperUtils = HelperUtils;
 
   removeLink(link: any) {
-      this.allLinks = this.allLinks.filter((l: any) => l !== link);
-      this.linksToDelete.push(link);
-      this.groupLinksByType(this.allLinks);
+      this.editCaseService.caseLinks = this.editCaseService.caseLinks.filter((l: any) => l !== link);
+      this.groupLinksByType(this.editCaseService.caseLinks);
   }
 }
