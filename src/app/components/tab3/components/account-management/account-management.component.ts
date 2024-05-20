@@ -3,7 +3,7 @@ import {addIcons} from "ionicons";
 import {keyOutline, personOutline, trashOutline} from "ionicons/icons";
 import {
   ActionSheetController,
-  IonAvatar,
+  IonAvatar, IonBackButton, IonButtons,
   IonCard,
   IonCardContent,
   IonCol,
@@ -45,7 +45,9 @@ import {HelperUtils} from "../../../../shared/helperutils";
     IonCardContent,
     IonGrid,
     IonRow,
-    IonCol
+    IonCol,
+    IonBackButton,
+    IonButtons
   ],
   standalone: true
 })
@@ -135,6 +137,6 @@ export class AccountManagementComponent {
   }
 
   get avatarImage() {
-    return this.userAvatar !== '' ? this.userAvatar : 'assets/icon/avatar.svg'; // Pfad zum Standard-Icon von Ionic
+    return this.userAvatar !== '' ? this.userAvatar : 'assets/icon/avatar.svg';
   }
 }

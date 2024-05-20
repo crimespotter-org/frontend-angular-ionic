@@ -59,12 +59,28 @@ export class SupabaseService {
   }
 
   async updateEmail(newEmail: string): Promise<string> {
-    const { data, error } = await this.supabase.auth.updateUser({
+    const {data, error} = await this.supabase.auth.updateUser({
       email: newEmail
     });
 
     if (error) return 'Email konnte nicht geändert werden.';
-    return '';  }
+    return '';
+  }
+
+  async updatePassword (newPassword: string): Promise<string> {
+    const {data, error} = await this.supabase.auth.updateUser({
+      password: newPassword
+    });
+
+    if (error) return 'Passwort konnte nicht geändert werden.';
+    return '';
+  }
+
+  async signInPasswordCheck(email: string, password: string) {
+    const data = await this.supabase.auth.signInWithPassword({email, password});
+
+    return data.error == null;
+  }
 
   async signIn(email: string, password: string) {
     const data = await this.supabase.auth.signInWithPassword({email, password});
