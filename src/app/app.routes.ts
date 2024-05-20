@@ -20,6 +20,11 @@ export const routes: Routes = [
     loadComponent: () => import('./components/add-case/add-case.page').then( m => m.AddCasePage)
   },
   {
+    path: 'edit-case/:id',
+    loadComponent: () => import('./components/edit-case/edit-case.component').then( m => m.EditCaseComponent),
+    canActivate: [authGuard]
+  },
+  {
     path: '**',
     redirectTo: '/tabs',
     pathMatch: 'full',

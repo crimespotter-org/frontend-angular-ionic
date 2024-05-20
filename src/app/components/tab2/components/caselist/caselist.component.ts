@@ -38,6 +38,7 @@ import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
 import {HelperUtils} from 'src/app/shared/helperutils';
 import {CaseDetailsService} from "../../../../services/case-details.service";
+import { EditCaseService } from 'src/app/services/edit-case.service';
 
 @Component({
   selector: 'app-caselist',
@@ -77,7 +78,8 @@ export class CaselistComponent implements OnInit {
               private caseDetailsService: CaseDetailsService,
               private filterStateService: FilterStateService,
               private router: Router,
-              private loadingController: LoadingController) {
+              private loadingController: LoadingController,
+              private editCaseService: EditCaseService) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -136,5 +138,10 @@ export class CaselistComponent implements OnInit {
 
   async dismissLoading() {
     await this.loadingController.dismiss();
+  }
+  
+  async editCase(caseId: string) {
+    await this.editCaseService.loadAllCaseData(caseId);
+    this.router.navigate(['edit-case', caseId]);
   }
 }

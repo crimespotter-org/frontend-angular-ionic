@@ -21,7 +21,7 @@ import { Location } from 'src/app/shared/interfaces/location.interface';
 })
 export class LocationPickerComponent implements ControlValueAccessor {
 
-  location?: Location;
+  location: Location;
 
   @Input()
   defaultLocation: Location = {latitude: 52.52437, longitude: 13.41053};
@@ -40,7 +40,10 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
   disabled = false;
 
-  constructor() { }
+  constructor() { 
+    console.log(this.defaultLocation);
+    this.location = this.defaultLocation;
+  }
 
   writeValue(location: any): void {
     this.location = location;

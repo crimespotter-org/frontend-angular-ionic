@@ -220,6 +220,7 @@ export class SupabaseService {
 
 
   async getCaseDetails(case_id_param: string): Promise<CaseDetails | null> {
+    console.log("getting case details for case id: " + case_id_param)
     const {
       data: details,
       error
@@ -238,6 +239,8 @@ export class SupabaseService {
       .storage
       .from('media')
       .list(`case-${caseId}`, {limit: 100, offset: 0});
+
+    console.log("trying to get image urls for case id: " + caseId);
 
     if (error) {
       console.error(error);

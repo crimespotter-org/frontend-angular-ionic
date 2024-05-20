@@ -134,7 +134,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (!this.firstReload) {
         let zoom = this.map.getZoom();
         this.map.remove()
-        this.map = L.map('map', {zoomSnap: 0, zoomDelta: 1}).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
+        this.map = L.map('map',).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
         this.firstReload = true;
       } else {
         this.map = this.map.flyTo([this.viewLocation.latitude, this.viewLocation.longitude], this.map.getZoom());
@@ -180,7 +180,8 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   updateMapWithCases() {
-    this.markerLayer.clearLayers(); // MarkerLayer leeren
+    //markerLayer leeren
+    if(this.markerLayer) this.markerLayer.clearLayers();
     const heatPoints: number[][] = [];
 
     this.cases.forEach((caze) => {
@@ -191,6 +192,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       heatPoints.push([caze.lat, caze.long, 500]);
     });
 
+    if(this.heatLayer)
     this.heatLayer.setLatLngs(heatPoints);
   }
 

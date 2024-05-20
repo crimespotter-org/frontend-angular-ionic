@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 import { QueryLocationResponse } from 'src/app/shared/interfaces/query-location-response';
 import { NgModel } from '@angular/forms';
 @Component({
-  selector: 'app-seletion-map',
+  selector: 'app-selection-map',
   templateUrl: './selection-map.component.html',
   styleUrls: ['./selection-map.component.scss'],
   imports: [IonSearchbar, IonItem, IonLabel, IonList, CommonModule, IonContent],
@@ -20,6 +20,7 @@ export class SelectionMapComponent implements AfterViewInit {
   dataService = inject(DataService);
 
   @Input() location: Location = { latitude: 48.441976384366384, longitude: 8.684747075615647 };
+  @Input() defaultMarkerLocation: Location | null = null;
 
   @Output() selectedLocation = new EventEmitter<Location>();
 
@@ -34,7 +35,11 @@ export class SelectionMapComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
-    setTimeout(() => this.initMap({ latitude: this.location.latitude, longitude: this.location.longitude }), 0);
+    setTimeout(() => this.initMap({ latitude: this.location.latitude, longitude: this.location.longitude }), 100);
+    if (this.defaultMarkerLocation != null) {
+      this.marker.setLatLng([this.defaultMarkerLocation.latitude, this.defaultMarkerLocation.longitude]);
+      this.marker.setOpacity(1);
+    }
   }
 
   initMap(coordinates: Location) {
@@ -45,12 +50,11 @@ export class SelectionMapComponent implements AfterViewInit {
       attribution: '© OpenStreetMap'
     }).addTo(this.map);
 
-    setTimeout(() => {
-      this.map.invalidateSize();
-    }, 500);
-
     this.marker.addTo(this.map);
     this.map.on('click', this.onMapClick.bind(this));
+    setTimeout(() => {
+      this.map.invalidateSize();
+    }, 10);
   }
 
   private onMapClick(event: L.LeafletMouseEvent) {

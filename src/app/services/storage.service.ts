@@ -56,7 +56,7 @@ export class StorageService {
     return [];
   }
 
-  public getLinkTypes() {
+  public getLinkTypes(): string[] {
     const data = sessionStorage.getItem(LINK_TYPE_KEY);
     if (data) {
       return JSON.parse(data);
