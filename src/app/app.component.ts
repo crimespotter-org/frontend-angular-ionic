@@ -1,5 +1,5 @@
 import {Component, NgZone, OnInit} from '@angular/core';
-import {IonApp, IonRouterOutlet} from '@ionic/angular/standalone';
+import {IonApp, IonRouterOutlet, LoadingController} from '@ionic/angular/standalone';
 import {SupabaseService} from "./services/supabase.service";
 import {App} from "@capacitor/app";
 import {Router} from "@angular/router";
@@ -15,7 +15,8 @@ export class AppComponent implements OnInit {
   constructor(private supabaseService: SupabaseService,
               private router: Router,
               private caseDetailsService: CaseDetailsService,
-              private ngZone: NgZone) {
+              private ngZone: NgZone,
+              private loadingController: LoadingController) {
   }
 
   ngOnInit() {
@@ -27,7 +28,16 @@ export class AppComponent implements OnInit {
         const caseId = segments[1];
         this.caseDetailsService.loadCaseDetails(caseId).then(() => {
           this.ngZone.run(() => {
-            this.router.navigate(['tabs/case-details', caseId]);
+            this.loadingController.create({
+              message: 'Geteilter Fall wird geladen...',
+            }).then(x => {
+              x.present().then(() => {
+                setTimeout(() => {
+                  this.router.navigate(['tabs/case-details', caseId])
+                  this.loadingController.dismiss();
+                }, 1000);
+              })
+            });
           });
         })
       }

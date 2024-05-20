@@ -57,8 +57,7 @@ export class CaseDetailsComponent implements OnInit {
   segment: string  = 'facts';
   constructor(
     private route: ActivatedRoute,
-    private caseDetailsService: CaseDetailsService,
-    private dataService: DataService
+    private caseDetailsService: CaseDetailsService
   ) {
     addIcons({ chevronBackOutline, shareOutline });
   }
@@ -79,9 +78,8 @@ export class CaseDetailsComponent implements OnInit {
 
   async shareCase() {
     if (this.caseId) {
-      const longUrl = `crmspttr://casedetails/${this.caseId}`;
+      const longUrl = `https://crimespotter.bvrx.de/case-details/${this.caseId}`;
       try {
-        //const tinyUrl = await this.dataService.shortenUrl(longUrl, this.caseId);
         await this.share(longUrl);
       } catch (error) {
         console.error('Error beim Teilen der Case Details:', error);
