@@ -61,7 +61,8 @@ export class EditCaseComponent implements OnInit {
     private route: ActivatedRoute,
     private editCaseService: EditCaseService,
     private dataService: DataService,
-    private supabaseService: SupabaseService
+    private supabaseService: SupabaseService,
+    private router: Router
   ) {
     addIcons({ chevronBackOutline, shareOutline });
   }
@@ -103,6 +104,8 @@ export class EditCaseComponent implements OnInit {
     const state = await this.supabaseService.updateCrimeCase(data, this.caseId!);
 
     console.log(state);
+
+    this.router.navigate(['tabs/tab2']);
   }
 }
 

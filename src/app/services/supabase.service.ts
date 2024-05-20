@@ -507,7 +507,7 @@ export class SupabaseService {
       p_latitude: caseData.latitude,
       p_longitude: caseData.longitude,
       p_place_name: caseData.placeName,
-      p_zip_code: caseData.zipCode.toString(),
+      p_zip_code: caseData.zipCode,
       p_case_type: caseData.caseType,
       p_crime_date_time: caseData.crimeDateTime,
       p_status: caseData.status,

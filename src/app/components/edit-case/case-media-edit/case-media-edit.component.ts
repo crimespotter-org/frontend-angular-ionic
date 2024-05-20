@@ -5,6 +5,7 @@ import {IonCard, IonCol, IonGrid, IonImg, IonRow, IonText, ModalController} from
 import {NgForOf, NgIf} from "@angular/common";
 import {HelperUtils} from "../../../shared/helperutils";
 import {CaseDetailsService} from "../../../services/case-details.service";
+import { EditCaseService } from 'src/app/services/edit-case.service';
 
 @Component({
   selector: 'app-case-media-edit',
@@ -27,13 +28,12 @@ export class CaseMediaEditComponent implements OnInit {
   imageUrls: string[] = [];
 
   constructor(private caseDetailsService: CaseDetailsService,
-              private modalController: ModalController) {
+              private modalController: ModalController,
+              private editCaseService: EditCaseService) {
   }
 
   async ngOnInit() {
-    this.caseDetailsService.caseImageUrls$.subscribe(imageUrls => {
-      this.imageUrls = imageUrls;
-    })
+    this.imageUrls = await this.editCaseService.imageUrls;
   }
 
 

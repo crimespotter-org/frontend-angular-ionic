@@ -39,6 +39,8 @@ import { StorageService } from 'src/app/services/storage.service';
 import { SelectionMapComponent } from '../../selection-map/selection-map.component';
 import { LocationPickerComponent } from '../../location-picker/location-picker.component';
 import { Location } from 'src/app/shared/interfaces/location.interface';
+import { DataService } from 'src/app/services/data.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-case-facts-edit',
@@ -81,7 +83,11 @@ export class CaseFactsEditComponent implements OnInit {
   caseTypes?: any[];
   location?: Location;
 
-  constructor(private editCaseService: EditCaseService, private alertController: AlertController, private modalController: ModalController, private storageService: StorageService) {
+  constructor(private editCaseService: EditCaseService,
+     private alertController: AlertController, 
+     private modalController: ModalController, 
+     private storageService: StorageService,
+     private dataServie: DataService,) {
     addIcons({
       fingerPrint,
       lockOpenOutline,
@@ -188,5 +194,41 @@ async editState(){
     console.log("location updated");
     this.caseDetails.lat = loc.latitude;
     this.caseDetails.long = loc.longitude;
+    this.updatePLZAndPlaceNameAlert();
+  }
+
+  async updatePLZAndPlaceNameAlert(){
+    const alert = await this.alertController.create({
+      header: 'Location',
+      message: 'Wollen Sie PLZ und Ort zum Standort updaten?',
+      buttons: [
+        {
+          text: 'Nein',
+          role: 'no',
+          cssClass: 'secondary',
+        },{
+          text: 'Ja',
+          role: 'yes',
+          cssClass: 'primary',
+        }
+      ]
+  });
+  alert.present();
+
+  const { role } = await alert.onWillDismiss();
+
+  if (role === 'yes') {
+    this.updatePLZandPlaceName(this.location!);
+  }
+}
+
+
+  async updatePLZandPlaceName(loc: Location) {
+    const data = await firstValueFrom(this.dataServie.getLocationFromCoordinatesNominatim(loc));
+    
+    if (data) {
+      this.caseDetails.zip_code = data.postalCode;
+      this.caseDetails.place_name = data.city || data.sub || data.county;
+    }
   }
 }
