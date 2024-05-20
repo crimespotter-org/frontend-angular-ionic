@@ -1,6 +1,6 @@
 <ion-menu side="end" [menuId]="menuId" contentId="searchbar">
   <ion-header>
-    <ion-toolbar color="primary">
+    <ion-toolbar>
       <ion-title *ngIf="menuId!=='mapMenu'">Optionen</ion-title>
       <ion-title *ngIf="menuId==='mapMenu'">Filter</ion-title>
     </ion-toolbar>
@@ -132,7 +132,7 @@
 </ion-menu>
 
 
-<ion-header [translucent]="true" id="searchbar">
+<ion-header id="searchbar">
   <ion-toolbar>
     <div style="display: flex; align-items: center; margin-top: -2px; padding-bottom: 4px">
       <ion-buttons *ngIf="!searchActive" slot="start">
