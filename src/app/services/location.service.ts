@@ -9,15 +9,13 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class LocationService {
 
-  private defaultLocation: UserLocation = { location: {latitude: 52.520008, longitude: 13.404954}, access_denied: true }; // Berlin/Germany
+  private defaultLocation: UserLocation = { location: {latitude: 52.520008, longitude: 13.404954}, access_denied: true };
 
   private _currentLocation: BehaviorSubject<UserLocation> = new BehaviorSubject<UserLocation>(this.defaultLocation);
 
   public readonly currentLocation$: Observable<UserLocation> = this._currentLocation.asObservable();
 
-  public currentLocation: UserLocation = this.defaultLocation;
-
-  constructor() { 
+  constructor() {
     this.checkAndRequestLocationAccess();
   }
 
@@ -38,7 +36,7 @@ export class LocationService {
   }
 
   public locationAccessGranted(): boolean {
-    return this.currentLocation.access_denied === false;
+    return !this._currentLocation.getValue().access_denied;
   }
 
   private watchPosition() {
@@ -55,18 +53,33 @@ export class LocationService {
         console.error("Did not receive a position.");
         return;
       }
-      this.currentLocation = {
+      this._currentLocation.next({
         location: {
           latitude: position.coords.latitude,
           longitude: position.coords.longitude
         },
         access_denied: false
-      };
-      this._currentLocation.next(this.currentLocation);
+      });
     });
   }
 
   public getCurrentLocation(): UserLocation {
-    return this.currentLocation;
+    return this._currentLocation.getValue();
+  }
+
+  public async getInitialLocation(): Promise<UserLocation> {
+    const initialPosition = await Geolocation.getCurrentPosition()
+
+    if (!initialPosition) {
+      return this.defaultLocation;
+    }
+
+    return {
+      location : {
+        latitude : initialPosition.coords.latitude,
+        longitude : initialPosition.coords.longitude
+      },
+      access_denied : false
+    }
   }
 }

@@ -85,7 +85,7 @@ export class MapComponent implements OnInit, AfterViewInit {
     });
     (window as any)['navigateToCaseDetails'] = this.navigateToCaseDetails.bind(this);
     this.markerLayer = L.layerGroup();
-    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15}); // Initiale leere Heatmap
+    this.heatLayer = L.heatLayer([], {radius: 25, blur: 15});
   }
 
   async ngAfterViewInit(): Promise<void> {
@@ -100,7 +100,7 @@ export class MapComponent implements OnInit, AfterViewInit {
 
   initMap(initialPosition: UserLocation) {
     if (this.map != undefined) this.map.remove();
-    this.map = L.map('map', {zoomSnap: 0, zoomDelta: 1}).setView([initialPosition.location.latitude, initialPosition.location.longitude], 13);
+    this.map = L.map('map', {zoomSnap: 0.4, zoomDelta: 1, zoomControl: false}).setView([initialPosition.location.latitude, initialPosition.location.longitude], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap'
@@ -118,12 +118,12 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   private setUserLocationMarker(location: Location) {
-    console.log(location);
     if(!this.locationMarker){
       this.locationMarker = L.marker([location.latitude, location.longitude], {icon: defaultMarker});
       this.locationMarker.addTo(this.map);
     }
     else{
+      this.locationMarker.addTo(this.map);
       this.locationMarker.setLatLng([location.latitude, location.longitude]);
     }
   }
@@ -134,7 +134,7 @@ export class MapComponent implements OnInit, AfterViewInit {
       if (!this.firstReload) {
         let zoom = this.map.getZoom();
         this.map.remove()
-        this.map = L.map('map',).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
+        this.map = L.map('map', {zoomSnap: 0.4, zoomDelta: 1, zoomControl: false}).setView([this.viewLocation.latitude, this.viewLocation.longitude], zoom);
         this.firstReload = true;
       } else {
         this.map = this.map.flyTo([this.viewLocation.latitude, this.viewLocation.longitude], this.map.getZoom());
@@ -161,7 +161,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         const markerLng = marker.getLatLng().lng;
 
         if (this.viewLocation?.latitude && this.viewLocation.longitude &&
-          Math.abs(markerLat - this.viewLocation?.latitude) < 0.0001 && Math.abs(markerLng - this.viewLocation?.longitude) < 0.0001) {
+          Math.abs(markerLat - this.viewLocation?.latitude) < 0.001 && Math.abs(markerLng - this.viewLocation?.longitude) < 0.001) {
           marker.openPopup();
         }
       });
@@ -180,8 +180,7 @@ export class MapComponent implements OnInit, AfterViewInit {
   }
 
   updateMapWithCases() {
-    //markerLayer leeren
-    if(this.markerLayer) this.markerLayer.clearLayers();
+    this.markerLayer.clearLayers();
     const heatPoints: number[][] = [];
 
     this.cases.forEach((caze) => {
@@ -192,7 +191,6 @@ export class MapComponent implements OnInit, AfterViewInit {
       heatPoints.push([caze.lat, caze.long, 500]);
     });
 
-    if(this.heatLayer)
     this.heatLayer.setLatLngs(heatPoints);
   }
 
@@ -247,8 +245,8 @@ export class MapComponent implements OnInit, AfterViewInit {
     L.marker([caze.lat, caze.long], {icon: murderMarker}).bindPopup(`${caze.title} <br /> `).addTo(this.map);
   }
 
-  async goToCurrentLocation() {
-    await this.filterStateService.goToCurrentLocation();
+  goToCurrentLocation() {
+    this.updateMapView(this.locationService.getCurrentLocation().location);
   }
 
   adjustMarkers() {

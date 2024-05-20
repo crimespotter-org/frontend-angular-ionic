@@ -11,7 +11,7 @@ export const routes: Routes = [
         children: [
           {
             path: '',
-            loadComponent: () =>  import('../tab1/tab1.page').then((m) => m.Tab1Page)
+            loadComponent: () => import('../tab1/tab1.page').then((m) => m.Tab1Page)
           },
           {
             path: 'case-details/:id',
@@ -49,16 +49,21 @@ export const routes: Routes = [
           },
           {
             path: 'account-management',
-            loadComponent: () => import('../tab3/components/account-management/account-management.component').then(m => m.AccountManagementComponent)
-          },
-          {
-            path: 'profile-edit',
-            loadComponent: () => import('../tab3/components/account-management/components/profile-edit/profile-edit.page').then(m => m.ProfileEditPage)
-          },
-          {
-            path: 'password-change',
-            loadComponent: () => import('../tab3/components/account-management/components/password-change/password-change.page').then(m => m.PasswordChangePage)
-          },
+            children: [
+              {
+                path: '',
+                loadComponent: () => import('../tab3/components/account-management/account-management.component').then(m => m.AccountManagementComponent)
+              },
+              {
+                path: 'profile-edit',
+                loadComponent: () => import('../tab3/components/account-management/components/profile-edit/profile-edit.page').then(m => m.ProfileEditPage)
+              },
+              {
+                path: 'password-change',
+                loadComponent: () => import('../tab3/components/account-management/components/password-change/password-change.page').then(m => m.PasswordChangePage)
+              },
+            ]
+          }
         ]
       },
       {

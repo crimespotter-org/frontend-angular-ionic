@@ -6,7 +6,7 @@ import {CaseFiltered} from "../shared/types/supabase";
 import {FilterOptions} from "../shared/interfaces/filter.options";
 import {Location} from "../shared/interfaces/location.interface";
 import {HelperUtils} from "../shared/helperutils";
-import { LocationService } from './location.service';
+import {LocationService} from './location.service';
 
 @Injectable({
   providedIn: 'root'
@@ -28,7 +28,6 @@ export class FilterStateService {
   public readonly filteredCases$ = this._filteredCases.asObservable();
   public readonly searchLocation$ = this._searchLocation.asObservable();
   public readonly searchQuery$ = this._searchQuery.asObservable();
-  myLocation?: Location
 
   sortOrder = 'created_at';
   isAscending = false;
@@ -44,10 +43,9 @@ export class FilterStateService {
   }
 
   private async initializeLocation() {
-    const currentPosition = this.locationService.getCurrentLocation();
-
-    this.myLocation = {latitude: currentPosition.location.latitude, longitude: currentPosition.location.longitude}
-    this._searchLocation.next({latitude: currentPosition.location.latitude, longitude: currentPosition.location.longitude}) 
+    this.locationService.getInitialLocation().then(x => {
+      this._searchLocation.next({latitude: x.location.latitude, longitude: x.location.longitude})
+    });
   }
 
   async setFilters(newFilters: Filter[]) {
@@ -79,17 +77,11 @@ export class FilterStateService {
       cases = cases.filter(caze => caze.title.toLowerCase().includes(searchQuery.toLowerCase()));
     }
 
-    if (!this.myLocation) {
-      const loc = this.locationService.getCurrentLocation();
-      this.myLocation = {latitude: loc.location.latitude, longitude: loc.location.longitude}
-    }
-
     cases = cases.map(caze => {
-      if (caze.lat && caze.long && this.myLocation) {
+      if (caze.lat && caze.long) {
         caze.distance_to_location = HelperUtils.calculateDistance(
           {latitude: caze.lat, longitude: caze.long},
-          this.myLocation
-        );
+          this.locationService.getCurrentLocation().location        );
       }
       return caze;
     });
@@ -180,7 +172,7 @@ export class FilterStateService {
   upvoteCase(caseId: string) {
     const caze = this._filteredCases.value.find(c => c.id === caseId);
     if (caze) {
-      this.supabaseService.upvote(caseId).then(x=>{
+      this.supabaseService.upvote(caseId).then(x => {
         if (caze.user_vote === -1) {
           caze.downvotes--;
         }
@@ -198,7 +190,7 @@ export class FilterStateService {
   downvoteCase(caseId: string) {
     const caze = this._filteredCases.value.find(c => c.id === caseId);
     if (caze) {
-      this.supabaseService.downvote(caseId).then(x=>{
+      this.supabaseService.downvote(caseId).then(x => {
         if (caze.user_vote === 1) {
           caze.upvotes--;
         }
@@ -210,10 +202,6 @@ export class FilterStateService {
 
       this._filteredCases.next(this._filteredCases.value);
     }
-  }
-
-  async goToCurrentLocation() {
-    await this.initializeLocation();
   }
 
   public triggerMapUpdate() {
