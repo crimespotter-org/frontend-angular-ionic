@@ -17,7 +17,7 @@ import {
   IonRow,
   IonTitle,
   IonToolbar,
-  ModalController
+  ModalController, ToastController
 } from "@ionic/angular/standalone";
 import {RouterLink} from "@angular/router";
 import {AvatarViewerComponent} from "./components/avatar-viewer/avatar-viewer.component";
@@ -60,7 +60,8 @@ export class AccountManagementComponent {
   constructor(private modalController: ModalController,
               private actionSheetController: ActionSheetController,
               private storageService: StorageService,
-              private supabaseService: SupabaseService) {
+              private supabaseService: SupabaseService,
+              private toastController: ToastController) {
     addIcons({keyOutline, personOutline, trashOutline});
     this.userName = this.storageService.getUsername();
     this.userId = this.storageService.getUserId();
@@ -115,13 +116,17 @@ export class AccountManagementComponent {
     });
 
     if (image && this.userId) {
+      await this.supabaseService.deleteUserAvatar(this.userId);
       await this.supabaseService.uploadUserAvatar({
         base64: HelperUtils.dataURItoBase64(image?.dataUrl ?? ''),
         type: image.format
       }, this.userId).then(() => {
         if (this.userId) {
-          this.supabaseService.getAvatarUrlForUser(this.userId).then(url =>
-            this.userAvatar = url);
+          this.supabaseService.getAvatarUrlForUser(this.userId).then(url => {
+            this.storageService.saveUserAvatarUrl(url)
+            this.userAvatar = url
+            this.showToast("Das Profilbild wurde aktualisiert..", 'success')
+          })
         }
       });
     }
@@ -130,13 +135,24 @@ export class AccountManagementComponent {
   async deleteAvatar() {
     if (this.userId) {
       await this.supabaseService.deleteUserAvatar(this.userId).then(() => {
-          this.userAvatar = 'assets/icon/avatar.svg';
+        this.storageService.saveUserAvatarUrl('assets/icon/avatar.svg')
+        this.userAvatar = 'assets/icon/avatar.svg';
         }
       )
+      this.showToast("Das Profilbild wurde gelöscht.", 'danger')
     }
   }
 
   get avatarImage() {
     return this.userAvatar !== '' ? this.userAvatar : 'assets/icon/avatar.svg';
+  }
+
+  private async showToast(message: string, color: string) {
+    const toast = await this.toastController.create({
+      message,
+      duration: 2000,
+      color
+    });
+    toast.present();
   }
 }

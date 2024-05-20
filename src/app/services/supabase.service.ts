@@ -170,6 +170,7 @@ export class SupabaseService {
       .storage
       .from('avatars')
       .remove([`${userId}.png`]);
+    this.avatarCache.delete(userId);
   }
 
   async getUserName(userId: string) {
