@@ -7,8 +7,6 @@ import {
   ModalController,
   IonButton, IonList, IonListHeader, IonLabel, IonItem, IonIcon, IonToggle, IonSegment, IonSegmentButton,
 } from '@ionic/angular/standalone';
-import {ProfileEditPage} from "./components/account-management/components/profile-edit/profile-edit.page";
-import {PasswordChangePage} from "./components/account-management/components/password-change/password-change.page";
 import {SupabaseService} from "../../services/supabase.service";
 import {Router, RouterLink} from "@angular/router";
 import {FormsModule} from "@angular/forms";
@@ -21,7 +19,7 @@ import {NgIf} from "@angular/common";
   templateUrl: 'tab3.page.html',
   styleUrls: ['tab3.page.scss'],
   standalone: true,
-  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, ProfileEditPage, PasswordChangePage, RouterLink, IonList, IonListHeader, IonLabel, IonItem, IonIcon, IonToggle, FormsModule, IonSegment, IonSegmentButton, NgIf],
+  imports: [IonHeader, IonToolbar, IonTitle, IonContent, IonButton, RouterLink, IonList, IonListHeader, IonLabel, IonItem, IonIcon, IonToggle, FormsModule, IonSegment, IonSegmentButton, NgIf],
 })
 export class Tab3Page {
   colorModeAuto: boolean = false;

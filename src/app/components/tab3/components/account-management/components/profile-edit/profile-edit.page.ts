@@ -1,9 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {Component,} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
-import {IonicModule} from '@ionic/angular';
 import {SupabaseService} from "../../../../../../services/supabase.service";
-import {ToastController} from "@ionic/angular/standalone";
+import {
+  IonBackButton, IonButton,
+  IonButtons, IonCard, IonCardContent, IonCol,
+  IonContent, IonGrid,
+  IonHeader, IonInput, IonItem, IonLabel, IonRow, IonSpinner, IonText,
+  IonTitle,
+  IonToolbar,
+  ToastController
+} from "@ionic/angular/standalone";
 import {StorageService} from "../../../../../../services/storage.service";
 import {Router} from "@angular/router";
 
@@ -12,17 +19,29 @@ import {Router} from "@angular/router";
   templateUrl: './profile-edit.page.html',
   styleUrls: ['./profile-edit.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule, ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, IonBackButton, IonButtons, IonHeader, IonToolbar, IonContent, IonTitle, IonCardContent, IonCard, IonItem, IonLabel, IonInput, IonText, IonGrid, IonRow, IonButton, IonCol, IonSpinner]
 })
 export class ProfileEditPage {
   profileForm: FormGroup;
   loading: boolean = false;
 
-  constructor(private fb: FormBuilder, private supabaseService: SupabaseService, private toastController: ToastController, private storageService: StorageService, private router:Router) {
+  constructor(private fb: FormBuilder,
+              private supabaseService: SupabaseService,
+              private toastController: ToastController,
+              private storageService: StorageService,
+              private router: Router) {
     this.profileForm = this.fb.group({
       username: [''],
       email: ['', [Validators.email]]
-    });
+    }, {validators: this.profileEditValidator()});
+  }
+
+  profileEditValidator() {
+    return (group: FormGroup) => {
+      const username = group.controls['username'].value;
+      const email = group.controls['email'].value;
+      return username.length === 0 && email.length === 0 ? {'empty': true} : null;
+    };
   }
 
   async updateProfile() {
@@ -31,24 +50,21 @@ export class ProfileEditPage {
     this.loading = true;
     const values = this.profileForm.value;
 
-    if (values.email.length>0 || values.username.length>0){
-      let result: string = '';
+    let result: string = '';
 
-      if (values.username) {
-        const updateUsername = await this.supabaseService.updateUsername(values.username);
-        if (updateUsername.length === 0) this.storageService.saveUsername(values.username);
-        result = result + updateUsername;
-      }
-      if (values.email) {
-        result = result + await this.supabaseService.updateEmail(values.email);
-      }
-      if (result.length >0) {
-        this.showToast(result, 'danger');
-      } else {
-        this.showToast('Profil erfolgreich aktualisiert. Die E-Mail muss ggf. noch bestätigt werden.', 'success');
-      }
+    if (values.username) {
+      const updateUsername = await this.supabaseService.updateUsername(values.username);
+      if (updateUsername.length === 0) this.storageService.saveUsername(values.username);
+      result = result + updateUsername;
+    }
+    if (values.email) {
+      result = result + await this.supabaseService.updateEmail(values.email);
+    }
+    if (result.length > 0) {
+      this.showToast(result, 'danger');
     } else {
-      this.showToast('Keine Daten zum aktualisieren übergeben.', 'danger');
+      this.showToast('Profil erfolgreich aktualisiert. Die E-Mail muss ggf. noch bestätigt werden.', 'success');
+      this.router.navigate(['tabs/tab3'])
     }
 
     this.loading = false;

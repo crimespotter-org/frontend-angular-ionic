@@ -55,12 +55,12 @@ export const routes: Routes = [
                 loadComponent: () => import('../tab3/components/account-management/account-management.component').then(m => m.AccountManagementComponent)
               },
               {
-                path: 'profile-edit',
-                loadComponent: () => import('../tab3/components/account-management/components/profile-edit/profile-edit.page').then(m => m.ProfileEditPage)
-              },
-              {
                 path: 'password-change',
                 loadComponent: () => import('../tab3/components/account-management/components/password-change/password-change.page').then(m => m.PasswordChangePage)
+              },
+              {
+                path: 'profile-edit',
+                loadComponent: () => import('../tab3/components/account-management/components/profile-edit/profile-edit.page').then(m => m.ProfileEditPage)
               },
             ]
           }

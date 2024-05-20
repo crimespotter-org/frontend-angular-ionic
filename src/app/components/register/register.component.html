@@ -50,7 +50,7 @@
           </ion-text>
         </ion-item>
 
-        <ion-item>
+        <ion-item style="align-items: center;">
           <ion-label position="floating">Passwort wiederholen</ion-label>
           <ion-input [type]="showPassword2 ? 'text' : 'password'" formControlName="confirmpassword" ></ion-input>
           <ion-button fill="clear" size= "medium" slot="end" (click)="togglePassword2Visibility()" style="margin-right: -25px">
@@ -66,7 +66,7 @@
         <ion-grid>
           <ion-row>
             <ion-col>
-              <ion-button type="submit" expand="block" [disabled]="loading">
+              <ion-button type="submit" expand="block" [disabled]="loading || !  registerForm.valid">
                 Registrieren
                 <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
               </ion-button>
