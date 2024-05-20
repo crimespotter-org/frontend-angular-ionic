@@ -1,0 +1,37 @@
+<ion-card *ngIf="caseDetails">
+  <ion-card-content>
+    <ion-textarea [autoGrow]="true" class="title" [(ngModel)]="caseDetails.title"></ion-textarea>
+    <app-location-picker [(ngModel)]="location" (selectedLocation)="locationUpdate($event)"></app-location-picker>
+    <ion-input [(ngModel)]="caseDetails.zip_code" placeholder="PLZ"/>
+    <ion-input [(ngModel)]="caseDetails.place_name" placeholder="Ort"/>
+    <br>
+    <div style="width: fit-content;">
+    <ion-datetime-button datetime="datetime"></ion-datetime-button>
+    </div>
+    <br>
+    <div class="chips-container">
+      <ion-chip color="primary" (click)="editType()">
+        <ion-icon name="finger-print"></ion-icon>
+        <ion-label>{{ HelperUtils.formatCrimeType(caseDetails.case_type) }}</ion-label>
+      </ion-chip>
+      <ion-chip [color]="caseDetails.status === 'open' ? 'danger' : 'success'" (click)="editState()">
+        <ion-icon name="lock-open-outline" *ngIf="caseDetails.status === 'open'"></ion-icon>
+        <ion-icon name="lock-closed-outline" *ngIf="caseDetails.status !== 'open'"></ion-icon>
+        <ion-label>{{ HelperUtils.formatStatus(caseDetails.status) }}</ion-label>
+      </ion-chip>
+    </div>
+    <ion-textarea [value]="caseDetails.summary" [autoGrow]="true">
+    </ion-textarea>
+    <div style="display: flex; justify-content: flex-end;">
+      {{caseDetails.username}} am: {{ caseDetails.created_at | date: 'dd.MM.YYYY, hh:mm' }}
+    </div>
+
+  </ion-card-content>
+</ion-card>
+
+
+<ion-modal [keepContentsMounted]="true" *ngIf="caseDetails">
+  <ng-template>
+    <ion-datetime locale="de-DE" id="datetime" [(ngModel)]="caseDetails.crime_date_time"></ion-datetime>
+  </ng-template>
+</ion-modal>

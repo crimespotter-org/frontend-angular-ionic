@@ -1,0 +1,38 @@
+
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button disabled="true">
+        <ion-icon name="share-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-segment [(ngModel)]="segment">
+      <ion-segment-button value="facts">
+        <ion-label>Fakten</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="links">
+        <ion-label>Links</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="media">
+        <ion-label>Medien</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-case-facts-edit *ngIf="segment === 'facts'"></app-case-facts-edit>
+  <app-case-links-edit *ngIf="segment === 'links'" [caseId]="caseId" ></app-case-links-edit>
+  <app-case-media-edit *ngIf="segment === 'media'" [caseId]="caseId"></app-case-media-edit>
+</ion-content>
+
+<ion-fab>
+  <ion-fab-button (click)="updateCase()">
+    <ion-icon name="add-outline"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
+

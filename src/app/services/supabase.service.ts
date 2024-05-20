@@ -476,6 +476,43 @@ export class SupabaseService {
 
   }
 
+  async updateCrimeCase(caseData: AddCase, caseId: number): Promise<boolean> {
+
+    const userId = this.storageService.getUserId();
+    if (userId === null) {
+      throw new Error('User not logged in');
+    }
+
+    const dataObject = {
+      p_case_id: caseId,
+      p_title: caseData.title,
+      p_summary: caseData.summary,
+      p_latitude: caseData.latitude,
+      p_longitude: caseData.longitude,
+      p_place_name: caseData.placeName,
+      p_zip_code: caseData.zipCode,
+      p_case_type: caseData.caseType,
+      p_crime_date_time: caseData.crimeDateTime,
+      p_status: caseData.status,
+      p_links: caseData.links.map(link => {
+          return {
+            url: link.value,
+            link_type: link.type
+          }
+        }
+      )
+    };
+
+    const {data, error} = await this.supabase.rpc('update_case_angular', dataObject);
+
+    if (error) {
+      throw new Error("Crime case update failed with error message: \n" + error.message);
+    } else {
+      return true;
+    }
+
+  }
+
 
   async uploadImagesForCase(caseId: number, images: Image[]) {
 

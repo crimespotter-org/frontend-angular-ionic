@@ -1,0 +1,14 @@
+
+  <ion-content>
+  <ion-input placeholder="Link eingeben" [(ngModel)]="url"></ion-input>
+  <ion-select [(ngModel)]="selectedLinkType" placeholder="Falltyp auswählen">
+    @for(linktype of linktypes; track linktype){
+      <ion-select-option [value]="linktype">{{HelperUtils.formatLinkType(linktype)}}</ion-select-option>
+    }
+  </ion-select>
+  <ion-button (click)="confirm()">
+    Speichern
+  </ion-button>
+  </ion-content>
+
+

@@ -1,0 +1,7 @@
+
+  <ion-list *ngIf="caseStates">
+    <ion-item *ngFor="let state of caseStates" (click)="selectState(state)"
+      [color]="state === selectedState ? 'primary' : ''">
+      {{ HelperUtils.formatStatus(state) }}
+    </ion-item>
+  </ion-list>
