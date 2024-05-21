@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SupabaseService} from "../../services/supabase.service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {
   ToastController,
   IonSpinner,
@@ -33,7 +33,7 @@ import {eye, eyeOff} from "ionicons/icons";
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
   standalone: true,
-  imports: [IonSpinner, IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, ReactiveFormsModule, NgIf, IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle, IonIcon],
+  imports: [IonSpinner, IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, ReactiveFormsModule, NgIf, IonRow, IonCol, IonGrid, IonText, IonCardContent, IonCardHeader, IonCard, IonCardTitle, IonIcon, RouterLink],
 })
 export class RegisterComponent {
 
@@ -109,11 +109,6 @@ export class RegisterComponent {
     this.loading = false;
 
     this.router.navigate(['/tabs']);
-
-  }
-
-  toLogin() {
-    this.router.navigate(['/login']);
   }
 
   presentErrorToast(message: string) {

@@ -72,8 +72,9 @@ export class Tab3Page {
     localStorage.setItem('darkMode', event.detail.checked);
   }
 
-  logout() {
-    this.supabaseService.signOut();
-    this.router.navigate(['/login']);
+  async logout() {
+    this.supabaseService.signOut().then(x=> {
+      this.router.navigate(['/login']);
+    });
   }
 }
