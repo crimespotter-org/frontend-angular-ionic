@@ -55,7 +55,7 @@ import { Renderer2, ElementRef } from '@angular/core';
     ]
 })
 export class Add1Page implements AfterViewInit {
-  
+
   HelperUtils = HelperUtils;
 
   @ViewChild(IonToast) toast!: IonToast;
@@ -100,7 +100,7 @@ export class Add1Page implements AfterViewInit {
     console.log(this.form.get('closed')?.value);
 console.log(this.form.value);
     if(this.form.valid){
-      this.router.navigate(['tabs/tab2/add2']);
+      this.router.navigate(['add-case-2']);
     }
     else{
       this.form.markAllAsTouched();

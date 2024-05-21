@@ -139,7 +139,7 @@ export class CaselistComponent implements OnInit {
   async dismissLoading() {
     await this.loadingController.dismiss();
   }
-  
+
   async editCase(caseId: string) {
     await this.editCaseService.loadAllCaseData(caseId);
     this.router.navigate(['edit-case', caseId]);

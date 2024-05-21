@@ -4,9 +4,36 @@ import { addIcons } from 'ionicons';
 import { arrowForwardOutline, createOutline, closeOutline, linkOutline, addOutline, checkmarkOutline, chevronBackOutline, locationOutline, trashOutline, imageOutline, newspaperOutline, bookOutline, micOutline, caretUpOutline, caretDownOutline, checkmarkSharp } from 'ionicons/icons';
 import { Router } from '@angular/router';
 import { Camera, CameraResultType, Photo } from '@capacitor/camera';
-import { IonProgressBar, IonBackButton, IonInput, IonModal, IonCard, IonCardContent, IonToast, IonItemSliding, IonItemOption, IonItemOptions, IonDatetime, IonButton, IonButtons, IonHeader, IonContent, IonToolbar, IonLabel, IonTitle, IonItem, IonFab, IonIcon, IonFabButton, IonSelectOption, IonSelect, IonTextarea } from '@ionic/angular/standalone';
+import {
+  IonProgressBar,
+  IonBackButton,
+  IonInput,
+  IonModal,
+  IonCard,
+  IonCardContent,
+  IonToast,
+  IonItemSliding,
+  IonItemOption,
+  IonItemOptions,
+  IonDatetime,
+  IonButton,
+  IonButtons,
+  IonHeader,
+  IonContent,
+  IonToolbar,
+  IonLabel,
+  IonTitle,
+  IonItem,
+  IonFab,
+  IonIcon,
+  IonFabButton,
+  IonSelectOption,
+  IonSelect,
+  IonTextarea,
+  IonText
+} from '@ionic/angular/standalone';
 import { Location, UserLocation } from 'src/app/shared/interfaces/location.interface';
-import { SelectionMapComponent } from "../../../../selection-map/selection-map.component";
+import { SelectionMapComponent } from "../../selection-map/selection-map.component";
 import { AddService } from 'src/app/services/add.service';
 import { LocationPickerComponent } from 'src/app/components/location-picker/location-picker.component';
 import { CommonModule } from '@angular/common';
@@ -19,9 +46,8 @@ import { LocationService } from 'src/app/services/location.service';
 import { SupabaseService } from 'src/app/services/supabase.service';
 import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
 import { DataService } from 'src/app/services/data.service';
-import { firstValueFrom } from 'rxjs';
+import {firstValueFrom, of} from 'rxjs';
 import { Image } from 'src/app/shared/interfaces/image.interface';
-import { Keyboard } from '@capacitor/keyboard';
 
 
 @Component({
@@ -61,10 +87,10 @@ import { Keyboard } from '@capacitor/keyboard';
     ReactiveFormsModule,
     IonBackButton,
     CommonModule,
-    IonProgressBar
+    IonProgressBar, IonText
   ]
 })
-export class Add2Page implements OnInit, AfterViewInit {
+export class Add2Page implements OnInit {
 
   HelperUtils = HelperUtils;
 
@@ -79,7 +105,7 @@ export class Add2Page implements OnInit, AfterViewInit {
   @ViewChild('selectLocationModal') modal!: IonModal
 
   images: Photo[] = [];
-  currentLocation?: Location;
+  currentLocation!: Location;
 
   form: FormGroup;
   links: FormArray;
@@ -90,13 +116,6 @@ export class Add2Page implements OnInit, AfterViewInit {
 
   loading: boolean = false;
 
-  //TODO: Make this globally accessible to also show icons in case details page
-  LinkTypeToIcon: Map<string, string> = new Map([
-    ['website', 'link-outline'],
-    ['facebook', 'logo-facebook'],
-    ['twitter', 'logo-twitter'],
-  ]);
-
   constructor() {
     addIcons({ checkmarkSharp, arrowForwardOutline, createOutline, caretDownOutline, caretUpOutline, micOutline, bookOutline, newspaperOutline, linkOutline, chevronBackOutline, addOutline, trashOutline, locationOutline, imageOutline, closeOutline });
 
@@ -106,19 +125,6 @@ export class Add2Page implements OnInit, AfterViewInit {
     this.linkTypes = this.storageService.getLinkTypes();
 
     console.log(this.linkTypes);
-  }
-  ngAfterViewInit(): void {
-    Keyboard.addListener('keyboardWillShow', () => {
-      console.log('keyboardWillShow');
-      this.hideBackFab = true;
-      this.hideForwardFab = true
-    });
-
-    Keyboard.addListener('keyboardWillHide', () => {
-      console.log('keyboardWillHide');
-      this.hideBackFab = false;
-      this.hideForwardFab = false;
-    });
   }
 
   async ngOnInit(): Promise<void> {
@@ -173,6 +179,8 @@ export class Add2Page implements OnInit, AfterViewInit {
   async submitForm() {
 
     if (!this.addService.form.valid) {
+      console.log(this.links);
+      console.log(this.addService.form.value);
       console.log('Form invalid');
       return;
     }
@@ -236,5 +244,6 @@ export class Add2Page implements OnInit, AfterViewInit {
     await actionSheet.present();
   }
 
+  protected readonly of = of;
 }
 

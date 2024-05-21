@@ -16,6 +16,14 @@ export const routes: Routes = [
     loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent),
   },
   {
+    path: 'add-case-1',
+    loadComponent: () => import('./components/add/add1/add1.page').then( m => m.Add1Page)
+  },
+  {
+    path: 'add-case-2',
+    loadComponent: () => import('./components/add/add2/add2.page').then( m => m.Add2Page)
+    },
+  {
     path: 'password-reset',
     loadComponent: () => import('./components/login/components/password-reset/password-reset.component').then(m => m.PasswordResetComponent),
   },
@@ -34,10 +42,6 @@ export const routes: Routes = [
   {
     path: 'mail-change-new-confirm',
     loadComponent: () => import('./components/tab3/components/account-management/components/profile-edit/components/new-mail-change-confirmation/new-mail-change-confirmation.component').then(m => m.NewMailChangeConfirmationComponent),
-  },
-  {
-    path: 'add-case',
-    loadComponent: () => import('./components/add-case/add-case.page').then( m => m.AddCasePage)
   },
   {
     path: 'edit-case/:id',
