@@ -18,16 +18,31 @@
     <ion-item formGroupName="location">
       <ion-label position="stacked" class="header">Tatort</ion-label>
       <ion-item style="width: 100%; margin-top: 5px;">
-      <app-location-picker formControlName="coordinates" (selectedLocation)="selectedLocationChanged($event)" [defaultLocation]="currentLocation || {latitude: 30, longitude: 30}" style="width: 100%;"></app-location-picker>
+      <app-location-picker formControlName="coordinates" [defaultLocation]="this.currentLocation" (selectedLocation)="selectedLocationChanged($event)" style="width: 100%;"></app-location-picker>
     </ion-item>
-    @if(this.form.get('location')?.get('coordinates')?.value != undefined){
+      <ion-item *ngIf="this.form.get('location')?.get('coordinates')?.hasError('required') && this.form.get('location')?.get('coordinates')?.touched">
+        <ion-text color="danger">
+          <p>Tatort Coordinaten sind erforderlich</p>
+        </ion-text>
+      </ion-item>
+    @if(this.form.get('location')?.get('coordinates')?.value){
     <ion-item style="width: 100%">
       <ion-input label="Postleitzahl" labelPlacement="stacked" formControlName="plz" type="number">
       </ion-input>
     </ion-item>
+      <ion-item lines="none" *ngIf="form.get('location')?.get('plz')?.hasError('required') && form.get('location')?.get('plz')?.touched">
+        <ion-text color="danger">
+          <p>Postleitzahl ist erforderlich</p>
+        </ion-text>
+      </ion-item>
     <ion-item style="width: 100%">
       <ion-input label="Ort" labelPlacement="stacked" formControlName="city"></ion-input>
     </ion-item>
+      <ion-item lines="none" *ngIf="form.get('location')?.get('city')?.hasError('required') && form.get('location')?.get('city')?.touched">
+        <ion-text color="danger">
+          <p>Ort ist erforderlich</p>
+        </ion-text>
+      </ion-item>
   }
     </ion-item>
     <ion-item>
@@ -56,7 +71,8 @@
     <ion-item>
       <ion-label position="stacked">Links</ion-label>
       <div formArrayName="further_links" id="linkContainer">
-        <ion-item *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
+        <div *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
+        <ion-item>
           <div slot="start" (click)="chooseIcon(idx)" class="linkTypeIconContainer">
             <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)" style="font-size: 1.5em;"></ion-icon>
             <ion-icon name="caret-down-outline" style="font-size: 0.75em"></ion-icon>
@@ -64,7 +80,15 @@
           <ion-input placeholder="Link eingeben" formControlName="value"></ion-input>
           <ion-icon slot="end" name="close-outline" (click)="removeLink(idx)" style="cursor: pointer;"></ion-icon>
         </ion-item>
+          <div slot="start"></div>
+          <ion-item *ngIf="link.get('value')?.hasError('required') && link.get('value')?.touched">
+            <ion-text color="danger">
+              <p>Link ist erforderlich</p>
+            </ion-text>
+          </ion-item>
+        </div>
       </div>
+
       <ion-item button id="addLinkContainer" (click)="addLink()">
         <ion-icon slot="start" name="add-outline"></ion-icon>
         <ion-label>Link hinzufügen</ion-label>

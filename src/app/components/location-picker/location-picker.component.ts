@@ -3,13 +3,14 @@ import { ModalController, IonModal, IonButton, IonContent, IonTitle, IonLabel, I
 import { SelectionMapComponent } from '../selection-map/selection-map.component';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { Location } from 'src/app/shared/interfaces/location.interface';
+import {NgIf} from "@angular/common";
 
 
 @Component({
   selector: 'app-location-picker',
   templateUrl: './location-picker.component.html',
   styleUrls: ['./location-picker.component.scss'],
-  imports: [IonButton, SelectionMapComponent, IonContent, IonModal, IonTitle, IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonItem],
+  imports: [IonButton, SelectionMapComponent, IonContent, IonModal, IonTitle, IonLabel, IonIcon, IonHeader, IonToolbar, IonButtons, IonItem, NgIf],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -40,8 +41,7 @@ export class LocationPickerComponent implements ControlValueAccessor {
 
   disabled = false;
 
-  constructor() { 
-    console.log(this.defaultLocation);
+  constructor() {
     this.location = this.defaultLocation;
   }
 
@@ -78,7 +78,6 @@ export class LocationPickerComponent implements ControlValueAccessor {
       this.modal.dismiss();
       this.tempLocation = undefined;
     }
-  
 
   cancelLocationModal() {
     console.log('canceled');
@@ -86,14 +85,5 @@ export class LocationPickerComponent implements ControlValueAccessor {
     this.onTouched();
     this.tempLocation = undefined;
     this.modal.dismiss();
-  }
-
-  getClasses() {
-    return {
-      'ng-touched': this.touched,
-      'ng-untouched': !this.touched,
-      'ng-valid': this.location != null,
-      'ng-invalid': this.location == null
-    };
   }
 }

@@ -25,7 +25,8 @@
       </ion-toolbar>
     </ion-header>
     <ion-content class="ion-padding">
-      <app-selection-map [defaultMarkerLocation]="location" [location]="location" (selectedLocation)="selectedLocationChanged($event)"></app-selection-map>
+      <app-selection-map *ngIf="location" [defaultMarkerLocation]="location" [location]="location" (selectedLocation)="selectedLocationChanged($event)"></app-selection-map>
+      <app-selection-map *ngIf="!location" [defaultMarkerLocation]="location" (selectedLocation)="selectedLocationChanged($event)"></app-selection-map>
     </ion-content>
   </ng-template>
 </ion-modal>

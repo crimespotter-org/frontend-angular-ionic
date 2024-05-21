@@ -41,6 +41,6 @@ ngAfterViewInit(){
 
   navigateToAddPage() {
     console.log('Navigating to add page');
-    this.router.navigate(['/tabs/tab2/add']);
+    this.router.navigate(['add-case-1']);
   }
 }

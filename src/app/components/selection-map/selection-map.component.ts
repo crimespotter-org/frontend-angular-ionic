@@ -35,6 +35,7 @@ export class SelectionMapComponent implements AfterViewInit {
   constructor() { }
 
   ngAfterViewInit(): void {
+    console.log(this.location);
     setTimeout(() => this.initMap({ latitude: this.location.latitude, longitude: this.location.longitude }), 100);
     if (this.defaultMarkerLocation != null) {
       this.marker.setLatLng([this.defaultMarkerLocation.latitude, this.defaultMarkerLocation.longitude]);

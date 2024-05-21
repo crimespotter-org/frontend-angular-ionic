@@ -16,8 +16,12 @@ export const routes: Routes = [
     loadComponent: () => import('./components/register/register.component').then(m => m.RegisterComponent),
   },
   {
-    path: 'add-case',
-    loadComponent: () => import('./components/add-case/add-case.page').then( m => m.AddCasePage)
+    path: 'add-case-1',
+    loadComponent: () => import('./components/add/add1/add1.page').then( m => m.Add1Page)
+  },
+  {
+    path: 'add-case-2',
+    loadComponent: () => import('./components/add/add2/add2.page').then( m => m.Add2Page)
   },
   {
     path: 'edit-case/:id',

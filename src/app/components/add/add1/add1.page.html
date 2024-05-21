@@ -14,35 +14,36 @@
 
 
 <ion-content>
+  <ion-card>
+    <ion-card-content>
   <form class="form" [formGroup]="form">
-
     <ion-grid>
       <ion-row>
-        <ion-col class="ion-justify-content-center">
+        <ion-col>
           <ion-item>
             <ion-label position="stacked">Titel</ion-label>
             <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
           </ion-item>
+          <ion-item lines="none" *ngIf="form.get('title')?.hasError('required') && form.get('title')?.touched">
+            <ion-text color="danger">
+              <p>Titel ist erforderlich</p>
+            </ion-text>
+          </ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
-        <ion-col class="ion-justify-content-center">
-          <ion-item style="height: 100%">
-            <!-- <ion-chip [color]="this.form.get('closed')?.value ? 'danger' : 'success'" button (click)="switchState()">
-              @if(this.form.get('closed')?.value){
-              <ion-icon name="lock-closed-outline"></ion-icon>
-              <ion-label>Geschlossen</ion-label>
-              }
-              @else{
-              <ion-icon name="lock-open-outline"></ion-icon>
-              <ion-label>Offen</ion-label>
-              }
-            </ion-chip> -->
+        <ion-col>
+          <ion-item>
             <ion-label position="stacked">Status</ion-label>
             <ion-select placeholder="Wählen Sie einen Status" formControlName="closed">
               <ion-select-option value="false">Offen</ion-select-option>
               <ion-select-option value="true">Geschlossen</ion-select-option>
             </ion-select>
+          </ion-item>
+          <ion-item lines="none" *ngIf="form.get('closed')?.hasError('required') && form.get('closed')?.touched">
+            <ion-text color="danger">
+              <p>Status ist erforderlich</p>
+            </ion-text>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -54,6 +55,11 @@
             <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" autosize
               rows="3" [autoGrow]="true">
             </ion-textarea>
+          </ion-item>
+          <ion-item lines="none" *ngIf="form.get('summary')?.hasError('required') && form.get('summary')?.touched">
+            <ion-text color="danger">
+              <p>Beschreibung ist erforderlich</p>
+            </ion-text>
           </ion-item>
         </ion-col>
       </ion-row>
@@ -67,6 +73,11 @@
               }
             </ion-select>
           </ion-item>
+          <ion-item lines="none" *ngIf="form.get('type')?.hasError('required') && form.get('type')?.touched">
+            <ion-text color="danger">
+              <p>Falltyp ist erforderlich</p>
+            </ion-text>
+</ion-item>
         </ion-col>
       </ion-row>
       <ion-row>
@@ -78,6 +89,11 @@
               placeholder="Startdatum auswählen" enabled="false" readonly>
             </ion-input>
           </ion-item>
+          <ion-item lines="none" *ngIf="form.get('date_of_crime')?.hasError('required') && form.get('date_of_crime')?.touched">
+            <ion-text color="danger">
+              <p>Tatzeit ist erforderlich</p>
+            </ion-text>
+          </ion-item>
         </ion-col>
       </ion-row>
     </ion-grid>
@@ -87,6 +103,8 @@
       </ng-template>
     </ion-modal>
   </form>
+    </ion-card-content>
+  </ion-card>
 </ion-content>
 
 <ion-toast message="Bitte füllen Sie alle Felder aus" duration="700" icon="warning-outline"></ion-toast>
