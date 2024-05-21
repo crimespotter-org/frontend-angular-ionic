@@ -24,7 +24,7 @@ export class SupabaseService {
     return this.supabase.auth.signUp({email, password});
   }
 
-  setSession (accessToken:string, refreshToken: string) {
+  setSession(accessToken: string, refreshToken: string) {
     this.supabase.auth.setSession({access_token: accessToken, refresh_token: refreshToken});
   }
 
@@ -256,15 +256,20 @@ export class SupabaseService {
       data: cases
     } = await this.supabase.rpc('get_filtered_cases_angular', params).returns<CaseFiltered[]>();
 
-    let casesWithMediaCheck = cases;
+    let casesWithMediaCheckAndAvatarUrl = cases;
     if (cases != null) {
-      casesWithMediaCheck = await Promise.all(cases.map(async (c) => ({
+      casesWithMediaCheckAndAvatarUrl = await Promise.all(cases.map(async (c) => ({
         ...c,
         has_media: await this.caseHasMedia(c.id)
       })));
+
+      casesWithMediaCheckAndAvatarUrl = await Promise.all(cases.map(async (c) => ({
+        ...c,
+        creator_avatar_url: await this.getAvatarUrlForUser(c.created_by)
+      })));
     }
 
-    return casesWithMediaCheck ?? [];
+    return casesWithMediaCheckAndAvatarUrl ?? [];
   }
 
   async caseHasMedia(caseId: string): Promise<boolean> {

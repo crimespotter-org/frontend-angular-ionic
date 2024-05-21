@@ -481,6 +481,7 @@ export type Database = {
           long: number
           created_by: string
           creator_username: string
+          creator_avatar_url: string
           place_name: string
           zip_code: number
           case_type: Database["public"]["Enums"]["casetype"]

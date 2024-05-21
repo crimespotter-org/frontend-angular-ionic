@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {
+  IonAvatar,
   IonButton,
-  IonButtons,
+  IonButtons, IonCol,
   IonContent,
   IonFab,
-  IonFabButton,
+  IonFabButton, IonGrid,
   IonIcon,
   IonItem,
   IonItemOption,
@@ -13,7 +14,7 @@ import {
   IonLabel,
   IonList,
   IonRefresher,
-  IonRefresherContent, LoadingController
+  IonRefresherContent, IonRow, LoadingController
 } from "@ionic/angular/standalone";
 import {CommonModule, DatePipe, NgForOf, NgIf} from "@angular/common";
 import {addIcons} from "ionicons";
@@ -38,7 +39,7 @@ import {SupabaseService} from "../../../../services/supabase.service";
 import {FilterStateService} from "../../../../services/filter-state.service";
 import {HelperUtils} from 'src/app/shared/helperutils';
 import {CaseDetailsService} from "../../../../services/case-details.service";
-import { EditCaseService } from 'src/app/services/edit-case.service';
+import {EditCaseService} from 'src/app/services/edit-case.service';
 
 @Component({
   selector: 'app-caselist',
@@ -64,7 +65,11 @@ import { EditCaseService } from 'src/app/services/edit-case.service';
     DatePipe,
     RouterLink,
     IonRefresher,
-    IonRefresherContent
+    IonRefresherContent,
+    IonAvatar,
+    IonGrid,
+    IonCol,
+    IonRow
   ],
   standalone: true
 })
@@ -113,7 +118,7 @@ export class CaselistComponent implements OnInit {
   async navigateToCaseDetails(caseId: string, event: MouseEvent) {
     await this.presentLoading('Steckbrief wird geladen...');
     try {
-      this.caseDetailsService.loadCaseDetails(caseId).then(()=>{
+      this.caseDetailsService.loadCaseDetails(caseId).then(() => {
         let target: HTMLElement | null = event.target as HTMLElement | null;
         while (target !== null) {
           if (target.classList && target.classList.contains('vote-button')) {
