@@ -20,28 +20,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    App.addListener('appUrlOpen', (event) => {
-      const url = new URL(event.url);
-      const path = url.pathname;
-      const segments = path.split('/');
-      if (segments.length >= 2) {
-        const caseId = segments[1];
-        this.caseDetailsService.loadCaseDetails(caseId).then(() => {
-          this.ngZone.run(() => {
-            this.loadingController.create({
-              message: 'Geteilter Fall wird geladen...',
-            }).then(x => {
-              x.present().then(() => {
-                setTimeout(() => {
-                  this.router.navigate(['tabs/case-details', caseId])
-                  this.loadingController.dismiss();
-                }, 1000);
-              })
-            });
-          });
-        })
-      }
-    });
+    this.addDeepLinkListener();
+
     this.supabaseService.updateLocalUser();
     this.supabaseService.updateCaseTypes();
     this.supabaseService.updateLinkTypes();
@@ -63,5 +43,77 @@ export class AppComponent implements OnInit {
         document.body.classList.remove('dark');
       }
     }
+  }
+
+  private addDeepLinkListener() {
+    App.addListener('appUrlOpen', (event) => {
+      const url = new URL(event.url);
+      const path = url.pathname;
+      const segments = path.split('/');
+
+      if (url.href.includes('case-details')) {
+        const caseId = segments[segments.length - 1];
+        this.caseDetailsService.loadCaseDetails(caseId).then(() => {
+          this.ngZone.run(() => {
+            this.loadingController.create({
+              message: 'Geteilter Fall wird geladen...',
+            }).then(x => {
+              x.present().then(() => {
+                setTimeout(() => {
+                  this.router.navigate(['tabs/case-details', caseId])
+                  this.loadingController.dismiss();
+                }, 1000);
+              })
+            });
+          });
+        })
+      }
+
+      if (url.href.includes('register-confirm')) {
+        this.supabaseService.signOut();
+        this.ngZone.run(() => {
+          this.router.navigate(['register-confirm'])
+        });
+      }
+
+      if (url.href.includes('reset-password')) {
+        this.supabaseService.signOut();
+
+        const searchParams = new URLSearchParams(url.search);
+        const fragmentParams = new URLSearchParams(url.hash.replace('#', ''));
+
+        const accessToken = fragmentParams.get('access_token');
+        const refreshToken = searchParams.get('refresh_token') || fragmentParams.get('refresh_token');
+
+        if (accessToken && refreshToken) {
+          this.ngZone.run(() => {
+            this.router.navigate(['password-reset-form'],
+              {
+                state: {
+                  accessToken: accessToken,
+                  refreshToken: refreshToken
+                }
+              })
+          });
+        }
+      }
+
+      if (url.href.includes('update-mail')) {
+        this.supabaseService.signOut();
+        if (url.href.includes('message=Confirmation+link+accepted')) {
+          this.ngZone.run(() => {
+            this.router.navigate(['mail-change-old-confirm'])
+          });
+        }
+
+        if (url.href.includes('type=email_change')) {
+          this.ngZone.run(() => {
+            this.router.navigate(['mail-change-new-confirm'])
+          });
+        }
+      }
+
+
+    });
   }
 }

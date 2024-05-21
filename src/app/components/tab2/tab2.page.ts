@@ -25,13 +25,6 @@ export class Tab2Page {
 
   constructor(private filterStateService:FilterStateService, private router: Router, private storageService: StorageService) {}
 
-ngAfterViewInit(){
-  console.log(this.storageService.getUserId());
-  console.log(this.storageService.getUserEmail());
-  console.log(this.storageService.getUserRole());
-  console.log(this.storageService.getUsername());
-}
-
   refreshCaselist($event: CustomEvent) {
     this.filterStateService.applyFilters();
     if (event?.target) {

@@ -24,6 +24,10 @@ export class SupabaseService {
     return this.supabase.auth.signUp({email, password});
   }
 
+  setSession (accessToken:string, refreshToken: string) {
+    this.supabase.auth.setSession({access_token: accessToken, refresh_token: refreshToken});
+  }
+
   async isUsernameTaken(username: string): Promise<boolean> {
     const {
       data,
@@ -60,19 +64,35 @@ export class SupabaseService {
 
   async updateEmail(newEmail: string): Promise<string> {
     const {data, error} = await this.supabase.auth.updateUser({
-      email: newEmail
-    });
+        email: newEmail
+      },
+      {
+        emailRedirectTo: 'crimespotter://update-mail'
+      });
 
     if (error) return 'Email konnte nicht geändert werden.';
     return '';
   }
 
-  async updatePassword (newPassword: string): Promise<string> {
+
+  async sendPasswordResetEmail(email: string) {
+
+    const {data, error} = await this.supabase.auth.resetPasswordForEmail(email,
+      {
+        redirectTo: 'crimespotter://reset-password'
+      });
+
+    return error === null;
+  }
+
+  async updatePassword(newPassword: string): Promise<string> {
     const {data, error} = await this.supabase.auth.updateUser({
       password: newPassword
     });
 
-    if (error) return 'Passwort konnte nicht geändert werden.';
+    console.log('UpdatePasswordError' + error);
+
+    if (error) return 'Passwort konnte nicht aktualisiert werden.';
     return '';
   }
 
@@ -544,5 +564,6 @@ export class SupabaseService {
         });
     }
   }
+
 }
 

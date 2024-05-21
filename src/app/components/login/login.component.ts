@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SupabaseService} from "../../services/supabase.service";
-import {Router} from "@angular/router";
+import {Router, RouterLink} from "@angular/router";
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators} from "@angular/forms";
 import {
   IonButton,
@@ -31,7 +31,7 @@ import {eye, eyeOff} from "ionicons/icons";
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  imports: [IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, NgIf, IonIcon, ReactiveFormsModule, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonGrid, IonRow, IonCol, IonToast],
+  imports: [IonHeader, IonTitle, IonButton, IonItem, IonContent, FormsModule, IonToolbar, IonLabel, IonInput, NgIf, IonIcon, ReactiveFormsModule, IonSpinner, IonCard, IonCardHeader, IonCardTitle, IonCardContent, IonText, IonGrid, IonRow, IonCol, IonToast, RouterLink],
   standalone: true
 })
 export class LoginComponent {
@@ -59,18 +59,14 @@ export class LoginComponent {
     const password = this.loginForm.get('password')?.value ?? '';
 
     const {error} = await this.supabaseService.signIn(email, password);
-    this.loading = false;
-
     if (error) {
       console.error('Fehler beim Anmelden:', error);
       this.presentErrorToast('Fehler beim Anmelden. Bitte E-Mail und Passwort prüfen.');
     } else {
       this.router.navigate(['/tabs']);
     }
-  }
 
-  toRegister() {
-    this.router.navigate(['/register']);
+    this.loading = false;
   }
 
   presentErrorToast(message: string) {
