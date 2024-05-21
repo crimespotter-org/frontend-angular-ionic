@@ -22,6 +22,26 @@ export const routes: Routes = [
   {
     path: 'add-case-2',
     loadComponent: () => import('./components/add/add2/add2.page').then( m => m.Add2Page)
+    },
+  {
+    path: 'password-reset',
+    loadComponent: () => import('./components/login/components/password-reset/password-reset.component').then(m => m.PasswordResetComponent),
+  },
+  {
+    path: 'password-reset-form',
+    loadComponent: () => import('./components/login/components/password-reset-form/password-reset-form.component').then(m => m.PasswordResetFormComponent),
+  },
+  {
+    path: 'register-confirm',
+    loadComponent: () => import('./components/register/components/email-confirmation/email-confirmation.component').then(m => m.EmailConfirmationComponent),
+  },
+  {
+    path: 'mail-change-old-confirm',
+    loadComponent: () => import('./components/tab3/components/account-management/components/profile-edit/components/old-mail-change-confirmation/old-mail-change-confirmation.component').then(m => m.OldMailChangeConfirmationComponent),
+  },
+  {
+    path: 'mail-change-new-confirm',
+    loadComponent: () => import('./components/tab3/components/account-management/components/profile-edit/components/new-mail-change-confirmation/new-mail-change-confirmation.component').then(m => m.NewMailChangeConfirmationComponent),
   },
   {
     path: 'edit-case/:id',
