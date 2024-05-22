@@ -6,11 +6,15 @@ import {
   IonInput,
   IonSelect,
   IonSelectOption,
-  IonToolbar, ModalController
+  IonToolbar, ModalController,
+  IonIcon,
+  IonTitle
 } from "@ionic/angular/standalone";
 import {StorageService} from "../../../../services/storage.service";
 import {HelperUtils} from "../../../../shared/helperutils";
 import {FormsModule} from "@angular/forms";
+import { addIcons } from 'ionicons';
+import { checkmarkOutline, closeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-add-link-modal',
@@ -26,7 +30,9 @@ import {FormsModule} from "@angular/forms";
     IonHeader,
     IonToolbar,
     IonButton,
-    IonButtons
+    IonButtons,
+    IonIcon,
+    IonTitle
   ]
 })
 export class AddLinkModalComponent  implements OnInit {
@@ -37,7 +43,12 @@ export class AddLinkModalComponent  implements OnInit {
   selectedLinkType: string = '';
   linktypes: string[] = []
 
-  constructor(private storageService: StorageService, private modalController: ModalController) { }
+  constructor(private storageService: StorageService, private modalController: ModalController) { 
+    addIcons({
+      checkmarkOutline,
+      closeOutline
+    })
+  }
 
   ngOnInit() {
     this.linktypes = this.storageService.getLinkTypes();

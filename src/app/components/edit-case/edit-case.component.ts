@@ -15,7 +15,7 @@ import {
 } from "@ionic/angular/standalone";
 import {ActivatedRoute, Router} from "@angular/router";
 import {addIcons} from "ionicons";
-import {chevronBackOutline, shareOutline} from "ionicons/icons";
+import {checkmarkOutline, chevronBackOutline, shareOutline} from "ionicons/icons";
 import {CaseDetailsService} from "../../services/case-details.service";
 import {CaseLinksEditComponent} from "./case-links-edit/case-links-edit.component";
 import {CaseMediaEditComponent} from "./case-media-edit/case-media-edit.component";
@@ -64,7 +64,7 @@ export class EditCaseComponent implements OnInit {
     private supabaseService: SupabaseService,
     private router: Router
   ) {
-    addIcons({ chevronBackOutline, shareOutline });
+    addIcons({ chevronBackOutline, shareOutline, checkmarkOutline });
   }
 
   ngOnInit(): void {

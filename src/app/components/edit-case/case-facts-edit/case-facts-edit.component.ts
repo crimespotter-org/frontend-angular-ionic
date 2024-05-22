@@ -115,28 +115,19 @@ async editType() {
         type: 'radio',
         label: HelperUtils.formatCrimeType(type),
         value: type,
-        checked: type === this.caseDetails.get('caseType')
+        checked: type === this.caseDetails.get('caseType')?.value,
+        handler: (selectedType: any) => {
+          // Führen Sie hier die Aktion aus, die Sie ausführen möchten, wenn ein Element angeklickt wird
+          console.log('Selected type:', selectedType);
+          this.caseDetails.patchValue({ caseType: selectedType.value });
+          alert.dismiss();
+        }
       }
     }),
-    buttons: [
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        cssClass: 'secondary',
-        handler: () => {
-          console.log('Confirm Cancel');
-        }
-      }, {
-        text: 'Ok',
-        handler: (data) => {
-          this.caseDetails.patchValue({caseType: data});
-        }
-      }
-    ]
+    buttons: [] // Keine Buttons
   });
-  alert.present();
 
-  console.log(this.caseDetails);
+  await alert.present();
 }
 
 // async editType(){
@@ -168,24 +159,15 @@ async editState(){
         type: 'radio',
         label: HelperUtils.formatStatus(state),
         value: state,
-        checked: state === this.caseDetails.get('caseState')?.value
+        checked: state === this.caseDetails.get('caseState')?.value,
+        handler: (selectedState: any) => {
+          console.log('Selected state:', selectedState);
+          this.caseDetails.patchValue({ caseState: selectedState.value });
+          alert.dismiss();
       }
+    }
     }),
-    buttons: [
-      {
-        text: 'Cancel',
-        role: 'cancel',
-        cssClass: 'secondary',
-        handler: () => {
-          console.log('Confirm Cancel');
-        }
-      }, {
-        text: 'Ok',
-        handler: (data) => {
-          this.caseDetails.patchValue({caseState: data});
-        }
-      }
-    ]
+    buttons: []
   });
 
   await alert.present();
