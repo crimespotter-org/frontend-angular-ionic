@@ -8,6 +8,7 @@ import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
 import {jwtDecode} from 'jwt-decode';
+import { ImageGet } from '../shared/interfaces/imageGet.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -306,11 +307,13 @@ export class SupabaseService {
     return details && details.length > 0 ? details[0] : null;
   }
 
-  async getImageUrlsForCase(caseId: string): Promise<string[]> {
+  async getImagesForCase(caseId: string): Promise<ImageGet[]> {
     const {data, error} = await this.supabase
       .storage
       .from('media')
       .list(`case-${caseId}`, {limit: 100, offset: 0});
+
+      console.log(data);
 
     console.log("trying to get image urls for case id: " + caseId);
 
@@ -319,7 +322,7 @@ export class SupabaseService {
       return [];
     }
 
-    const urlPromises = await Promise.all(data.map(async file => {
+    const imagePromises: (ImageGet | null)[] = await Promise.all(data.map(async file => {
       const expiresIn = 300;
       const {data: signedData, error: signedError} = await this.supabase
         .storage
@@ -330,11 +333,11 @@ export class SupabaseService {
         console.error(signedError);
         return null;
       }
-      return signedData.signedUrl;
+      return {imageUrl: signedData.signedUrl, imageId: file.id};
     }));
 
-    const urls = await Promise.all(urlPromises);
-    return urls.filter((url): url is string => url !== null);
+    const images = imagePromises.filter(image => image !== null) as ImageGet[];
+    return images.filter(url => url != null);
   }
 
   async updateCaseTypes() {

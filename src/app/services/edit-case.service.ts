@@ -5,6 +5,7 @@ import { CaseDetails } from '../shared/types/supabase';
 import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Location } from '../shared/interfaces/location.interface';
+import { ImageGet } from '../shared/interfaces/imageGet.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +19,7 @@ export class EditCaseService {
   caseDetails?: CaseDetails | null;
   caseLinks: any[] = [];
   caseComments: any[] = [];
-  imageUrls: string[] = [];
+  images: ImageGet[] = [];
 
   detailsForm = this.fb.group({
     caseTitle: ['', Validators.required],
@@ -70,8 +71,8 @@ export class EditCaseService {
   }
 
   async loadCaseImageUrls(caseId: string): Promise<void> {
-    this.supabaseService.getImageUrlsForCase(caseId).then(imageUrls => {
-      this.imageUrls = imageUrls;
-    })
+    this.supabaseService.getImagesForCase(caseId).then(imageUrls => {
+      this.images = imageUrls;
+    });
   }
 }

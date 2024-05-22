@@ -53,11 +53,11 @@ export class CaseDetailsService {
     });
   }
 
-  async loadCaseImageUrls(caseId: string): Promise<void> {
-    this.supabaseService.getImageUrlsForCase(caseId).then(imageUrls => {
-      this._caseImageUrls.next(imageUrls);
-    })
-  }
+async loadCaseImageUrls(caseId: string): Promise<void> {
+  const images = await this.supabaseService.getImagesForCase(caseId);
+  const imageUrls = images.map(image => image.imageUrl);
+  this._caseImageUrls.next(imageUrls);
+}
 
   getComments () {
     return this._caseComments.getValue();

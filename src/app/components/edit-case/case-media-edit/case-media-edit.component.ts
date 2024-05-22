@@ -6,6 +6,7 @@ import {NgForOf, NgIf} from "@angular/common";
 import {HelperUtils} from "../../../shared/helperutils";
 import {CaseDetailsService} from "../../../services/case-details.service";
 import { EditCaseService } from 'src/app/services/edit-case.service';
+import { ImageGet } from 'src/app/shared/interfaces/imageGet.interface';
 
 @Component({
   selector: 'app-case-media-edit',
@@ -25,7 +26,7 @@ import { EditCaseService } from 'src/app/services/edit-case.service';
 })
 export class CaseMediaEditComponent implements OnInit {
   @Input() caseId: any;
-  imageUrls: string[] = [];
+  images: ImageGet[] = [];
 
   constructor(private caseDetailsService: CaseDetailsService,
               private modalController: ModalController,
@@ -33,17 +34,19 @@ export class CaseMediaEditComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.imageUrls = await this.editCaseService.imageUrls;
+    this.images = await this.editCaseService.images;
   }
 
 
   reorderImageUrls(selectedIndex: number): string[] {
-    let reordered = [this.imageUrls[selectedIndex]];
-    for (let i = selectedIndex + 1; i < this.imageUrls.length; i++) {
-      reordered.push(this.imageUrls[i]);
+  const imageUrls = this.images.map(image => image.imageUrl);
+
+    let reordered = [imageUrls[selectedIndex]];
+    for (let i = selectedIndex + 1; i < imageUrls.length; i++) {
+      reordered.push(imageUrls[i]);
     }
     for (let i = 0; i < selectedIndex; i++) {
-      reordered.push(this.imageUrls[i]);
+      reordered.push(imageUrls[i]);
     }
     return reordered;
   }

@@ -1,13 +1,14 @@
-<ion-card *ngIf="imageUrls.length>0">
+<ion-card *ngIf="images.length>0">
   <ion-grid>
     <ion-row>
-      <ion-col size="6" size-sm="4" size-md="3" *ngFor="let media of imageUrls">
-        <ion-img [src]="media"></ion-img>
+      <ion-col size="6" size-sm="4" size-md="3" *ngFor="let image of images">
+        <ion-img [src]="image.imageUrl"></ion-img>
+        <p> {{ image.imageId }} </p>
       </ion-col>
     </ion-row>
   </ion-grid>
 </ion-card>
-<ion-card *ngIf="imageUrls.length === 0">
+<ion-card *ngIf="images.length === 0">
   <ion-text color="medium">
     <p>Keine Medien vorhanden.</p>
   </ion-text>
