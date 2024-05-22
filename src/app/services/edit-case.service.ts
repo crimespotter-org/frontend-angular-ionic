@@ -1,7 +1,10 @@
 import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CaseDetails } from '../shared/types/supabase';
+import { BehaviorSubject } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Location } from '../shared/interfaces/location.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -11,27 +14,64 @@ export class EditCaseService {
   constructor(private supabaseService: SupabaseService, private fb: FormBuilder) {
   }
 
+  location!: Location;
   caseDetails?: CaseDetails | null;
   caseLinks: any[] = [];
   caseComments: any[] = [];
   imageUrls: string[] = [];
 
+  detailsForm = this.fb.group({
+    caseTitle: ['', Validators.required],
+    caseSummary: ['', Validators.required],
+    caseType: ['', Validators.required],
+    caseState: ['', Validators.required],
+    caseDate: ['', Validators.required],
+    caseLocation: [null as any, Validators.required],
+    caseLat: [0, Validators.required],
+    caseLong: [0, Validators.required],
+    caseZipCode: [0, Validators.required],
+    casePlaceName: ['', Validators.required],
+  });
+
   async loadAllCaseData(caseId: string): Promise<void> {
     await this.loadCaseDetails(caseId);
     await this.loadCaseLinks(caseId);
-    await this.loadImageUrls(caseId);
+    await this.loadCaseImageUrls(caseId);
   }
-
+  
   async loadCaseDetails(caseId: string): Promise<void> {
-    this.caseDetails = await this.supabaseService.getCaseDetails(caseId);
+    try {
+      const caseDetails = await this.supabaseService.getCaseDetails(caseId);
+      if(!caseDetails) {
+        throw new Error('Case not found');
+      }
+
+      this.detailsForm.patchValue({
+        caseTitle: caseDetails.title,
+        caseSummary: caseDetails.summary,
+        caseType: caseDetails.case_type,
+        caseState: caseDetails.status,
+        caseDate: caseDetails.crime_date_time,
+        caseLocation: { latitude: caseDetails.lat, longitude: caseDetails.long },
+        caseLat: caseDetails.lat,
+        caseLong: caseDetails.long,
+        caseZipCode: caseDetails.zip_code,
+        casePlaceName: caseDetails.place_name,
+      });
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   async loadCaseLinks(caseId: string): Promise<void> {
-    this.caseLinks = await this.supabaseService.getLinksByCaseId(caseId);
+    this.supabaseService.getLinksByCaseId(caseId).then(links => {
+      this.caseLinks = links;
+    })
   }
 
-
-  async loadImageUrls(caseId: string): Promise<void> {
-     this.imageUrls = await this.supabaseService.getImageUrlsForCase(caseId);
+  async loadCaseImageUrls(caseId: string): Promise<void> {
+    this.supabaseService.getImageUrlsForCase(caseId).then(imageUrls => {
+      this.imageUrls = imageUrls;
+    })
   }
 }

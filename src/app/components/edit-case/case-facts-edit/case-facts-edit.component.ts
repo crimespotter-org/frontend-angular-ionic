@@ -32,7 +32,7 @@ import {
 } from "ionicons/icons";
 import {addIcons} from "ionicons";
 import { EditTypeModalComponent } from './edit-type-modal/edit-type-modal.component';
-import { FormsModule } from '@angular/forms';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { EditStateModalComponent } from './edit-state-modal/edit-state-modal.component';
 import { EditCaseService } from 'src/app/services/edit-case.service';
 import { StorageService } from 'src/app/services/storage.service';
@@ -69,13 +69,14 @@ import { firstValueFrom } from 'rxjs';
     IonDatetimeButton,
     IonDatetime,
     IonModal,
-    LocationPickerComponent
+    LocationPickerComponent,
+    ReactiveFormsModule
   ],
   standalone: true
 })
 export class CaseFactsEditComponent implements OnInit {
 
-  caseDetails: any
+  caseDetails!: FormGroup;
   caseStates: string[] = [
     "open",
     "closed",
@@ -83,7 +84,7 @@ export class CaseFactsEditComponent implements OnInit {
   caseTypes?: any[];
   location?: Location;
 
-  constructor(private editCaseService: EditCaseService,
+  constructor(public editCaseService: EditCaseService,
      private alertController: AlertController, 
      private modalController: ModalController, 
      private storageService: StorageService,
@@ -95,13 +96,13 @@ export class CaseFactsEditComponent implements OnInit {
       pencilSharp,
       locationOutline
     });
-
   }
 
   async ngOnInit() {
     this.caseTypes = await this.storageService.getCaseTypes();
-    this.caseDetails = this.editCaseService.caseDetails;
-    this.location = { longitude: this.caseDetails.long, latitude: this.caseDetails.lat};
+    this.caseDetails = this.editCaseService.detailsForm;
+    console.log(this.caseDetails)
+    this.location = { longitude: this.caseDetails.get('caseLong')!.value, latitude: this.caseDetails.get('caseLat')!.value};
   }
 
 async editType() {
@@ -114,7 +115,7 @@ async editType() {
         type: 'radio',
         label: HelperUtils.formatCrimeType(type),
         value: type,
-        checked: type === this.caseDetails.case_type
+        checked: type === this.caseDetails.get('caseType')
       }
     }),
     buttons: [
@@ -128,12 +129,14 @@ async editType() {
       }, {
         text: 'Ok',
         handler: (data) => {
-          this.caseDetails.case_type = data;
+          this.caseDetails.patchValue({caseType: data});
         }
       }
     ]
   });
   alert.present();
+
+  console.log(this.caseDetails);
 }
 
 // async editType(){
@@ -165,7 +168,7 @@ async editState(){
         type: 'radio',
         label: HelperUtils.formatStatus(state),
         value: state,
-        checked: state === this.caseDetails.status
+        checked: state === this.caseDetails.get('caseState')?.value
       }
     }),
     buttons: [
@@ -179,7 +182,7 @@ async editState(){
       }, {
         text: 'Ok',
         handler: (data) => {
-          this.caseDetails.status = data;
+          this.caseDetails.patchValue({caseState: data});
         }
       }
     ]
@@ -192,8 +195,8 @@ async editState(){
 
   locationUpdate(loc: Location) {
     console.log("location updated");
-    this.caseDetails.lat = loc.latitude;
-    this.caseDetails.long = loc.longitude;
+    this.caseDetails.patchValue({caseLat: loc.latitude});
+    this.caseDetails.patchValue({caseLong: loc.longitude});
     this.updatePLZAndPlaceNameAlert();
   }
 
@@ -218,7 +221,7 @@ async editState(){
   const { role } = await alert.onWillDismiss();
 
   if (role === 'yes') {
-    this.updatePLZandPlaceName(this.location!);
+    this.updatePLZandPlaceName(this.caseDetails.get('caseLocation')?.value);
   }
 }
 
@@ -227,8 +230,9 @@ async editState(){
     const data = await firstValueFrom(this.dataServie.getLocationFromCoordinatesNominatim(loc));
     
     if (data) {
-      this.caseDetails.zip_code = data.postalCode;
-      this.caseDetails.place_name = data.city || data.sub || data.county;
+      console.log(data)
+      this.caseDetails.patchValue({caseZipCode: data.postalCode});
+      this.caseDetails.patchValue({casePlaceName: data.city || data.sub || data.county});
     }
   }
 }

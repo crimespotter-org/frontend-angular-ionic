@@ -79,6 +79,13 @@ export class EditCaseComponent implements OnInit {
 
   async updateCase() {
 
+    if(!this.editCaseService.detailsForm.valid){
+      console.log('Form is invalid');
+      return;
+    };
+
+    const caseDetailsForm = this.editCaseService.detailsForm.value;
+
     const links: FurtherLink[] = this.editCaseService.caseLinks.map((link) => {
       return {
         type: link.link_type,
@@ -87,25 +94,26 @@ export class EditCaseComponent implements OnInit {
     });
 
     const data: AddCase = {
-      title: this.editCaseService.caseDetails?.title!,
-      summary: this.editCaseService.caseDetails?.summary!,
-      caseType: this.editCaseService.caseDetails?.case_type!,
-      latitude: this.editCaseService.caseDetails?.lat!,
-      longitude: this.editCaseService.caseDetails?.long!,
-      status: this.editCaseService.caseDetails?.status!,
-      zipCode: this.editCaseService.caseDetails?.zip_code!,
-      placeName: this.editCaseService.caseDetails?.place_name!,
-      crimeDateTime: this.editCaseService.caseDetails?.crime_date_time!,
+      title: caseDetailsForm.caseTitle!,
+      summary: caseDetailsForm.caseSummary!,
+      caseType: caseDetailsForm.caseType!,
+      latitude: caseDetailsForm.caseLat!,
+      longitude: caseDetailsForm.caseLong!,
+      status: caseDetailsForm.caseState!,
+      zipCode: caseDetailsForm.caseZipCode!,
+      placeName: caseDetailsForm.casePlaceName!,
+      crimeDateTime: caseDetailsForm.caseDate!,
       links: links
     };
 
     console.log(data);
 
-    const state = await this.supabaseService.updateCrimeCase(data, this.caseId!);
 
-    console.log(state);
+    // const state = await this.supabaseService.updateCrimeCase(data, this.caseId!);
 
-    this.router.navigate(['tabs/tab2']);
+    // console.log(state);
+
+    // this.router.navigate(['tabs/tab2']);
   }
 }
 
