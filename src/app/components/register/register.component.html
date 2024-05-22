@@ -7,57 +7,57 @@
   <ion-card>
     <ion-card-content>
       <form (ngSubmit)="register()" [formGroup]="registerForm">
-        <ion-item>
+        <ion-item style="--background: var(--ion-card-background)">
           <ion-label position="floating">E-Mail</ion-label>
           <ion-input type="email" formControlName="email"></ion-input>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.get('email')?.hasError('required') && registerForm.get('email')?.touched" style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>E-Mail ist erforderlich</p>
           </ion-text>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched" style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>Bitte geben Sie eine gültige E-Mail-Adresse ein</p>
           </ion-text>
         </ion-item>
 
-        <ion-item>
+        <ion-item style="--background: var(--ion-card-background)">
           <ion-label position="floating">Username</ion-label>
           <ion-input type="text" formControlName="username"></ion-input>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.get('username')?.hasError('required') && registerForm.get('username')?.touched" style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>Benutzername ist erforderlich</p>
           </ion-text>
         </ion-item>
 
-        <ion-item style="align-items: center;">
+        <ion-item style="align-items: center;--background: var(--ion-card-background)">
           <ion-label position="floating">Passwort</ion-label>
           <ion-input [type]="showPassword1 ? 'text' : 'password'" formControlName="password" ></ion-input>
           <ion-button fill="clear" size= "medium" slot="end" (click)="togglePassword1Visibility()" style="margin-right: -25px">
             <ion-icon [name]="showPassword1 ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.get('password')?.hasError('required') && registerForm.get('password')?.touched" style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>Passwort ist erforderlich</p>
           </ion-text>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.get('password')?.hasError('minlength') && registerForm.get('password')?.touched" style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>Passwort muss mindestens 6 Zeichen lang sein</p>
           </ion-text>
         </ion-item>
 
-        <ion-item style="align-items: center;">
+        <ion-item style="align-items: center;--background: var(--ion-card-background)">
           <ion-label position="floating">Passwort wiederholen</ion-label>
           <ion-input [type]="showPassword2 ? 'text' : 'password'" formControlName="confirmpassword" ></ion-input>
           <ion-button fill="clear" size= "medium" slot="end" (click)="togglePassword2Visibility()" style="margin-right: -25px">
             <ion-icon [name]="showPassword2 ? 'eye-off' : 'eye'"></ion-icon>
           </ion-button>
         </ion-item>
-        <ion-item lines="none" *ngIf="registerForm.hasError('notmatched') && registerForm.get('confirmpassword')?.touched">
+        <ion-item lines="none" *ngIf="registerForm.hasError('notmatched') && registerForm.get('confirmpassword')?.touched"  style="--background: var(--ion-card-background)">
           <ion-text color="danger">
             <p>Die Passwörter stimmen nicht überein</p>
           </ion-text>
