@@ -3,7 +3,16 @@
     <ion-row>
       <ion-col size="6" size-sm="4" size-md="3" *ngFor="let image of images">
         <ion-img [src]="image.imageUrl"></ion-img>
+        <ion-button class="overlap" color="danger" (click)="markImageForRemoval(image)">
+          <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
         <p> {{ image.imageId }} </p>
+      </ion-col>
+      <ion-col size="6" size-sm="4" size-md="3" *ngFor="let image of this.editCaseService.newImages">
+        <ion-img [src]="image.dataUrl"></ion-img>
+        <ion-button class="overlap" color="danger" (click)="removeTempImage(image)">
+          <ion-icon name="trash-outline"></ion-icon>
+        </ion-button>
       </ion-col>
     </ion-row>
   </ion-grid>
@@ -13,3 +22,13 @@
     <p>Keine Medien vorhanden.</p>
   </ion-text>
 </ion-card>
+
+<ion-card>
+  <ion-card-content>
+    <ion-button expand="block" (click)="addImage()">
+      <ion-icon slot="start" name="add-outline"></ion-icon>
+      Bild hinzufügen
+    </ion-button>
+  </ion-card-content>
+</ion-card>
+

@@ -1,12 +1,14 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {SupabaseService} from "../../../services/supabase.service";
-import {images} from "ionicons/icons";
-import {IonCard, IonCol, IonGrid, IonImg, IonRow, IonText, ModalController} from "@ionic/angular/standalone";
+import {addOutline, images, trashBinOutline, trashOutline} from "ionicons/icons";
+import {IonCard, IonCol, IonGrid, IonImg, IonRow, IonText, ModalController, IonIcon, IonButton, IonCardContent} from "@ionic/angular/standalone";
 import {NgForOf, NgIf} from "@angular/common";
 import {HelperUtils} from "../../../shared/helperutils";
 import {CaseDetailsService} from "../../../services/case-details.service";
 import { EditCaseService } from 'src/app/services/edit-case.service';
 import { ImageGet } from 'src/app/shared/interfaces/imageGet.interface';
+import { addIcons } from 'ionicons';
+import { Camera, CameraResultType, Photo } from '@capacitor/camera';
 
 @Component({
   selector: 'app-case-media-edit',
@@ -20,7 +22,10 @@ import { ImageGet } from 'src/app/shared/interfaces/imageGet.interface';
     NgForOf,
     IonCard,
     NgIf,
-    IonText
+    IonText,
+    IonIcon,
+    IonButton,
+    IonCardContent
   ],
   standalone: true
 })
@@ -30,7 +35,8 @@ export class CaseMediaEditComponent implements OnInit {
 
   constructor(private caseDetailsService: CaseDetailsService,
               private modalController: ModalController,
-              private editCaseService: EditCaseService) {
+              public editCaseService: EditCaseService) {
+                addIcons({trashOutline, addOutline});
   }
 
   async ngOnInit() {
@@ -49,6 +55,25 @@ export class CaseMediaEditComponent implements OnInit {
       reordered.push(imageUrls[i]);
     }
     return reordered;
+  }
+
+  async markImageForRemoval(image: ImageGet) {
+    this.images = this.images.filter(img => img !== image);
+    await this.editCaseService.imagesToDelete.push(image);
+  }
+
+  async addImage(){
+    const image = await Camera.getPhoto({
+      quality: 90,
+      allowEditing: false,
+      resultType: CameraResultType.DataUrl,
+    });
+
+    this.editCaseService.newImages.push(image);
+  }
+
+  async removeTempImage(image: Photo){
+    this.editCaseService.newImages = this.editCaseService.newImages.filter((img: Photo) => img !== image);
   }
 
   protected readonly HelperUtils = HelperUtils;

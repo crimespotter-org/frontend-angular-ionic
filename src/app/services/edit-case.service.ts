@@ -6,6 +6,8 @@ import { BehaviorSubject } from 'rxjs';
 import { Observable } from 'rxjs';
 import { Location } from '../shared/interfaces/location.interface';
 import { ImageGet } from '../shared/interfaces/imageGet.interface';
+import { Image } from '../shared/interfaces/image.interface';
+import { Photo } from '@capacitor/camera';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +22,8 @@ export class EditCaseService {
   caseLinks: any[] = [];
   caseComments: any[] = [];
   images: ImageGet[] = [];
+  imagesToDelete: ImageGet[] = [];
+  newImages: Photo[] = []
 
   detailsForm = this.fb.group({
     caseTitle: ['', Validators.required],
