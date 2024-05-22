@@ -1,4 +1,4 @@
 export interface ImageGet {
-    imageId: string;
+    imageName: string;
     imageUrl: string;
 }

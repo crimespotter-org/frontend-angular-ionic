@@ -9,7 +9,8 @@ import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
 import {jwtDecode} from 'jwt-decode';
 import { ImageGet } from '../shared/interfaces/imageGet.interface';
-
+import {v4 as uuid} from 'uuid';
+import { image } from 'ionicons/icons';
 @Injectable({
   providedIn: 'root'
 })
@@ -333,7 +334,7 @@ export class SupabaseService {
         console.error(signedError);
         return null;
       }
-      return {imageUrl: signedData.signedUrl, imageId: file.id};
+      return {imageUrl: signedData.signedUrl, imageName: file.name};
     }));
 
     const images = imagePromises.filter(image => image !== null) as ImageGet[];
@@ -483,7 +484,7 @@ export class SupabaseService {
     return data.data ? data.data : [];
   }
 
-  async createCrimeCase(caseData: AddCase): Promise<number> {
+  async createCrimeCase(caseData: AddCase): Promise<string> {
 
     console.log("creating new case...");
 
@@ -565,16 +566,34 @@ export class SupabaseService {
   }
 
 
-  async uploadImagesForCase(caseId: number, images: Image[]) {
+  async uploadImagesForCase(caseId: string, images: Image[]) {
 
     for (let i = 0; i < images.length; i++) {
       const {data, error} = await this.supabase
         .storage
         .from('media')
-        .upload(`case-${caseId}/${i}.png`, decode(images[i].base64), {
+        .upload(`case-${caseId}/${uuid()}.png`, decode(images[i].base64), {
           contentType: `image/${images[i].type}`
         });
     }
+  }
+
+  async deleteImagesFromCase(caseId: string, imageNames: string[]): Promise<boolean> {
+    for(let imageName of imageNames) {
+      console.log(`deleting ${imageName}`);
+      const {data, error} = await this.supabase
+        .storage
+        .from('media')
+        .remove([`case-${caseId}/${imageName}`]);
+
+      if (error) {
+        console.error(error);
+        return false;
+      }
+    }
+
+    return true;
+
   }
 
 }

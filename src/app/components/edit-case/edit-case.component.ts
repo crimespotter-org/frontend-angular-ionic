@@ -25,6 +25,7 @@ import { EditCaseService } from "src/app/services/edit-case.service";
 import {AddCase} from "../../shared/interfaces/addcase.interface";
 import {SupabaseService} from "../../services/supabase.service";
 import {FurtherLink} from "../../shared/interfaces/further-link.interface";
+import { HelperUtils } from "src/app/shared/helperutils";
 
 
 @Component({
@@ -84,6 +85,9 @@ export class EditCaseComponent implements OnInit {
       return;
     };
 
+    console.log(this.caseId);
+
+
     const caseDetailsForm = this.editCaseService.detailsForm.value;
 
     const links: FurtherLink[] = this.editCaseService.caseLinks.map((link) => {
@@ -109,11 +113,19 @@ export class EditCaseComponent implements OnInit {
     console.log(data);
 
 
-    // const state = await this.supabaseService.updateCrimeCase(data, this.caseId!);
+    this.supabaseService.uploadImagesForCase(
+      this.caseId!,
+      this.editCaseService.newImages.map(image => ({ base64: HelperUtils.dataURItoBase64(image?.dataUrl ?? ''), type: image.format }))
+    );
 
-    // console.log(state);
+    this.supabaseService.deleteImagesFromCase(this.caseId!, this.editCaseService.imagesToDelete.map(image => image.imageName));
 
-    // this.router.navigate(['tabs/tab2']);
+
+    const state = await this.supabaseService.updateCrimeCase(data, this.caseId!);
+
+    console.log(state);
+
+    this.router.navigate(['tabs/tab2']);
   }
 }
 

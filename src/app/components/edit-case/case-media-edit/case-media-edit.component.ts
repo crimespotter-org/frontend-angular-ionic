@@ -69,6 +69,8 @@ export class CaseMediaEditComponent implements OnInit {
       resultType: CameraResultType.DataUrl,
     });
 
+    console.log(image);
+
     this.editCaseService.newImages.push(image);
   }
 
