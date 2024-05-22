@@ -299,6 +299,14 @@ export class SupabaseService {
       return null;
     }
 
+    if (details && details.length>0) {
+      details[0] = {
+        ...details[0],
+        user_avatar_url: await this.getAvatarUrlForUser(details[0].user_id)
+      }
+      console.log(details)
+    }
+
     return details && details.length > 0 ? details[0] : null;
   }
 

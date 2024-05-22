@@ -430,6 +430,7 @@ export type Database = {
           link_created_at: string
           user_id: string
           username: string
+          user_avatar_url: string
         }
       }
       get_case_votes_by_id: {

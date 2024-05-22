@@ -1,19 +1,20 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {DatePipe, NgIf} from "@angular/common";
 import {
-  IonBadge,
-  IonButton,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
-  IonCardTitle,
-  IonChip,
-  IonCol,
-  IonIcon,
-  IonItem,
-  IonLabel,
-  IonRow, IonText
+    IonAvatar,
+    IonBadge,
+    IonButton,
+    IonCard,
+    IonCardContent,
+    IonCardHeader,
+    IonCardSubtitle,
+    IonCardTitle,
+    IonChip,
+    IonCol, IonGrid,
+    IonIcon,
+    IonItem,
+    IonLabel,
+    IonRow, IonText
 } from "@ionic/angular/standalone";
 import {CaseDetailsService} from "../../../services/case-details.service";
 import { HelperUtils } from 'src/app/shared/helperutils';
@@ -28,24 +29,26 @@ import {addIcons} from "ionicons";
   selector: 'app-case-facts',
   templateUrl: './case-facts.component.html',
   styleUrls: ['./case-facts.component.scss'],
-  imports: [
-    IonCard,
-    IonCardTitle,
-    IonCardHeader,
-    IonCardContent,
-    DatePipe,
-    IonCardSubtitle,
-    IonChip,
-    IonBadge,
-    IonRow,
-    IonButton,
-    IonCol,
-    IonIcon,
-    IonItem,
-    IonLabel,
-    NgIf,
-    IonText
-  ],
+    imports: [
+        IonCard,
+        IonCardTitle,
+        IonCardHeader,
+        IonCardContent,
+        DatePipe,
+        IonCardSubtitle,
+        IonChip,
+        IonBadge,
+        IonRow,
+        IonButton,
+        IonCol,
+        IonIcon,
+        IonItem,
+        IonLabel,
+        NgIf,
+        IonText,
+        IonAvatar,
+        IonGrid
+    ],
   standalone: true
 })
 export class CaseFactsComponent implements OnInit {

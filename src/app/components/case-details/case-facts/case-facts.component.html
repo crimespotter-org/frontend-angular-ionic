@@ -23,8 +23,18 @@
       <br>
       <p>{{ caseDetails.summary }}</p>
     </ion-text>
-    <div style="display: flex; justify-content: flex-end;">
-      {{caseDetails.username}} am: {{ caseDetails.created_at | date: 'dd.MM.YYYY, hh:mm' }}
-    </div>
+    <ion-grid>
+      <ion-row>
+        <ion-col size="auto">
+          <ion-avatar>
+            <img [src]="caseDetails.user_avatar_url" alt="User Avatar">
+          </ion-avatar>
+        </ion-col>
+        <ion-col>
+          <p class="created-at">Erstellt am: {{ caseDetails.created_at | date: 'dd.MM.yyyy, HH:mm' }} <br>
+            {{ caseDetails.username }}</p>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
   </ion-card-content>
 </ion-card>
