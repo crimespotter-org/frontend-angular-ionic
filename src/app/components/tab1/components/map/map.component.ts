@@ -188,7 +188,7 @@ export class MapComponent implements OnInit, AfterViewInit {
         .bindPopup(this.createPopupContent(caze));
       this.markerLayer.addLayer(marker);
 
-      heatPoints.push([caze.lat, caze.long, 500]);
+      heatPoints.push([caze.lat, caze.long, (caze.upvotes-caze.downvotes) * 600]);
     });
 
     this.heatLayer.setLatLngs(heatPoints);
