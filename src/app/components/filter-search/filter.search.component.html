@@ -163,7 +163,7 @@
       </ion-item>
     </ion-list>
     <div class="chips-container" *ngIf="!(menuId && !filters)">
-      <ion-chip color="secondary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'"
+      <ion-chip color="tertiary" *ngIf="selectedSortOrder && menuId === 'caselistMenu'"
                 (click)="toggleSortDirection()">
         <ion-label>
           {{
@@ -175,7 +175,7 @@
         </ion-label>
         <ion-icon name="{{ isAscendingSort ? 'arrow-up-outline' : 'arrow-down-outline' }}"></ion-icon>
       </ion-chip>
-      <ion-chip *ngFor="let filter of filters" color="primary">
+      <ion-chip *ngFor="let filter of filters" color="secondary">
         <ion-label>
           {{ filter.type === 'crimefluencer' ? formatCrimefluencer(filter.value) : '' }}
           {{ filter.type === 'dateRange' ? formatDateRange(filter.value) : '' }}

@@ -11,7 +11,16 @@ import {SupabaseService} from "../../services/supabase.service";
 import {Router, RouterLink} from "@angular/router";
 import {FormsModule} from "@angular/forms";
 import {addIcons} from "ionicons";
-import {invertModeOutline, exit, lockClosed, moon, notifications, personCircle} from "ionicons/icons";
+import {
+  invertModeOutline,
+  chatbubbles,
+  lockClosed,
+  moon,
+  notifications,
+  personCircle,
+  shieldCheckmark,
+  logOut, helpCircle, documentText, reader, informationCircle
+} from "ionicons/icons";
 import {NgIf} from "@angular/common";
 
 @Component({
@@ -28,7 +37,20 @@ export class Tab3Page {
     private router: Router,
     private supabaseService: SupabaseService
   ) {
-    addIcons({moon, notifications, lockClosed, personCircle, exit, invertModeOutline});
+    addIcons({
+      moon,
+      notifications,
+      lockClosed,
+      personCircle,
+      logOut,
+      invertModeOutline,
+      shieldCheckmark,
+      helpCircle,
+      documentText,
+      reader,
+      informationCircle,
+      chatbubbles
+    });
     this.initializeMode();
   }
 
@@ -73,7 +95,7 @@ export class Tab3Page {
   }
 
   async logout() {
-    this.supabaseService.signOut().then(x=> {
+    await this.supabaseService.signOut().then(x => {
       this.router.navigate(['/login']);
     });
   }

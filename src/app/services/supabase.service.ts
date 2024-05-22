@@ -260,11 +260,7 @@ export class SupabaseService {
     if (cases != null) {
       casesWithMediaCheckAndAvatarUrl = await Promise.all(cases.map(async (c) => ({
         ...c,
-        has_media: await this.caseHasMedia(c.id)
-      })));
-
-      casesWithMediaCheckAndAvatarUrl = await Promise.all(cases.map(async (c) => ({
-        ...c,
+        has_media: await this.caseHasMedia(c.id),
         creator_avatar_url: await this.getAvatarUrlForUser(c.created_by)
       })));
     }
