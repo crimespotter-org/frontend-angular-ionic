@@ -197,9 +197,11 @@ export class MapComponent implements OnInit, AfterViewInit {
   private createPopupContent(caseData: CaseFiltered): string {
     return `
       <div class="popup-content">
-        <h3 style="margin:0;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
-            ${caseData.title}
-        </h3>
+        <h5 style="padding-top:5px;padding-bottom:5px;margin:0;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
+          <strong>
+             ${caseData.title}
+          </strong>
+        </h5>
         <h6 style="margin:1px;overflow: hidden;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">
             ${HelperUtils.formatCrimeType(caseData.case_type)} | ${HelperUtils.formatStatus(caseData.status)} | ${caseData.distance_to_location.toFixed(0)}km entfernt
         </h6>
@@ -209,9 +211,21 @@ export class MapComponent implements OnInit, AfterViewInit {
         <p style="margin:1px;overflow: hidden; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; font-size: 0.8rem;">
             ${caseData.summary}
         </p>
-        <p style="font-size: 0.6rem; margin-top: 4px;">
-            Erstellt am: ${moment(caseData.created_at).format('DD.MM.YYYY, HH:mm')} von ${caseData.creator_username}
-        </p>
+        <ion-grid style="padding: 0;margin: 0;">
+          <ion-row style="padding: 0;margin: 0;align-items: center;">
+            <ion-col size="auto">
+              <ion-avatar style="width: 26px;height: 26px;margin: 5px;margin-left:0;--border-radius: 4px;">
+                <img src="${caseData.creator_avatar_url}" alt="User Avatar">
+              </ion-avatar>
+            </ion-col>
+            <ion-col style="padding: 0;margin: 0;">
+              <p style="font-size: 0.6rem; margin-top: 1px; padding: 0; margin-bottom: 0;">
+                  Erstellt am: ${moment(caseData.created_at).format('DD.MM.YYYY, HH:mm')}</br>
+                  ${caseData.creator_username}
+              </p>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
         <ion-chip color="primary" onClick="navigateToCaseDetails('${caseData.id}', '${caseData.lat}', '${caseData.long}')">
             <ion-icon name="search-outline"></ion-icon>
             <ion-label>Details ansehen</ion-label>

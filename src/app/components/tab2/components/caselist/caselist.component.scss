@@ -16,6 +16,7 @@ ion-fab-button {
   flex-direction: column;
   align-items: center;
   height: fit-content;
+  margin-bottom: 27px;
 
   ion-button {
     --background: transparent;
@@ -45,7 +46,14 @@ ion-item {
   h2 {
     overflow: hidden;
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+
+  h5 {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
   }
 
@@ -62,14 +70,6 @@ ion-item {
     margin-top: 1px;
     padding: 0;
     margin-bottom: 0;
-    text-align: right;
-  }
-
-  .created-by {
-    font-size: 0.6rem;
-    padding: 0;
-    margin: 0;
-    text-align: right;
   }
 }
 
@@ -77,21 +77,22 @@ ion-avatar {
   width: 26px;
   height: 26px;
   margin: 5px;
+  margin-left: 0;
   --border-radius: 4px;
 }
 
 ion-grid {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 }
 
 ion-row {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
   align-items: center;
 }
 
 ion-col {
-  padding: 0px;
-  margin: 0px;
+  padding: 0;
+  margin: 0;
 }
