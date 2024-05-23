@@ -179,6 +179,7 @@ export class Add2Page implements OnInit {
   async submitForm() {
 
     if (!this.addService.form.valid) {
+      this.addService.form.markAllAsTouched();
       console.log(this.links);
       console.log(this.addService.form.value);
       console.log('Form invalid');

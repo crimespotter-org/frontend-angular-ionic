@@ -15,9 +15,10 @@
     ion-searchbar {
       padding-inline-start: 0;
       padding-inline-end: 0;
-      padding-bottom: 0;  
-      color: var(--ion-background-color);
+      padding-bottom: 0;
+      color: var(--ion-text-color);
+      background-color: var(--ion-background-color);
     }
-    
+
 }
 
