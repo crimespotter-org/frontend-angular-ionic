@@ -3,15 +3,15 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule, NgSwitch} from "@angular/common";
 import {CaseFactsEditComponent} from "./case-facts-edit/case-facts-edit.component";
 import {
-  IonBackButton,
-  IonButton,
-  IonButtons,
-  IonContent,
-  IonFab,
-  IonFabButton,
-  IonHeader,
-  IonIcon, IonLabel, IonSegment, IonSegmentButton, IonTitle,
-  IonToolbar
+    IonBackButton,
+    IonButton,
+    IonButtons,
+    IonContent,
+    IonFab,
+    IonFabButton,
+    IonHeader,
+    IonIcon, IonLabel, IonProgressBar, IonSegment, IonSegmentButton, IonTitle,
+    IonToolbar
 } from "@ionic/angular/standalone";
 import {ActivatedRoute, Router} from "@angular/router";
 import {addIcons} from "ionicons";
@@ -33,29 +33,31 @@ import { HelperUtils } from "src/app/shared/helperutils";
   templateUrl: './edit-case.component.html',
   standalone: true,
   styleUrls: ['./edit-case.component.scss'],
-  imports: [
-    FormsModule,
-    NgSwitch,
-    CaseFactsEditComponent,
-    CommonModule,
-    IonFab,
-    IonFabButton,
-    IonIcon,
-    IonHeader,
-    IonToolbar,
-    IonButtons,
-    IonButton,
-    IonContent,
-    IonTitle,
-    IonSegmentButton,
-    IonSegment,
-    IonLabel,
-    CaseLinksEditComponent,
-    CaseMediaEditComponent,
-    IonBackButton,
-  ]
+    imports: [
+        FormsModule,
+        NgSwitch,
+        CaseFactsEditComponent,
+        CommonModule,
+        IonFab,
+        IonFabButton,
+        IonIcon,
+        IonHeader,
+        IonToolbar,
+        IonButtons,
+        IonButton,
+        IonContent,
+        IonTitle,
+        IonSegmentButton,
+        IonSegment,
+        IonLabel,
+        CaseLinksEditComponent,
+        CaseMediaEditComponent,
+        IonBackButton,
+        IonProgressBar,
+    ]
 })
 export class EditCaseComponent implements OnInit {
+  loading = false;
   caseId: string | null = '';
   segment: string  = 'facts';
   constructor(
@@ -80,10 +82,13 @@ export class EditCaseComponent implements OnInit {
 
   async updateCase() {
 
+
     if(!this.editCaseService.detailsForm.valid){
       console.log('Form is invalid');
       return;
     };
+
+    this.loading = true;
 
     console.log(this.caseId);
 
@@ -125,7 +130,10 @@ export class EditCaseComponent implements OnInit {
 
     console.log(state);
 
+    this.editCaseService.triggerReload();
     this.router.navigate(['tabs/tab2']);
+
+    this.loading = false;
   }
 }
 

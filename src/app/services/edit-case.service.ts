@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SupabaseService } from './supabase.service';
 import { FormBuilder, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { CaseDetails } from '../shared/types/supabase';
-import { BehaviorSubject } from 'rxjs';
+import {BehaviorSubject, Subject} from 'rxjs';
 import { Observable } from 'rxjs';
 import { Location } from '../shared/interfaces/location.interface';
 import { ImageGet } from '../shared/interfaces/imageGet.interface';
@@ -20,7 +20,6 @@ export class EditCaseService {
   location!: Location;
   caseDetails?: CaseDetails | null;
   caseLinks: any[] = [];
-  caseComments: any[] = [];
   images: ImageGet[] = [];
   imagesToDelete: ImageGet[] = [];
   newImages: Photo[] = []
@@ -38,12 +37,16 @@ export class EditCaseService {
     casePlaceName: ['', Validators.required],
   });
 
+  private reloadSubject = new Subject<void>();
+
+  reloadObservable = this.reloadSubject.asObservable();
+
   async loadAllCaseData(caseId: string): Promise<void> {
     await this.loadCaseDetails(caseId);
     await this.loadCaseLinks(caseId);
     await this.loadCaseImageUrls(caseId);
   }
-  
+
   async loadCaseDetails(caseId: string): Promise<void> {
     try {
       const caseDetails = await this.supabaseService.getCaseDetails(caseId);
@@ -78,5 +81,9 @@ export class EditCaseService {
     this.supabaseService.getImagesForCase(caseId).then(imageUrls => {
       this.images = imageUrls;
     });
+  }
+
+  triggerReload(){
+    this.reloadSubject.next();
   }
 }

@@ -1,10 +1,20 @@
 <ion-card *ngIf="caseDetails">
   <ion-card-content>
     <form [formGroup]="editCaseService.detailsForm">
+      <ion-item>
+        <ion-label position="stacked">Titel</ion-label>
     <ion-textarea class="interactive title" [autoGrow]="true" rows=1 formControlName="caseTitle"></ion-textarea>
+      </ion-item>
     <app-location-picker formControlName="caseLocation" (selectedLocation)="locationUpdate($event)"></app-location-picker>
+      <ion-item>
+        <ion-label position="stacked">PLZ</ion-label>
     <ion-input formControlName="caseZipCode" class="interactive" placeholder="PLZ"/>
-    <ion-input formControlName="casePlaceName" class="interactive" placeholder="Ort"/>
+      </ion-item>
+      <ion-item>
+        <ion-label position="stacked">Ort</ion-label>
+        <ion-input formControlName="casePlaceName" class="interactive" placeholder="Ort"/>
+      </ion-item>
+
     <br>
     <div style="width: fit-content;">
     <ion-datetime-button datetime="datetime"></ion-datetime-button>
@@ -21,8 +31,10 @@
         <ion-label>{{ HelperUtils.formatStatus(caseDetails.get('caseState')?.value || '') }}</ion-label>
       </ion-chip>
     </div>
-    <ion-textarea formControlName="caseSummary" class="interactive" [autoGrow]="true">
-    </ion-textarea>
+      <ion-item>
+        <ion-label position="stacked">Beschreibung</ion-label>
+    <ion-textarea formControlName="caseSummary" class="interactive" [autoGrow]="true" />
+      </ion-item>
     <div style="display: flex; justify-content: flex-end;">
       {{editCaseService.caseDetails?.username}} am: {{ editCaseService.caseDetails?.created_at | date: 'dd.MM.YYYY, hh:mm' }}
     </div>
