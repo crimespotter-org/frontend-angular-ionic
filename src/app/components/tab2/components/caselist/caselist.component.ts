@@ -105,6 +105,9 @@ export class CaselistComponent implements OnInit {
     this.filterStateService.filteredCases$.subscribe(filteredCases => {
       this.cases = filteredCases;
     });
+    this.editCaseService.reloadObservable.subscribe(() => {
+      this.filterStateService.applyFilters();
+    });
   }
 
   upvote(caseId: string) {
