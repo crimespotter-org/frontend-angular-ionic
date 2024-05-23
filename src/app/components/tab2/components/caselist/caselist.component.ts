@@ -146,7 +146,9 @@ export class CaselistComponent implements OnInit {
   }
 
   async editCase(caseId: string) {
+    await this.presentLoading('Falldaten werden geladen...');
     await this.editCaseService.loadAllCaseData(caseId);
+    await this.dismissLoading();
     this.router.navigate(['edit-case', caseId]);
   }
 }
