@@ -37,10 +37,6 @@ export class EditCaseService {
     casePlaceName: ['', Validators.required],
   });
 
-  private reloadSubject = new Subject<void>();
-
-  reloadObservable = this.reloadSubject.asObservable();
-
   async loadAllCaseData(caseId: string): Promise<void> {
     await this.loadCaseDetails(caseId);
     await this.loadCaseLinks(caseId);
@@ -83,7 +79,5 @@ export class EditCaseService {
     });
   }
 
-  triggerReload(){
-    this.reloadSubject.next();
-  }
+
 }

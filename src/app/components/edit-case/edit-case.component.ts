@@ -3,19 +3,20 @@ import {FormsModule} from "@angular/forms";
 import {CommonModule, NgSwitch} from "@angular/common";
 import {CaseFactsEditComponent} from "./case-facts-edit/case-facts-edit.component";
 import {
-    IonBackButton,
-    IonButton,
-    IonButtons,
-    IonContent,
-    IonFab,
-    IonFabButton,
-    IonHeader,
-    IonIcon, IonLabel, IonProgressBar, IonSegment, IonSegmentButton, IonTitle,
-    IonToolbar
+  AlertController,
+  IonBackButton,
+  IonButton,
+  IonButtons,
+  IonContent,
+  IonFab,
+  IonFabButton,
+  IonHeader,
+  IonIcon, IonLabel, IonProgressBar, IonSegment, IonSegmentButton, IonTitle,
+  IonToolbar
 } from "@ionic/angular/standalone";
 import {ActivatedRoute, Router} from "@angular/router";
 import {addIcons} from "ionicons";
-import {checkmarkOutline, chevronBackOutline, shareOutline} from "ionicons/icons";
+import {checkmarkOutline, chevronBackOutline, shareOutline, trashOutline} from "ionicons/icons";
 import {CaseDetailsService} from "../../services/case-details.service";
 import {CaseLinksEditComponent} from "./case-links-edit/case-links-edit.component";
 import {CaseMediaEditComponent} from "./case-media-edit/case-media-edit.component";
@@ -26,6 +27,7 @@ import {AddCase} from "../../shared/interfaces/addcase.interface";
 import {SupabaseService} from "../../services/supabase.service";
 import {FurtherLink} from "../../shared/interfaces/further-link.interface";
 import { HelperUtils } from "src/app/shared/helperutils";
+import {UpdaterService} from "../../services/updater.service";
 
 
 @Component({
@@ -65,9 +67,11 @@ export class EditCaseComponent implements OnInit {
     private editCaseService: EditCaseService,
     private dataService: DataService,
     private supabaseService: SupabaseService,
-    private router: Router
+    private router: Router,
+    private alertController: AlertController,
+    private updater: UpdaterService
   ) {
-    addIcons({ chevronBackOutline, shareOutline, checkmarkOutline });
+    addIcons({ chevronBackOutline, shareOutline, checkmarkOutline, trashOutline });
   }
 
   ngOnInit(): void {
@@ -130,10 +134,42 @@ export class EditCaseComponent implements OnInit {
 
     console.log(state);
 
-    this.editCaseService.triggerReload();
+    this.updater.triggerReload();
     this.router.navigate(['tabs/tab2']);
 
     this.loading = false;
+  }
+
+  async deleteCase(){
+    this.loading = true;
+    await this.supabaseService.deleteCase(this.caseId!);
+    this.updater.triggerReload();
+    this.router.navigate(['tabs/tab2']);
+    this.loading = false;
+  }
+
+  async presentDeleteConfirm() {
+    const alert = await this.alertController.create({
+      header: 'Sind Sie sicher?',
+      message: 'Sind Sie sicher, dass Sie diesen Fall löschen wollen?',
+      buttons: [
+        {
+          text: 'Abbrechen',
+          role: 'cancel',
+          cssClass: 'secondary',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Bestätigen',
+          handler: () => {
+            this.deleteCase();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
   }
 }
 

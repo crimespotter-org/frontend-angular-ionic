@@ -596,5 +596,27 @@ export class SupabaseService {
 
   }
 
+  async deleteCase(caseId: string): Promise<boolean> {
+    const {data, error} = await this.supabase
+      .rpc('delete_case_by_id', {case_id: caseId});
+
+    if (error) {
+      console.error(error);
+      return false;
+    }
+
+    const {data: mediaData, error: mediaError} = await this.supabase
+      .storage
+      .from('media')
+      .remove([`case-${caseId}`]);
+
+    if(error){
+      console.log(mediaError);
+      return false;
+    }
+
+    return true;
+  }
+
 }
 

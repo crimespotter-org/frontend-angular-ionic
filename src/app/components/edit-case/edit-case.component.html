@@ -17,6 +17,12 @@
       </ion-segment-button>
     </ion-segment>
     <ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
+    <ion-buttons slot="end">
+      <ion-button (click)="presentDeleteConfirm()">
+        <ion-icon name="trash-outline" color="danger"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
 

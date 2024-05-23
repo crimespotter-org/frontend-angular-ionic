@@ -85,8 +85,8 @@ export class CaseFactsEditComponent implements OnInit {
   location?: Location;
 
   constructor(public editCaseService: EditCaseService,
-     private alertController: AlertController, 
-     private modalController: ModalController, 
+     private alertController: AlertController,
+     private modalController: ModalController,
      private storageService: StorageService,
      private dataServie: DataService,) {
     addIcons({
@@ -130,25 +130,6 @@ async editType() {
   await alert.present();
 }
 
-// async editType(){
-
-
-// async editState(){
-//   const modal = await this.modalController.create({
-//     cssClass: 'modal-class',
-//     componentProps: {
-//       'currentState': this.caseDetails.status
-//     },
-//     component: EditStateModalComponent,
-//   });
-//   modal.present();
-
-//   const { data, role } = await modal.onWillDismiss();
-
-//   if (role === 'confirm') {
-//     this.caseDetails.status = data;
-//   }
-// }
 
 async editState(){
   const alert = await this.alertController.create({
@@ -210,7 +191,7 @@ async editState(){
 
   async updatePLZandPlaceName(loc: Location) {
     const data = await firstValueFrom(this.dataServie.getLocationFromCoordinatesNominatim(loc));
-    
+
     if (data) {
       console.log(data)
       this.caseDetails.patchValue({caseZipCode: data.postalCode});

@@ -40,6 +40,7 @@ import {FilterStateService} from "../../../../services/filter-state.service";
 import {HelperUtils} from 'src/app/shared/helperutils';
 import {CaseDetailsService} from "../../../../services/case-details.service";
 import {EditCaseService} from 'src/app/services/edit-case.service';
+import {UpdaterService} from "../../../../services/updater.service";
 
 @Component({
   selector: 'app-caselist',
@@ -84,7 +85,8 @@ export class CaselistComponent implements OnInit {
               private filterStateService: FilterStateService,
               private router: Router,
               private loadingController: LoadingController,
-              private editCaseService: EditCaseService) {
+              private editCaseService: EditCaseService,
+              private updater: UpdaterService) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -105,7 +107,7 @@ export class CaselistComponent implements OnInit {
     this.filterStateService.filteredCases$.subscribe(filteredCases => {
       this.cases = filteredCases;
     });
-    this.editCaseService.reloadObservable.subscribe(() => {
+    this.updater.reloadObservable.subscribe(() => {
       this.filterStateService.applyFilters();
     });
   }

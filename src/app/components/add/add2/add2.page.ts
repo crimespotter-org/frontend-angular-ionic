@@ -48,6 +48,7 @@ import { AddCase } from 'src/app/shared/interfaces/addcase.interface';
 import { DataService } from 'src/app/services/data.service';
 import {firstValueFrom, of} from 'rxjs';
 import { Image } from 'src/app/shared/interfaces/image.interface';
+import {UpdaterService} from "../../../services/updater.service";
 
 
 @Component({
@@ -101,6 +102,7 @@ export class Add2Page implements OnInit {
   locationService = inject(LocationService);
   supaBaseService = inject(SupabaseService);
   dataService = inject(DataService);
+  updater = inject(UpdaterService);
 
   @ViewChild('selectLocationModal') modal!: IonModal
 
@@ -225,6 +227,7 @@ export class Add2Page implements OnInit {
     await this.supaBaseService.uploadImagesForCase(caseId, images);
 
     this.loading = false;
+    this.updater.triggerReload();
     this.router.navigate(["tabs/tab2"]);
 
   }
