@@ -41,6 +41,7 @@ import {HelperUtils} from 'src/app/shared/helperutils';
 import {CaseDetailsService} from "../../../../services/case-details.service";
 import {EditCaseService} from 'src/app/services/edit-case.service';
 import {UpdaterService} from "../../../../services/updater.service";
+import {StorageService} from "../../../../services/storage.service";
 
 @Component({
   selector: 'app-caselist',
@@ -77,6 +78,8 @@ import {UpdaterService} from "../../../../services/updater.service";
 export class CaselistComponent implements OnInit {
 
   HelperUtils = HelperUtils;
+  userrole;
+  userid;
 
   cases: CaseFiltered[] = [];
 
@@ -86,7 +89,8 @@ export class CaselistComponent implements OnInit {
               private router: Router,
               private loadingController: LoadingController,
               private editCaseService: EditCaseService,
-              private updater: UpdaterService) {
+              private updater: UpdaterService,
+              private storageService: StorageService) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -101,6 +105,8 @@ export class CaselistComponent implements OnInit {
       add,
       chevronDownCircleOutline
     });
+    this.userrole = this.storageService.getUserRole() ?? 'crimespotter';
+    this.userid = this.storageService.getUserId() ?? '';
   }
 
   ngOnInit() {

@@ -20,11 +20,11 @@
     <ion-grid>
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <ion-label position="stacked">Titel</ion-label>
             <ion-input placeholder="Geben Sie ihrem Fall einen Titel" formControlName="title"></ion-input>
           </ion-item>
-          <ion-item lines="none" *ngIf="form.get('title')?.hasError('required') && form.get('title')?.touched">
+          <ion-item style="--background: var(--ion-card-background)" lines="none" *ngIf="form.get('title')?.hasError('required') && form.get('title')?.touched">
             <ion-text color="danger">
               <p>Titel ist erforderlich</p>
             </ion-text>
@@ -33,14 +33,14 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <ion-label position="stacked">Status</ion-label>
             <ion-select placeholder="Wählen Sie einen Status" formControlName="closed">
               <ion-select-option value="false">Offen</ion-select-option>
               <ion-select-option value="true">Geschlossen</ion-select-option>
             </ion-select>
           </ion-item>
-          <ion-item lines="none" *ngIf="form.get('closed')?.hasError('required') && form.get('closed')?.touched">
+          <ion-item style="--background: var(--ion-card-background)" lines="none" *ngIf="form.get('closed')?.hasError('required') && form.get('closed')?.touched">
             <ion-text color="danger">
               <p>Status ist erforderlich</p>
             </ion-text>
@@ -50,13 +50,13 @@
 
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <ion-label position="stacked">Beschreibung</ion-label>
             <ion-textarea placeholder="Geben Sie ihrem Fall eine Beschreibung" formControlName="summary" autosize
               rows="3" [autoGrow]="true">
             </ion-textarea>
           </ion-item>
-          <ion-item lines="none" *ngIf="form.get('summary')?.hasError('required') && form.get('summary')?.touched">
+          <ion-item style="--background: var(--ion-card-background)" lines="none" *ngIf="form.get('summary')?.hasError('required') && form.get('summary')?.touched">
             <ion-text color="danger">
               <p>Beschreibung ist erforderlich</p>
             </ion-text>
@@ -65,7 +65,7 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <ion-label position="stacked">Falltyp</ion-label>
             <ion-select placeholder="Wählen Sie einen Falltyp" formControlName="type">
               @for(type of caseTypes; track type){
@@ -73,7 +73,7 @@
               }
             </ion-select>
           </ion-item>
-          <ion-item lines="none" *ngIf="form.get('type')?.hasError('required') && form.get('type')?.touched">
+          <ion-item style="--background: var(--ion-card-background)" lines="none" *ngIf="form.get('type')?.hasError('required') && form.get('type')?.touched">
             <ion-text color="danger">
               <p>Falltyp ist erforderlich</p>
             </ion-text>
@@ -82,14 +82,14 @@
       </ion-row>
       <ion-row>
         <ion-col>
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <ion-label position="stacked">Tatzeit</ion-label>
             <ion-input formControlName="date_of_crime"
               [value]="form.get('date_of_crime')?.value | date: 'dd.MM.yyyy HH:mm'" id="open-date-modal"
               placeholder="Startdatum auswählen" enabled="false" readonly>
             </ion-input>
           </ion-item>
-          <ion-item lines="none" *ngIf="form.get('date_of_crime')?.hasError('required') && form.get('date_of_crime')?.touched">
+          <ion-item style="--background: var(--ion-card-background)" lines="none" *ngIf="form.get('date_of_crime')?.hasError('required') && form.get('date_of_crime')?.touched">
             <ion-text color="danger">
               <p>Tatzeit ist erforderlich</p>
             </ion-text>

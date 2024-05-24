@@ -130,6 +130,8 @@ export class SupabaseService {
 
     const session = await this.getSession();
 
+    console.log(session)
+
     if (session === null) {
       console.log('No session found');
       return;

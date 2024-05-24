@@ -1,44 +1,46 @@
 <ion-card *ngIf="caseDetails">
   <ion-card-content>
     <form [formGroup]="editCaseService.detailsForm">
-      <ion-item>
+      <ion-item lines="none" style="--background: var(--ion-card-background)">
         <ion-label position="stacked">Titel</ion-label>
-    <ion-textarea class="interactive title" [autoGrow]="true" rows=1 formControlName="caseTitle"></ion-textarea>
+        <ion-textarea class="interactive title" [autoGrow]="true" rows=1 formControlName="caseTitle"></ion-textarea>
       </ion-item>
-    <app-location-picker formControlName="caseLocation" (selectedLocation)="locationUpdate($event)"></app-location-picker>
-      <ion-item>
+      <app-location-picker formControlName="caseLocation"
+                           (selectedLocation)="locationUpdate($event)"></app-location-picker>
+      <ion-item lines="none" style="--background: var(--ion-card-background)">
         <ion-label position="stacked">PLZ</ion-label>
-    <ion-input formControlName="caseZipCode" class="interactive" placeholder="PLZ"/>
+        <ion-input formControlName="caseZipCode" class="interactive" placeholder="PLZ"/>
       </ion-item>
-      <ion-item>
+      <ion-item lines="none" style="--background: var(--ion-card-background)">
         <ion-label position="stacked">Ort</ion-label>
         <ion-input formControlName="casePlaceName" class="interactive" placeholder="Ort"/>
       </ion-item>
 
-    <br>
-    <div style="width: fit-content;">
-    <ion-datetime-button datetime="datetime"></ion-datetime-button>
-    </div>
-    <br>
-    <div class="chips-container">
-      <ion-chip color="primary" (click)="editType()">
-        <ion-icon name="finger-print"></ion-icon>
-        <ion-label>{{ HelperUtils.formatCrimeType(editCaseService.detailsForm.get('caseType')?.value || '') }}</ion-label>
-      </ion-chip>
-      <ion-chip [color]="caseDetails.get('caseState')?.value === 'open' ? 'danger' : 'success'" (click)="editState()">
-        <ion-icon name="lock-open-outline" *ngIf="caseDetails.get('caseState')?.value === 'open'"></ion-icon>
-        <ion-icon name="lock-closed-outline" *ngIf="caseDetails.get('caseState')?.value !== 'open'"></ion-icon>
-        <ion-label>{{ HelperUtils.formatStatus(caseDetails.get('caseState')?.value || '') }}</ion-label>
-      </ion-chip>
-    </div>
-      <ion-item>
+      <br>
+      <div style="width: fit-content;">
+        <ion-datetime-button datetime="datetime"></ion-datetime-button>
+      </div>
+      <br>
+      <div class="chips-container">
+        <ion-chip color="secondary" (click)="editType()">
+          <ion-icon name="finger-print"></ion-icon>
+          <ion-label>{{ HelperUtils.formatCrimeType(editCaseService.detailsForm.get('caseType')?.value || '') }}</ion-label>
+        </ion-chip>
+        <ion-chip [color]="caseDetails.get('caseState')?.value === 'open' ? 'danger' : 'success'" (click)="editState()">
+          <ion-icon name="lock-open-outline" *ngIf="caseDetails.get('caseState')?.value === 'open'"></ion-icon>
+          <ion-icon name="lock-closed-outline" *ngIf="caseDetails.get('caseState')?.value !== 'open'"></ion-icon>
+          <ion-label>{{ HelperUtils.formatStatus(caseDetails.get('caseState')?.value || '') }}</ion-label>
+        </ion-chip>
+      </div>
+      <ion-item lines="none" style="--background: var(--ion-card-background)">
         <ion-label position="stacked">Beschreibung</ion-label>
-    <ion-textarea formControlName="caseSummary" class="interactive" [autoGrow]="true" />
+        <ion-textarea formControlName="caseSummary" class="interactive" [autoGrow]="true"/>
       </ion-item>
-    <div style="display: flex; justify-content: flex-end;">
-      {{editCaseService.caseDetails?.username}} am: {{ editCaseService.caseDetails?.created_at | date: 'dd.MM.YYYY, hh:mm' }}
-    </div>
-  </form>
+      <div style="display: flex; justify-content: flex-end;">
+        {{ editCaseService.caseDetails?.username }}
+        am: {{ editCaseService.caseDetails?.created_at | date: 'dd.MM.YYYY, hh:mm' }}
+      </div>
+    </form>
   </ion-card-content>
 </ion-card>
 

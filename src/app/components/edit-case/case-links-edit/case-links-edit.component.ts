@@ -106,6 +106,8 @@ export class CaseLinksEditComponent implements OnInit {
   async addLink(){
     const modal = await this.modalController.create({
       component: AddLinkModalComponent,
+      initialBreakpoint: 0.25,
+      breakpoints: [0, 0.25, 0.5]
     });
 
     modal.present();

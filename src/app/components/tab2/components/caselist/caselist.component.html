@@ -63,7 +63,7 @@
 
     </ion-item>
 
-    <ion-item-options side="end">
+    <ion-item-options side="end" *ngIf="userrole === 'admin' || userrole ==='crimefluencer' && userid === case.created_by">
       <ion-item-option (click)="editCase(case.id)">
         <ion-icon slot="icon-only" name="create-outline"></ion-icon>
       </ion-item-option>

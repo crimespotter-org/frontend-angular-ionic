@@ -1,5 +1,6 @@
 import {Routes} from '@angular/router';
 import {authGuard} from "./guards/auth.guard";
+import {roleCrimespotterGuard} from "./guards/role.crimespotter.guard";
 
 export const routes: Routes = [
   {
@@ -17,12 +18,14 @@ export const routes: Routes = [
   },
   {
     path: 'add-case-1',
-    loadComponent: () => import('./components/add/add1/add1.page').then( m => m.Add1Page)
+    loadComponent: () => import('./components/add/add1/add1.page').then(m => m.Add1Page),
+    canActivate: [authGuard,roleCrimespotterGuard]
   },
   {
     path: 'add-case-2',
-    loadComponent: () => import('./components/add/add2/add2.page').then( m => m.Add2Page)
-    },
+    loadComponent: () => import('./components/add/add2/add2.page').then(m => m.Add2Page),
+    canActivate: [authGuard,roleCrimespotterGuard]
+  },
   {
     path: 'password-reset',
     loadComponent: () => import('./components/login/components/password-reset/password-reset.component').then(m => m.PasswordResetComponent),
@@ -45,8 +48,8 @@ export const routes: Routes = [
   },
   {
     path: 'edit-case/:id',
-    loadComponent: () => import('./components/edit-case/edit-case.component').then( m => m.EditCaseComponent),
-    canActivate: [authGuard]
+    loadComponent: () => import('./components/edit-case/edit-case.component').then(m => m.EditCaseComponent),
+    canActivate: [authGuard, roleCrimespotterGuard]
   },
   {
     path: '**',

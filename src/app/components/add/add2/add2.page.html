@@ -15,34 +15,34 @@
 
 <ion-content>
   <form class="form" [formGroup]="form">
-    <ion-item formGroupName="location">
+    <ion-item style="--background: var(--ion-card-background)" formGroupName="location">
       <ion-label position="stacked" class="header">Tatort</ion-label>
       <ion-item style="width: 100%; margin-top: 5px;">
         <app-location-picker formControlName="coordinates" [defaultLocation]="this.currentLocation"
                              (selectedLocation)="selectedLocationChanged($event)"
                              style="width: 100%;"></app-location-picker>
       </ion-item>
-      <ion-item
+      <ion-item style="--background: var(--ion-card-background)"
         *ngIf="this.form.get('location')?.get('coordinates')?.hasError('required') && this.form.get('location')?.get('coordinates')?.touched">
         <ion-text color="danger" class="error-message">
           <p>Tatort Coordinaten sind erforderlich</p>
         </ion-text>
       </ion-item>
       @if (this.form.get('location')?.get('coordinates')?.value) {
-        <ion-item style="width: 100%">
+        <ion-item style="width: 100%; --background: var(--ion-card-background)">
           <ion-input label="Postleitzahl" labelPlacement="stacked" formControlName="plz" type="number">
           </ion-input>
         </ion-item>
-        <ion-item lines="none"
+        <ion-item lines="none" style="--background: var(--ion-card-background)"
                   *ngIf="form.get('location')?.get('plz')?.hasError('required') && form.get('location')?.get('plz')?.touched">
           <ion-text color="danger" class="error-message">
             <p>Postleitzahl ist erforderlich</p>
           </ion-text>
         </ion-item>
-        <ion-item style="width: 100%">
+        <ion-item style="width: 100%;--background: var(--ion-card-background)">
           <ion-input label="Ort" labelPlacement="stacked" formControlName="city"></ion-input>
         </ion-item>
-        <ion-item lines="none"
+        <ion-item lines="none" style="--background: var(--ion-card-background)"
                   *ngIf="form.get('location')?.get('city')?.hasError('required') && form.get('location')?.get('city')?.touched">
           <ion-text color="danger" class="error-message">
             <p>Ort ist erforderlich</p>
@@ -50,7 +50,7 @@
         </ion-item>
       }
     </ion-item>
-    <ion-item>
+    <ion-item style="--background: var(--ion-card-background)">
       <ion-label position="stacked">Bilder</ion-label>
       <div id="pictureSelection" *ngIf="images.length === 0">
         <ion-item button (click)="uploadImage()">
@@ -73,7 +73,7 @@
       </div>
     </ion-item>
 
-    <ion-item>
+    <ion-item style="--background: var(--ion-card-background)">
       <ion-label position="stacked">Links</ion-label>
       <div formArrayName="further_links" id="linkContainer">
         <div *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
@@ -94,7 +94,7 @@
         </div>
       </div>
 
-      <ion-item button id="addLinkContainer" (click)="addLink()">
+      <ion-item button id="addLinkContainer" (click)="addLink()" style="--background: var(--ion-card-background)">
         <ion-icon slot="start" name="add-outline"></ion-icon>
         <ion-label>Link hinzufügen</ion-label>
       </ion-item>
