@@ -51,7 +51,7 @@ export class AppComponent implements OnInit {
       const path = url.pathname;
       const segments = path.split('/');
 
-      if (url.href.includes('case-details')) {
+      if (url.href.includes('casedetails')) {
         const caseId = segments[segments.length - 1];
         this.caseDetailsService.loadCaseDetails(caseId).then(() => {
           this.ngZone.run(() => {
