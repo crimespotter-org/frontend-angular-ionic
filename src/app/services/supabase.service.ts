@@ -8,9 +8,10 @@ import {AddCase} from '../shared/interfaces/addcase.interface';
 import {decode} from 'base64-arraybuffer'
 import {Image} from '../shared/interfaces/image.interface';
 import {jwtDecode} from 'jwt-decode';
-import { ImageGet } from '../shared/interfaces/imageGet.interface';
+import {ImageGet} from '../shared/interfaces/imageGet.interface';
 import {v4 as uuid} from 'uuid';
-import { image } from 'ionicons/icons';
+import {image} from 'ionicons/icons';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,7 +24,11 @@ export class SupabaseService {
   }
 
   signUp(email: string, password: string) {
-    return this.supabase.auth.signUp({email, password});
+    return this.supabase.auth.signUp({
+      email, password, options: {
+        emailRedirectTo: 'crimespotter://register-confirm'
+      }
+    })
   }
 
   setSession(accessToken: string, refreshToken: string) {
@@ -299,7 +304,7 @@ export class SupabaseService {
       return null;
     }
 
-    if (details && details.length>0) {
+    if (details && details.length > 0) {
       details[0] = {
         ...details[0],
         user_avatar_url: await this.getAvatarUrlForUser(details[0].user_id)
@@ -316,7 +321,7 @@ export class SupabaseService {
       .from('media')
       .list(`case-${caseId}`, {limit: 100, offset: 0});
 
-      console.log(data);
+    console.log(data);
 
     console.log("trying to get image urls for case id: " + caseId);
 
@@ -581,7 +586,7 @@ export class SupabaseService {
   }
 
   async deleteImagesFromCase(caseId: string, imageNames: string[]): Promise<boolean> {
-    for(let imageName of imageNames) {
+    for (let imageName of imageNames) {
       console.log(`deleting ${imageName}`);
       const {data, error} = await this.supabase
         .storage
@@ -612,7 +617,7 @@ export class SupabaseService {
       .from('media')
       .remove([`case-${caseId}`]);
 
-    if(error){
+    if (error) {
       console.log(mediaError);
       return false;
     }

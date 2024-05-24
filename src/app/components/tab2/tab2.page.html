@@ -5,7 +5,7 @@
     </ion-refresher-content>
   </ion-refresher>
   <app-caselist></app-caselist>
-  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="userrole === 'admin' || userrole ==='crimefluencer'">
+  <ion-fab vertical="bottom" horizontal="start" slot="fixed" *ngIf="storageService.getUserRole() === 'admin' || storageService.getUserRole() ==='crimefluencer'">
     <ion-fab-button (click)="navigateToAddPage()">
       <ion-icon name="add" ></ion-icon>
     </ion-fab-button>

@@ -24,10 +24,7 @@ import {NgIf} from "@angular/common";
 })
 export class Tab2Page {
 
-  userrole ;
-
-  constructor(private filterStateService:FilterStateService, private router: Router, private storageService: StorageService) {
-    this.userrole = storageService.getUserRole() ?? 'crimespotter';
+  constructor(private filterStateService:FilterStateService, private router: Router, public storageService: StorageService) {
   }
 
   refreshCaselist($event: CustomEvent) {

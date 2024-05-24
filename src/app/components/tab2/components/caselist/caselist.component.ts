@@ -78,8 +78,6 @@ import {StorageService} from "../../../../services/storage.service";
 export class CaselistComponent implements OnInit {
 
   HelperUtils = HelperUtils;
-  userrole;
-  userid;
 
   cases: CaseFiltered[] = [];
 
@@ -90,7 +88,7 @@ export class CaselistComponent implements OnInit {
               private loadingController: LoadingController,
               private editCaseService: EditCaseService,
               private updater: UpdaterService,
-              private storageService: StorageService) {
+              public storageService: StorageService) {
     addIcons({
       bookOutline,
       chevronUpOutline,
@@ -105,8 +103,6 @@ export class CaselistComponent implements OnInit {
       add,
       chevronDownCircleOutline
     });
-    this.userrole = this.storageService.getUserRole() ?? 'crimespotter';
-    this.userid = this.storageService.getUserId() ?? '';
   }
 
   ngOnInit() {
