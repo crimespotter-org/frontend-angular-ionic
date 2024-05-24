@@ -8,7 +8,7 @@ import {
   IonSelectOption,
   IonToolbar, ModalController,
   IonIcon,
-  IonTitle
+  IonTitle, ToastController
 } from "@ionic/angular/standalone";
 import {StorageService} from "../../../../services/storage.service";
 import {HelperUtils} from "../../../../shared/helperutils";
@@ -43,7 +43,7 @@ export class AddLinkModalComponent  implements OnInit {
   selectedLinkType: string = '';
   linktypes: string[] = []
 
-  constructor(private storageService: StorageService, private modalController: ModalController) { 
+  constructor(private storageService: StorageService, private modalController: ModalController, private toastController: ToastController) {
     addIcons({
       checkmarkOutline,
       closeOutline
@@ -59,7 +59,23 @@ export class AddLinkModalComponent  implements OnInit {
   }
 
   async confirm(){
-    await this.modalController.dismiss({url: this.url, type: this.selectedLinkType}, 'confirm');
+    if(await this.validValues()){
+      await this.modalController.dismiss({url: this.url, type: this.selectedLinkType}, 'confirm');
+    }
+    else{
+      const toast = await this.toastController.create({
+        message: 'Bitte geben Sie sowohl einen Typ als auch eine URL ein.',
+        duration: 2000,
+        color: 'danger'
+      });
+      toast.present();
+      }
+    }
+
+  async validValues(){
+    return this.url &&
+      this.url.trim().length !== 0 &&
+      this.selectedLinkType.length !== 0;
   }
 
 }
