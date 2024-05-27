@@ -17,11 +17,11 @@
   <form class="form" [formGroup]="form">
     <ion-item style="--background: var(--ion-card-background)" formGroupName="location">
       <ion-label position="stacked" class="header">Tatort</ion-label>
-      <ion-item style="width: 100%; margin-top: 5px;">
+      <div style="width: 100%; margin-top: 5px; --background: var(--ion-card-background)">
         <app-location-picker formControlName="coordinates" [defaultLocation]="this.currentLocation"
                              (selectedLocation)="selectedLocationChanged($event)"
-                             style="width: 100%;"></app-location-picker>
-      </ion-item>
+                             style="width: 100%; --background: var(--ion-card-background)"></app-location-picker>
+      </div>
       <ion-item style="--background: var(--ion-card-background)"
         *ngIf="this.form.get('location')?.get('coordinates')?.hasError('required') && this.form.get('location')?.get('coordinates')?.touched">
         <ion-text color="danger" class="error-message">
@@ -53,7 +53,7 @@
     <ion-item style="--background: var(--ion-card-background)">
       <ion-label position="stacked">Bilder</ion-label>
       <div id="pictureSelection" *ngIf="images.length === 0">
-        <ion-item button (click)="uploadImage()">
+        <ion-item button (click)="uploadImage()" style="--background: var(--ion-card-background)">
           <ion-icon slot="start" name="image-outline"></ion-icon>
           <ion-label>Bilder hinzuzufügen</ion-label>
         </ion-item>
@@ -75,9 +75,9 @@
 
     <ion-item style="--background: var(--ion-card-background)">
       <ion-label position="stacked">Links</ion-label>
-      <div formArrayName="further_links" id="linkContainer">
+      <div formArrayName="further_links" id="linkContainer" style="--background: var(--ion-card-background)">
         <div *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
-          <ion-item>
+          <ion-item style="--background: var(--ion-card-background)">
             <div slot="start" (click)="chooseIcon(idx)" class="linkTypeIconContainer">
               <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)"
                         style="font-size: 1.5em;"></ion-icon>

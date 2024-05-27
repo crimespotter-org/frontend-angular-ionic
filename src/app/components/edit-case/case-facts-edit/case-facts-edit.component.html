@@ -36,10 +36,6 @@
         <ion-label position="stacked">Beschreibung</ion-label>
         <ion-textarea formControlName="caseSummary" class="interactive" [autoGrow]="true"/>
       </ion-item>
-      <div style="display: flex; justify-content: flex-end;">
-        {{ editCaseService.caseDetails?.username }}
-        am: {{ editCaseService.caseDetails?.created_at | date: 'dd.MM.YYYY, hh:mm' }}
-      </div>
     </form>
   </ion-card-content>
 </ion-card>
