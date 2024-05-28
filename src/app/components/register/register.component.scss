@@ -1,0 +1,12 @@
+.validation-error{
+
+    ion-label{
+        color: --ion-color-danger;
+    }
+    color: --ion-color-danger;
+    font-size: 12px;
+    margin-top: 5px;
+    margin-bottom: 0;
+    display: block;
+    padding-left: 5px;
+}

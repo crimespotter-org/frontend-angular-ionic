@@ -1,0 +1,20 @@
+.link-item {
+  display: flex;
+  align-items: flex-start;
+  padding-bottom: 5px;
+  padding-top: 2px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.link-url {
+  font-weight: 400;
+  text-decoration: none;
+  flex-grow: 1;
+}
+
+ion-item {
+  --background: var(--ion-card-background);
+}
+ion-list {
+  --background: var(--ion-card-background);
+}

@@ -1,0 +1,27 @@
+
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Link hinzufügen</ion-title>
+      <ion-buttons slot="start">
+        <ion-button (click)="cancel()">
+          <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button (click)="confirm()">
+          <ion-icon slot="icon-only" name="checkmark-outline"></ion-icon>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-header>
+  <ion-content class="ion-padding">
+  <ion-input placeholder="Link eingeben" [(ngModel)]="url"></ion-input>
+  <ion-select [(ngModel)]="selectedLinkType" placeholder="Falltyp auswählen">
+    @for(linktype of linktypes; track linktype){
+      <ion-select-option [value]="linktype">{{HelperUtils.formatLinkType(linktype)}}</ion-select-option>
+    }
+  </ion-select>
+  </ion-content>
+
+
+

@@ -1,0 +1,103 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button (click)="routeToPreviousPage()"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Neuen Fall anlegen</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="submitForm()">
+        <ion-icon slot="icon-only" name="checkmark-sharp"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-progress-bar type="indeterminate" *ngIf="loading"></ion-progress-bar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form class="form" [formGroup]="form">
+    <ion-item style="--background: var(--ion-card-background)" formGroupName="location">
+      <ion-label position="stacked" class="header">Tatort</ion-label>
+      <div style="width: 100%; margin-top: 5px; --background: var(--ion-card-background)">
+        <app-location-picker formControlName="coordinates" [defaultLocation]="this.currentLocation"
+                             (selectedLocation)="selectedLocationChanged($event)"
+                             style="width: 100%; --background: var(--ion-card-background)"></app-location-picker>
+      </div>
+      <ion-item style="--background: var(--ion-card-background)"
+        *ngIf="this.form.get('location')?.get('coordinates')?.hasError('required') && this.form.get('location')?.get('coordinates')?.touched">
+        <ion-text color="danger" class="error-message">
+          <p>Tatort Coordinaten sind erforderlich</p>
+        </ion-text>
+      </ion-item>
+      @if (this.form.get('location')?.get('coordinates')?.value) {
+        <ion-item style="width: 100%; --background: var(--ion-card-background)">
+          <ion-input label="Postleitzahl" labelPlacement="stacked" formControlName="plz" type="number">
+          </ion-input>
+        </ion-item>
+        <ion-item lines="none" style="--background: var(--ion-card-background)"
+                  *ngIf="form.get('location')?.get('plz')?.hasError('required') && form.get('location')?.get('plz')?.touched">
+          <ion-text color="danger" class="error-message">
+            <p>Postleitzahl ist erforderlich</p>
+          </ion-text>
+        </ion-item>
+        <ion-item style="width: 100%;--background: var(--ion-card-background)">
+          <ion-input label="Ort" labelPlacement="stacked" formControlName="city"></ion-input>
+        </ion-item>
+        <ion-item lines="none" style="--background: var(--ion-card-background)"
+                  *ngIf="form.get('location')?.get('city')?.hasError('required') && form.get('location')?.get('city')?.touched">
+          <ion-text color="danger" class="error-message">
+            <p>Ort ist erforderlich</p>
+          </ion-text>
+        </ion-item>
+      }
+    </ion-item>
+    <ion-item style="--background: var(--ion-card-background)">
+      <ion-label position="stacked">Bilder</ion-label>
+      <div id="pictureSelection" *ngIf="images.length === 0">
+        <ion-item button (click)="uploadImage()" style="--background: var(--ion-card-background)">
+          <ion-icon slot="start" name="image-outline"></ion-icon>
+          <ion-label>Bilder hinzuzufügen</ion-label>
+        </ion-item>
+      </div>
+      <div class="scrolling-wrapper" *ngIf="images.length > 0">
+        <div class="card" *ngFor="let image of images; index as idx">
+          <img [src]="image.dataUrl"/>
+          <ion-button class="delete-button" (click)="discardImage(image)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+        <div class="card">
+          <ion-button class="add-image" (click)="uploadImage()">
+            <ion-icon name="add-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+    </ion-item>
+
+    <ion-item style="--background: var(--ion-card-background)">
+      <ion-label position="stacked">Links</ion-label>
+      <div formArrayName="further_links" id="linkContainer" style="--background: var(--ion-card-background)">
+        <div *ngFor="let link of links.controls; index as idx" [formGroupName]="idx">
+          <ion-item style="--background: var(--ion-card-background)">
+            <div slot="start" (click)="chooseIcon(idx)" class="linkTypeIconContainer">
+              <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(link.get('type')?.value)"
+                        style="font-size: 1.5em;"></ion-icon>
+              <ion-icon name="caret-down-outline" style="font-size: 0.75em"></ion-icon>
+            </div>
+            <ion-input placeholder="Link eingeben" formControlName="value"></ion-input>
+            <ion-icon slot="end" name="close-outline" (click)="removeLink(idx)" style="cursor: pointer;"></ion-icon>
+          </ion-item>
+          <ion-item *ngIf="link.get('value')?.hasError('required') && link.get('value')?.touched">
+            <ion-text color="danger" class="error-message" style="margin-left: 70px">
+              <p>Link ist erforderlich</p>
+            </ion-text>
+          </ion-item>
+        </div>
+      </div>
+
+      <ion-item button id="addLinkContainer" (click)="addLink()" style="--background: var(--ion-card-background)">
+        <ion-icon slot="start" name="add-outline"></ion-icon>
+        <ion-label>Link hinzufügen</ion-label>
+      </ion-item>
+    </ion-item>
+  </form>
+</ion-content>

@@ -1,0 +1,7 @@
+<ion-content>
+  <ion-list *ngIf="caseTypes">
+    <ion-item *ngFor="let type of caseTypes" (click)="selectType(type)" color="{{type === selectedType ? 'primary' : ''}}">
+      {{ HelperUtils.formatCrimeType(type) }}
+    </ion-item>
+  </ion-list>
+</ion-content>

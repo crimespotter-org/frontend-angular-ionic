@@ -1,0 +1,23 @@
+#selectormap {
+    height: 100%; /* Set the height of the map container */
+    position: relative; /* Positioning context for absolute positioning of search bar */
+}
+
+#overlapping {
+    position: absolute;
+    top: 20px; /* Adjust top position as needed */
+    left: 50%; /* Position the search bar horizontally in the middle */
+    transform: translateX(-50%); /* Center horizontally */
+    z-index: 1000; /* Ensure the search bar is above the map */
+    width: 70%;
+
+
+    ion-searchbar {
+      padding-inline-start: 0;
+      padding-inline-end: 0;
+      padding-bottom: 0;
+      color: var(--ion-text-color);
+    }
+
+}
+

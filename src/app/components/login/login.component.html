@@ -1,0 +1,68 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Anmeldung</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form (ngSubmit)="login()" [formGroup]="loginForm">
+        <ion-item style="--background: var(--ion-card-background)">
+          <ion-label position="floating">E-Mail</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item lines="none" *ngIf="loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched" style="--background: var(--ion-card-background)">
+          <ion-text color="danger">
+            <p>E-Mail ist erforderlich</p>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none" *ngIf="loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched" style="--background: var(--ion-card-background)">
+          <ion-text color="danger">
+            <p>Bitte geben Sie eine gültige E-Mail-Adresse ein</p>
+          </ion-text>
+        </ion-item>
+
+        <ion-item style="align-items: center;--background: var(--ion-card-background)">
+          <ion-label position="floating">Passwort</ion-label>
+          <ion-input [type]="showPassword ? 'text' : 'password'" formControlName="password"></ion-input>
+          <ion-button fill="clear" size="medium" slot="end" (click)="togglePasswordVisibility()"
+                      style="margin-right: -25px">
+            <ion-icon [name]="showPassword ? 'eye-off' : 'eye'"></ion-icon>
+          </ion-button>
+        </ion-item>
+        <ion-item lines="none" style="--background: var(--ion-card-background)"
+                  *ngIf="loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched">
+          <ion-text color="danger">
+            <p>Passwort ist erforderlich</p>
+          </ion-text>
+        </ion-item>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" expand="block" [disabled]="loading || !loginForm.valid">
+                Login
+                <ion-spinner *ngIf="loading"></ion-spinner>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button [routerLink]="['/password-reset']" expand="block" fill="clear" [disabled]="loading">
+                Passwort vergessen?
+              </ion-button>
+            </ion-col>
+          </ion-row>
+          <ion-row>
+            <ion-col>
+              <ion-button [routerLink]="['/register']" expand="block" fill="clear" [disabled]="loading">
+                Zur Registrierung
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

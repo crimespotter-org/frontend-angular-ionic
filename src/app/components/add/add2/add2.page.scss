@@ -1,0 +1,84 @@
+.scrolling-wrapper {
+    margin-top: 10px;
+    height: 30vh;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    white-space: nowrap;
+
+    .card {
+        position: relative;
+        display: inline-flex;
+        flex-direction: column;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+
+        img {
+            height: 100%;
+        }
+
+        .add-image {
+            margin-top: 0;
+            margin-bottom: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            ion-icon {
+                height: 100%; // Match the height of the images
+            }
+        }
+
+        .delete-button {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            border: none;
+            padding: 5px;
+            cursor: pointer;
+        }
+    }
+}
+
+#locationSelection {
+    margin-top: 10px;
+    width: 100%;
+}
+
+#pictureSelection {
+    margin-top: 10px;
+    width: 100%;
+}
+
+#addLinkContainer{
+    margin-top: 10px;
+    width: 100%;
+}
+
+#linkContainer{
+    margin-top: 10px;
+    width: 100%;
+}
+
+#removeLink{
+    border: none;
+    background-color: transparent;
+}
+
+.hidden-text .select-text {
+    display: none;
+  }
+
+.linkTypeIconContainer{
+    color: rgba(var(--ion-text-color-rgb, 0, 0, 0), 0.54);
+}
+
+app-location-picker {
+    margin-top: 10px;
+    width: 100%;
+}
+
+.error-message {
+    font-size: 0.8em;
+}

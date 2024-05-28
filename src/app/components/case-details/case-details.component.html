@@ -1,0 +1,34 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="shareCase()">
+        <ion-icon name="share-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+
+    <ion-segment [(ngModel)]="segment">
+      <ion-segment-button value="facts">
+        <ion-label>Fakten</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="links">
+        <ion-label>Links</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="media">
+        <ion-label>Medien</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="comments">
+        <ion-label>Chat</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-case-facts *ngIf="segment === 'facts'"></app-case-facts>
+  <app-case-links *ngIf="segment === 'links'" [caseId]="caseId" ></app-case-links>
+  <app-case-media *ngIf="segment === 'media'" [caseId]="caseId"></app-case-media>
+  <app-case-chat *ngIf="segment === 'comments'" [caseId]="caseId"></app-case-chat>
+</ion-content>

@@ -1,0 +1,25 @@
+<div *ngFor="let group of linkGroups">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>
+        <ion-icon [name]="HelperUtils.convertLinkTypeToIcon(group.type)"></ion-icon>
+        {{ HelperUtils.formatLinkType(group.type) | titlecase }}
+      </ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-list *ngIf="group.links.length > 0">
+        <ion-item *ngFor="let link of group.links" (click)="openLink(link.url)">
+          <ion-icon name="link-outline" slot="start"></ion-icon>
+          <ion-label>
+            <p>{{ link.url }}</p>
+          </ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</div>
+<ion-card *ngIf="linkGroups.length === 0">
+  <ion-text color="medium">
+    <p>Keine Links vorhanden.</p>
+  </ion-text>
+</ion-card>

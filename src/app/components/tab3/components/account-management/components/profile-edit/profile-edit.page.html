@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text=""></ion-back-button>
+    </ion-buttons>
+    <ion-title>Profil bearbeiten</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-card>
+    <ion-card-content>
+      <form (ngSubmit)="updateProfile()" [formGroup]="profileForm">
+        <ion-item style="--background: var(--ion-card-background)">
+          <ion-label position="floating">Neuer Benutzername</ion-label>
+          <ion-input type="text" formControlName="username"></ion-input>
+        </ion-item>
+
+        <ion-item style="--background: var(--ion-card-background)">
+          <ion-label position="floating">Neue E-Mail</ion-label>
+          <ion-input type="email" formControlName="email"></ion-input>
+        </ion-item>
+        <ion-item lines="none" *ngIf="profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched" style="--background: var(--ion-card-background)">
+          <ion-text color="danger">
+            <p>Bitte geben Sie eine gültige E-Mail-Adresse ein</p>
+          </ion-text>
+        </ion-item>
+        <ion-item lines="none" *ngIf="profileForm.hasError('empty') && profileForm.get('username')?.touched && profileForm.get('email')?.touched" style="--background: var(--ion-card-background)">
+          <ion-text color="danger">
+            <p>Keine neuen Werte eingetragen.</p>
+          </ion-text>
+        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-button type="submit" expand="block" [disabled]="loading || !profileForm.valid">
+                Profil aktualisieren
+                <ion-spinner *ngIf="loading"></ion-spinner>
+              </ion-button>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </form>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
